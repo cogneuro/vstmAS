@@ -1,5 +1,5 @@
 ---
-title: "Effects of VAST load on response selection"
+title: "Effects of VSTM load on response selection"
 author: "Do-Joon Yi"
 date: "`r Sys.Date()`"
 output:
