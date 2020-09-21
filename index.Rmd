@@ -1,5 +1,12 @@
 ---
-title: "vstmAS"
+title: "Effects of VAST load on response selection"
+author: "Do-Joon Yi"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: cosmo 
+    highlight: pygments
+mainfont: Noto Sans CJK KR
 ---
 
-in preparation
+manuscript in preparation

@@ -27,6 +27,10 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -435,9 +439,6 @@ div.tocify {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Home</a>
-</li>
-<li>
   <a href="vstmAS1.html">Exp 1</a>
 </li>
 <li>
@@ -492,12 +493,20 @@ pre code, pre, code {
 }
 </style>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">set.seed</span>(<span class="dv">12345</span>) <span class="co"># for reproducibility</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">options</span>(<span class="dt">knitr.kable.NA =</span> <span class="st">&#39;&#39;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. </span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;pacman&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
-<span id="cb1-6"><a href="#cb1-6"></a>pacman<span class="op">::</span><span class="kw">p_load</span>(tidyverse, TOSTER, pwr, Hmisc, BayesFactor, ggbeeswarm)</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># pacman::p_load_gh(&quot;crsh/papaja&quot;, &quot;thomasp85/patchwork&quot;)</span></span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. </span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;pacman&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a>pacman<span class="op">::</span><span class="kw">p_load</span>(tidyverse, TOSTER, pwr, Hmisc, BayesFactor, ggbeeswarm)</span>
+<span id="cb1-6"><a href="#cb1-6"></a>pacman<span class="op">::</span><span class="kw">p_load_gh</span>(<span class="st">&quot;RLesur/klippy&quot;</span>)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># pacman::p_load_gh(&quot;crsh/papaja&quot;, &quot;thomasp85/patchwork&quot;)</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="kw">options</span>(<span class="dt">knitr.kable.NA =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">options</span>(<span class="dt">dplyr.summarise.inform=</span><span class="ot">FALSE</span>) <span class="co"># 200603 supress warning in regards to regrouping </span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>klippy<span class="op">::</span><span class="kw">klippy</span>()</span></code></pre></div>
+<script>
+  addClassKlippyTo("pre.r, pre.markdown");
+  addKlippy('left', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
 <div id="data" class="section level1">
 <h1><span class="header-section-number">1</span> Data</h1>
 <p>We combined data from Experiment 1~3 and 5. Since each experiment recruited 20 participants, there were 80 participants total.</p>
@@ -614,33 +623,32 @@ pre code, pre, code {
 <span id="cb2-111"><a href="#cb2-111"></a><span class="st">  </span><span class="kw">spread</span>(Congruency, M) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-112"><a href="#cb2-112"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cEffect =</span> Incongruent <span class="op">-</span><span class="st"> </span>Congruent) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-113"><a href="#cb2-113"></a><span class="st">  </span><span class="kw">select</span>(Exp, SN, vstmLoad, cEffect)</span>
-<span id="cb2-114"><a href="#cb2-114"></a><span class="co">## `summarise()` regrouping output by &#39;Exp&#39;, &#39;SN&#39;, &#39;vstmLoad&#39; (override with `.groups` argument)</span></span>
-<span id="cb2-115"><a href="#cb2-115"></a></span>
-<span id="cb2-116"><a href="#cb2-116"></a><span class="co"># Congruency effect, subject-level, wide format</span></span>
-<span id="cb2-117"><a href="#cb2-117"></a>T2CEswide &lt;-<span class="st"> </span>T2CEslong <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-118"><a href="#cb2-118"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> vstmLoad, <span class="dt">value =</span> cEffect) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-119"><a href="#cb2-119"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Diff =</span> LowLoad <span class="op">-</span><span class="st"> </span>HighLoad,</span>
-<span id="cb2-120"><a href="#cb2-120"></a>         <span class="dt">Dummy =</span> <span class="st">&quot;Dummy&quot;</span>)</span>
-<span id="cb2-121"><a href="#cb2-121"></a></span>
-<span id="cb2-122"><a href="#cb2-122"></a>temp &lt;-<span class="st"> </span>Hmisc<span class="op">::</span><span class="kw">smean.cl.boot</span>(T2CEswide<span class="op">$</span>Diff)</span>
-<span id="cb2-123"><a href="#cb2-123"></a></span>
-<span id="cb2-124"><a href="#cb2-124"></a><span class="kw">ggplot</span>(T2CEswide, <span class="kw">aes</span>(<span class="dt">x=</span>Dummy, <span class="dt">y=</span>Diff)) <span class="op">+</span></span>
-<span id="cb2-125"><a href="#cb2-125"></a><span class="st">  </span><span class="co"># geom_hline(aes(yintercept=mean(Diff)), lty=1, size=8, col = alpha(&quot;#a6d8f0&quot;, 0.5)) +</span></span>
-<span id="cb2-126"><a href="#cb2-126"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.6</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb2-127"><a href="#cb2-127"></a><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> Exp), <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.9</span>, <span class="dt">width =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
-<span id="cb2-128"><a href="#cb2-128"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="kw">aes</span>(<span class="dt">yintercept=</span><span class="dv">0</span>), <span class="dt">lty=</span><span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb2-129"><a href="#cb2-129"></a><span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data=</span><span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">shape=</span><span class="dv">19</span>,  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>,</span>
-<span id="cb2-130"><a href="#cb2-130"></a>               <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.9</span>)) <span class="op">+</span></span>
-<span id="cb2-131"><a href="#cb2-131"></a><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb2-132"><a href="#cb2-132"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Congruency Difference </span><span class="ch">\n</span><span class="st"> (Low Load - High Load)&quot;</span>) <span class="op">+</span></span>
-<span id="cb2-133"><a href="#cb2-133"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb2-134"><a href="#cb2-134"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.line.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb2-135"><a href="#cb2-135"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb2-136"><a href="#cb2-136"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb2-137"><a href="#cb2-137"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb2-138"><a href="#cb2-138"></a>        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb2-139"><a href="#cb2-139"></a>        <span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.85</span>, <span class="fl">0.25</span>),</span>
-<span id="cb2-140"><a href="#cb2-140"></a>        <span class="dt">aspect.ratio =</span> <span class="fl">.5</span>)</span></code></pre></div>
+<span id="cb2-114"><a href="#cb2-114"></a></span>
+<span id="cb2-115"><a href="#cb2-115"></a><span class="co"># Congruency effect, subject-level, wide format</span></span>
+<span id="cb2-116"><a href="#cb2-116"></a>T2CEswide &lt;-<span class="st"> </span>T2CEslong <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-117"><a href="#cb2-117"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> vstmLoad, <span class="dt">value =</span> cEffect) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-118"><a href="#cb2-118"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Diff =</span> LowLoad <span class="op">-</span><span class="st"> </span>HighLoad,</span>
+<span id="cb2-119"><a href="#cb2-119"></a>         <span class="dt">Dummy =</span> <span class="st">&quot;Dummy&quot;</span>)</span>
+<span id="cb2-120"><a href="#cb2-120"></a></span>
+<span id="cb2-121"><a href="#cb2-121"></a>temp &lt;-<span class="st"> </span>Hmisc<span class="op">::</span><span class="kw">smean.cl.boot</span>(T2CEswide<span class="op">$</span>Diff)</span>
+<span id="cb2-122"><a href="#cb2-122"></a></span>
+<span id="cb2-123"><a href="#cb2-123"></a><span class="kw">ggplot</span>(T2CEswide, <span class="kw">aes</span>(<span class="dt">x=</span>Dummy, <span class="dt">y=</span>Diff)) <span class="op">+</span></span>
+<span id="cb2-124"><a href="#cb2-124"></a><span class="st">  </span><span class="co"># geom_hline(aes(yintercept=mean(Diff)), lty=1, size=8, col = alpha(&quot;#a6d8f0&quot;, 0.5)) +</span></span>
+<span id="cb2-125"><a href="#cb2-125"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.6</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb2-126"><a href="#cb2-126"></a><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> Exp), <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.9</span>, <span class="dt">width =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb2-127"><a href="#cb2-127"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="kw">aes</span>(<span class="dt">yintercept=</span><span class="dv">0</span>), <span class="dt">lty=</span><span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb2-128"><a href="#cb2-128"></a><span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.data=</span><span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">shape=</span><span class="dv">19</span>,  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>,</span>
+<span id="cb2-129"><a href="#cb2-129"></a>               <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.9</span>)) <span class="op">+</span></span>
+<span id="cb2-130"><a href="#cb2-130"></a><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb2-131"><a href="#cb2-131"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Congruency Difference </span><span class="ch">\n</span><span class="st"> (Low Load - High Load)&quot;</span>) <span class="op">+</span></span>
+<span id="cb2-132"><a href="#cb2-132"></a><span class="st">  </span><span class="kw">theme_classic</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb2-133"><a href="#cb2-133"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.line.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb2-134"><a href="#cb2-134"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb2-135"><a href="#cb2-135"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb2-136"><a href="#cb2-136"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb2-137"><a href="#cb2-137"></a>        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb2-138"><a href="#cb2-138"></a>        <span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.85</span>, <span class="fl">0.25</span>),</span>
+<span id="cb2-139"><a href="#cb2-139"></a>        <span class="dt">aspect.ratio =</span> <span class="fl">.5</span>)</span></code></pre></div>
 <p><img src="vstmAStost_files/figure-html/data-1.png" width="672" /></p>
 <p>We calculated the difference in <strong>congruency effects</strong> between <code>low load</code> vs. <code>high load</code> conditions for each participant. The results plotted above show that the difference values are distributed evenly around zero. The global mean was -2.36 and 95% bootstrapped CI was [-8.99, 4.06] (shown in dark red).</p>
 <p><br><br></p>
@@ -772,7 +780,7 @@ pre code, pre, code {
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">sessionInfo</span>()</span>
 <span id="cb14-2"><a href="#cb14-2"></a><span class="co">## R version 4.0.2 (2020-06-22)</span></span>
 <span id="cb14-3"><a href="#cb14-3"></a><span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
-<span id="cb14-4"><a href="#cb14-4"></a><span class="co">## Running under: macOS Mojave 10.14.6</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co">## Running under: macOS High Sierra 10.13.6</span></span>
 <span id="cb14-5"><a href="#cb14-5"></a><span class="co">## </span></span>
 <span id="cb14-6"><a href="#cb14-6"></a><span class="co">## Matrix products: default</span></span>
 <span id="cb14-7"><a href="#cb14-7"></a><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib</span></span>
@@ -785,13 +793,13 @@ pre code, pre, code {
 <span id="cb14-14"><a href="#cb14-14"></a><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span id="cb14-15"><a href="#cb14-15"></a><span class="co">## </span></span>
 <span id="cb14-16"><a href="#cb14-16"></a><span class="co">## other attached packages:</span></span>
-<span id="cb14-17"><a href="#cb14-17"></a><span class="co">##  [1] ggbeeswarm_0.6.0       BayesFactor_0.9.12-4.2 Matrix_1.2-18         </span></span>
-<span id="cb14-18"><a href="#cb14-18"></a><span class="co">##  [4] coda_0.19-3            Hmisc_4.4-1            Formula_1.2-3         </span></span>
-<span id="cb14-19"><a href="#cb14-19"></a><span class="co">##  [7] survival_3.2-3         lattice_0.20-41        pwr_1.3-0             </span></span>
-<span id="cb14-20"><a href="#cb14-20"></a><span class="co">## [10] TOSTER_0.3.4           forcats_0.5.0          stringr_1.4.0         </span></span>
-<span id="cb14-21"><a href="#cb14-21"></a><span class="co">## [13] dplyr_1.0.2            purrr_0.3.4            readr_1.3.1           </span></span>
-<span id="cb14-22"><a href="#cb14-22"></a><span class="co">## [16] tidyr_1.1.2            tibble_3.0.3           ggplot2_3.3.2         </span></span>
-<span id="cb14-23"><a href="#cb14-23"></a><span class="co">## [19] tidyverse_1.3.0        pacman_0.5.1          </span></span>
+<span id="cb14-17"><a href="#cb14-17"></a><span class="co">##  [1] klippy_0.0.0.9500      ggbeeswarm_0.6.0       BayesFactor_0.9.12-4.2</span></span>
+<span id="cb14-18"><a href="#cb14-18"></a><span class="co">##  [4] Matrix_1.2-18          coda_0.19-3            Hmisc_4.4-1           </span></span>
+<span id="cb14-19"><a href="#cb14-19"></a><span class="co">##  [7] Formula_1.2-3          survival_3.2-3         lattice_0.20-41       </span></span>
+<span id="cb14-20"><a href="#cb14-20"></a><span class="co">## [10] pwr_1.3-0              TOSTER_0.3.4           forcats_0.5.0         </span></span>
+<span id="cb14-21"><a href="#cb14-21"></a><span class="co">## [13] stringr_1.4.0          dplyr_1.0.2            purrr_0.3.4           </span></span>
+<span id="cb14-22"><a href="#cb14-22"></a><span class="co">## [16] readr_1.3.1            tidyr_1.1.2            tibble_3.0.3          </span></span>
+<span id="cb14-23"><a href="#cb14-23"></a><span class="co">## [19] ggplot2_3.3.2          tidyverse_1.3.0        pacman_0.5.1          </span></span>
 <span id="cb14-24"><a href="#cb14-24"></a><span class="co">## </span></span>
 <span id="cb14-25"><a href="#cb14-25"></a><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span id="cb14-26"><a href="#cb14-26"></a><span class="co">##  [1] fs_1.5.0            lubridate_1.7.9     RColorBrewer_1.1-2 </span></span>
@@ -808,7 +816,7 @@ pre code, pre, code {
 <span id="cb14-37"><a href="#cb14-37"></a><span class="co">## [34] dbplyr_1.4.4        htmlwidgets_1.5.1   rlang_0.4.7        </span></span>
 <span id="cb14-38"><a href="#cb14-38"></a><span class="co">## [37] readxl_1.3.1        rstudioapi_0.11     farver_2.0.3       </span></span>
 <span id="cb14-39"><a href="#cb14-39"></a><span class="co">## [40] generics_0.0.2      jsonlite_1.7.1      gtools_3.8.2       </span></span>
-<span id="cb14-40"><a href="#cb14-40"></a><span class="co">## [43] magrittr_1.5        Rcpp_1.0.5          munsell_0.5.0      </span></span>
+<span id="cb14-40"><a href="#cb14-40"></a><span class="co">## [43] magrittr_1.5        Rcpp_1.0.5.2        munsell_0.5.0      </span></span>
 <span id="cb14-41"><a href="#cb14-41"></a><span class="co">## [46] fansi_0.4.1         lifecycle_0.2.0     stringi_1.5.3      </span></span>
 <span id="cb14-42"><a href="#cb14-42"></a><span class="co">## [49] yaml_2.2.1          plyr_1.8.6          grid_4.0.2         </span></span>
 <span id="cb14-43"><a href="#cb14-43"></a><span class="co">## [52] blob_1.2.1          parallel_4.0.2      crayon_1.3.4       </span></span>
@@ -818,7 +826,7 @@ pre code, pre, code {
 <span id="cb14-47"><a href="#cb14-47"></a><span class="co">## [64] data.table_1.13.0   modelr_0.1.8        png_0.1-7          </span></span>
 <span id="cb14-48"><a href="#cb14-48"></a><span class="co">## [67] vctrs_0.3.4         MatrixModels_0.4-1  cellranger_1.1.0   </span></span>
 <span id="cb14-49"><a href="#cb14-49"></a><span class="co">## [70] gtable_0.3.0        assertthat_0.2.1    xfun_0.17          </span></span>
-<span id="cb14-50"><a href="#cb14-50"></a><span class="co">## [73] broom_0.7.0         beeswarm_0.2.3      cluster_2.1.0      </span></span>
+<span id="cb14-50"><a href="#cb14-50"></a><span class="co">## [73] broom_0.7.0.9001    beeswarm_0.2.3      cluster_2.1.0      </span></span>
 <span id="cb14-51"><a href="#cb14-51"></a><span class="co">## [76] ellipsis_0.3.1</span></span></code></pre></div>
 </div>
 

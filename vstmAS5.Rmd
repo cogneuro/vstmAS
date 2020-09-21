@@ -32,7 +32,6 @@ pre code, pre, code {
 
 ```{r setup, message=FALSE}
 set.seed(12345) # for reproducibility
-options(knitr.kable.NA = '')
 
 # Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. 
 if (!require("pacman", quietly = TRUE)) install.packages("pacman")
@@ -42,6 +41,8 @@ pacman::p_load(tidyverse, knitr,
                ggstatsplot)
 pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
 
+options(knitr.kable.NA = '')
+options(dplyr.summarise.inform=FALSE) # 200603 supress warning in regards to regrouping 
 klippy::klippy()
 ```
 
@@ -127,8 +128,8 @@ vE5g <- Rmisc::summarySEwithin(data = vE5slong, measurevar = "vstmCorr",
 p1 <- ggplot(filter(vE5slong, Overlap=="NonOverlap"), aes(x=vstmLoad, y=vstmCorr)) +
   geom_violin(width = 0.5, trim=TRUE) + 
   geom_point(color="gray80", size=1.8) +
-  geom_segment(data=vE5swide, aes(x=1, y=vE5swide$NonOverlap_LowLoad, xend=2, 
-                   yend=vE5swide$NonOverlap_HighLoad), color="gray80") +
+  geom_segment(data=vE5swide, aes(x=1, y=NonOverlap_LowLoad, xend=2, 
+                   yend=NonOverlap_HighLoad), color="gray80") +
   geom_pointrange(filter(vE5g, Overlap=="NonOverlap"), inherit.aes=FALSE,
                   mapping=aes(x = vstmLoad, y=vstmCorr, 
                               ymin = vstmCorr - ci, ymax = vstmCorr + ci), 
@@ -144,8 +145,8 @@ p1 <- ggplot(filter(vE5slong, Overlap=="NonOverlap"), aes(x=vstmLoad, y=vstmCorr
 p2 <- ggplot(filter(vE5slong, Overlap=="Overlap"), aes(x=vstmLoad, y=vstmCorr)) +
   geom_violin(width = 0.5, trim=TRUE) + 
   geom_point(color="gray80", size=1.8) +
-  geom_segment(data=vE5swide, aes(x=1, y=vE5swide$Overlap_LowLoad, xend=2, 
-                   yend=vE5swide$Overlap_HighLoad), color="gray80") +
+  geom_segment(data=vE5swide, aes(x=1, y=Overlap_LowLoad, xend=2, 
+                   yend=Overlap_HighLoad), color="gray80") +
   geom_pointrange(filter(vE5g, Overlap=="Overlap"), inherit.aes=FALSE,
                   mapping=aes(x = vstmLoad, y=vstmCorr, 
                               ymin = vstmCorr - ci, ymax = vstmCorr + ci), 
@@ -272,7 +273,7 @@ rE5 <- cE5 %>% filter(RT > 200) %>%
   nest() %>% 
   mutate(lbound = map(data, ~median(.$RT)-2.5*mad(.$RT)),
          ubound = map(data, ~median(.$RT)+2.5*mad(.$RT))) %>% 
-  unnest(lbound, ubound) %>% 
+  unnest(c(lbound, ubound)) %>% 
   unnest(data) %>% 
   mutate(Outlier = (RT < lbound)|(RT > ubound)) %>% 
   filter(Outlier == FALSE) %>% 
@@ -420,8 +421,8 @@ z1 <- ggplot(filter(rE5CEslong, Overlap=="NonOverlap"), aes(x=vstmLoad, y=cEffec
   geom_violin(width = 0.5, trim=TRUE) + 
   geom_point(color="gray80", size=1.8) +
   geom_segment(data=rE5CEswide, 
-               aes(x=1, y=rE5CEswide$NonOverlap_LowLoad, xend=2, 
-                   yend=rE5CEswide$NonOverlap_HighLoad), color="gray80") +
+               aes(x=1, y=NonOverlap_LowLoad, xend=2, 
+                   yend=NonOverlap_HighLoad), color="gray80") +
   geom_pointrange(filter(rE5CEg, Overlap=="NonOverlap"), inherit.aes=FALSE,
                   mapping=aes(x = vstmLoad, y=cEffect, 
                               ymin = cEffect - ci, ymax = cEffect + ci), 
@@ -437,8 +438,8 @@ z2 <- ggplot(filter(rE5CEslong, Overlap=="Overlap"), aes(x=vstmLoad, y=cEffect))
   geom_violin(width = 0.5, trim=TRUE) + 
   geom_point(color="gray80", size=1.8) +
   geom_segment(data=rE5CEswide, 
-               aes(x=1, y=rE5CEswide$Overlap_LowLoad, xend=2, 
-                   yend=rE5CEswide$Overlap_HighLoad), color="gray80") +
+               aes(x=1, y=Overlap_LowLoad, xend=2, 
+                   yend=Overlap_HighLoad), color="gray80") +
   geom_pointrange(filter(rE5CEg, Overlap=="Overlap"), inherit.aes=FALSE,
                   mapping=aes(x = vstmLoad, y=cEffect, 
                               ymin = cEffect - ci, ymax = cEffect + ci), 

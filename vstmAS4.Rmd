@@ -32,7 +32,6 @@ pre code, pre, code {
 
 ```{r setup, message=FALSE}
 set.seed(12345) # for reproducibility
-options(knitr.kable.NA = '')
 
 # Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. 
 if (!require("pacman", quietly = TRUE)) install.packages("pacman")
@@ -42,6 +41,8 @@ pacman::p_load(tidyverse, knitr,
                ggstatsplot)
 pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
 
+options(knitr.kable.NA = '')
+options(dplyr.summarise.inform=FALSE) # 200603 supress warning in regards to regrouping 
 klippy::klippy()
 ```
 
@@ -158,7 +159,7 @@ rE4 <- cE4 %>% filter(RT > 200) %>%
   nest() %>%
   mutate(lbound = map(data, ~median(.$RT)-2.5*mad(.$RT)),
          ubound = map(data, ~median(.$RT)+2.5*mad(.$RT))) %>%
-  unnest(lbound, ubound) %>%
+  unnest(c(lbound, ubound)) %>%
   unnest(data) %>%
   mutate(Outlier = (RT < lbound)|(RT > ubound)) %>%
   filter(Outlier == FALSE) %>%
@@ -239,11 +240,11 @@ G1 <- ggplot() +
                     labels=c("Incongruent", "Congruent")) +
   geom_point(data=rE4slong, aes(x=PercLoad, y=RT, group=Congruency),
              position=position_dodge(0.6), color="gray80", size=1.8) +
-  geom_segment(data=rE4swide, aes(x=1-.15, y=rE4swide$LowLoad_Incongruent, 
-                                    xend=1+.15, yend=rE4swide$LowLoad_Congruent),
+  geom_segment(data=rE4swide, aes(x=1-.15, y=LowLoad_Incongruent, 
+                                    xend=1+.15, yend=LowLoad_Congruent),
                color="gray80") +
-  geom_segment(data=rE4swide, aes(x=2-.15, y=rE4swide$HighLoad_Incongruent, 
-                                    xend=2+.15, yend=rE4swide$HighLoad_Congruent),
+  geom_segment(data=rE4swide, aes(x=2-.15, y=HighLoad_Incongruent, 
+                                    xend=2+.15, yend=HighLoad_Congruent),
                color="gray80") +
   labs(x = "Perceptual Load", y = "Reaction Time (ms)") +
   scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
@@ -268,7 +269,7 @@ G2 <- ggplot(rE4CEslong, aes(x=PercLoad, y=cEffect)) +
   geom_violin(width = 0.5, trim=TRUE) + 
   geom_point(color="gray80", size=1.8) +
   geom_segment(data=rE4CEswide, color="gray80", 
-               aes(x=1, y=rE4CEswide$LowLoad, xend=2, yend=rE4CEswide$HighLoad)) +
+               aes(x=1, y=LowLoad, xend=2, yend=HighLoad)) +
   geom_pointrange(rE4CEg, inherit.aes=FALSE,
                   mapping=aes(x = PercLoad, y=cEffect, 
                               ymin = cEffect - ci, ymax = cEffect + ci), 

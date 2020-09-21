@@ -32,7 +32,6 @@ pre code, pre, code {
 
 ```{r setup, message=FALSE}
 set.seed(12345) # for reproducibility
-options(knitr.kable.NA = '')
 
 # Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. 
 if (!require("pacman", quietly = TRUE)) install.packages("pacman")
@@ -42,6 +41,8 @@ pacman::p_load(tidyverse, knitr,
                ggstatsplot)
 pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
 
+options(knitr.kable.NA = '')
+options(dplyr.summarise.inform=FALSE) # 200603 supress warning in regards to regrouping 
 klippy::klippy()
 ```
 
@@ -122,8 +123,8 @@ vE2g <- Rmisc::summarySEwithin(data = vE2slong, measurevar = "vstmCorr",
 ggplot(vE2slong, aes(x=vstmLoad, y=vstmCorr)) +
   geom_violin(width = 0.5, trim=TRUE) + 
   geom_point(color="gray80", size=1.8) +
-  geom_segment(data=vE2swide, aes(x=1, y=vE2swide$LowLoad, 
-                                  xend=2, yend=vE2swide$HighLoad), color="gray80") +
+  geom_segment(data=vE2swide, aes(x=1, y=LowLoad, 
+                                  xend=2, yend=HighLoad), color="gray80") +
   geom_pointrange(vE2g, inherit.aes=FALSE,
                   mapping=aes(x = vstmLoad, y=vstmCorr, 
                               ymin = vstmCorr - ci, ymax = vstmCorr + ci), 
@@ -222,7 +223,7 @@ rE2 <- cE2 %>% filter(RT > 200) %>%
   nest() %>%
   mutate(lbound = map(data, ~median(.$RT)-2.5*mad(.$RT)),
          ubound = map(data, ~median(.$RT)+2.5*mad(.$RT))) %>%
-  unnest(lbound, ubound) %>%
+  unnest(c(lbound, ubound)) %>%
   unnest(data) %>%
   mutate(Outlier = (RT < lbound)|(RT > ubound)) %>%
   filter(Outlier == FALSE) %>%
@@ -303,11 +304,11 @@ G1 <- ggplot() +
                     labels=c("Incongruent", "Congruent")) +
   geom_point(data=rE2slong, aes(x=vstmLoad, y=RT, group=Congruency),
              position=position_dodge(0.6), color="gray80", size=1.8) +
-  geom_segment(data=rE2swide, aes(x=1-.15, y=rE2swide$LowLoad_Incongruent, 
-                                    xend=1+.15, yend=rE2swide$LowLoad_Congruent),
+  geom_segment(data=rE2swide, aes(x=1-.15, y=LowLoad_Incongruent, 
+                                    xend=1+.15, yend=LowLoad_Congruent),
                color="gray80") +
-  geom_segment(data=rE2swide, aes(x=2-.15, y=rE2swide$HighLoad_Incongruent, 
-                                    xend=2+.15, yend=rE2swide$HighLoad_Congruent),
+  geom_segment(data=rE2swide, aes(x=2-.15, y=HighLoad_Incongruent, 
+                                    xend=2+.15, yend=HighLoad_Congruent),
                color="gray80") +
   labs(x = "VSTM Load", y = "Reaction Time (ms)") +
   scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
@@ -331,7 +332,7 @@ G2 <- ggplot(rE2CEslong, aes(x=vstmLoad, y=cEffect)) +
   geom_violin(width = 0.5, trim=TRUE) + 
   geom_point(color="gray80", size=1.8) +
   geom_segment(data=rE2CEswide, color="gray80", 
-               aes(x=1, y=rE2CEswide$LowLoad, xend=2, yend=rE2CEswide$HighLoad)) +
+               aes(x=1, y=LowLoad, xend=2, yend=HighLoad)) +
   geom_pointrange(rE2CEg, inherit.aes=FALSE,
                   mapping=aes(x = vstmLoad, y=cEffect, 
                               ymin = cEffect - ci, ymax = cEffect + ci), 

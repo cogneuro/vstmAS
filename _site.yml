@@ -3,8 +3,6 @@ output_dir: "."
 navbar:
   title: "vstmAS"
   left:
-    - text: "Home"
-      href: index.html
     - text: "Exp 1"
       href: vstmAS1.html
     - text: "Exp 2"

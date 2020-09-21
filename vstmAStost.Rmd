@@ -32,12 +32,16 @@ pre code, pre, code {
 
 ```{r setup, message=FALSE}
 set.seed(12345) # for reproducibility
-options(knitr.kable.NA = '')
 
 # Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. 
 if (!require("pacman", quietly = TRUE)) install.packages("pacman")
 pacman::p_load(tidyverse, TOSTER, pwr, Hmisc, BayesFactor, ggbeeswarm)
+pacman::p_load_gh("RLesur/klippy")
 # pacman::p_load_gh("crsh/papaja", "thomasp85/patchwork")
+
+options(knitr.kable.NA = '')
+options(dplyr.summarise.inform=FALSE) # 200603 supress warning in regards to regrouping 
+klippy::klippy()
 ```
 
 # Data

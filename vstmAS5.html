@@ -439,9 +439,6 @@ div.tocify {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Home</a>
-</li>
-<li>
   <a href="vstmAS1.html">Exp 1</a>
 </li>
 <li>
@@ -496,17 +493,18 @@ pre code, pre, code {
 }
 </style>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">set.seed</span>(<span class="dv">12345</span>) <span class="co"># for reproducibility</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">options</span>(<span class="dt">knitr.kable.NA =</span> <span class="st">&#39;&#39;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. </span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;pacman&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;Rmisc&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;Rmisc&quot;</span>) <span class="co"># Never load it directly.</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>pacman<span class="op">::</span><span class="kw">p_load</span>(tidyverse, knitr,</span>
-<span id="cb1-8"><a href="#cb1-8"></a>               powerAnalysis, afex, emmeans, BayesFactor, </span>
-<span id="cb1-9"><a href="#cb1-9"></a>               ggstatsplot)</span>
-<span id="cb1-10"><a href="#cb1-10"></a>pacman<span class="op">::</span><span class="kw">p_load_gh</span>(<span class="st">&quot;thomasp85/patchwork&quot;</span>, <span class="st">&quot;RLesur/klippy&quot;</span>)</span>
-<span id="cb1-11"><a href="#cb1-11"></a></span>
-<span id="cb1-12"><a href="#cb1-12"></a>klippy<span class="op">::</span><span class="kw">klippy</span>()</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. </span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;pacman&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;Rmisc&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;Rmisc&quot;</span>) <span class="co"># Never load it directly.</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>pacman<span class="op">::</span><span class="kw">p_load</span>(tidyverse, knitr,</span>
+<span id="cb1-7"><a href="#cb1-7"></a>               powerAnalysis, afex, emmeans, BayesFactor, </span>
+<span id="cb1-8"><a href="#cb1-8"></a>               ggstatsplot)</span>
+<span id="cb1-9"><a href="#cb1-9"></a>pacman<span class="op">::</span><span class="kw">p_load_gh</span>(<span class="st">&quot;thomasp85/patchwork&quot;</span>, <span class="st">&quot;RLesur/klippy&quot;</span>)</span>
+<span id="cb1-10"><a href="#cb1-10"></a></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="kw">options</span>(<span class="dt">knitr.kable.NA =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="kw">options</span>(<span class="dt">dplyr.summarise.inform=</span><span class="ot">FALSE</span>) <span class="co"># 200603 supress warning in regards to regrouping </span></span>
+<span id="cb1-13"><a href="#cb1-13"></a>klippy<span class="op">::</span><span class="kw">klippy</span>()</span></code></pre></div>
 <script>
   addClassKlippyTo("pre.r, pre.markdown");
   addKlippy('left', 'top', 'auto', '1', 'Copy code', 'Copied!');
@@ -804,14 +802,13 @@ pre code, pre, code {
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># VSTM, Experiment 5, subject-level, long format</span></span>
 <span id="cb6-2"><a href="#cb6-2"></a>vE5slong &lt;-<span class="st"> </span>E5 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, Overlap, vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">vstmCorr =</span> <span class="kw">mean</span>(vstmCorr)<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span></code></pre></div>
-<pre><code>## `summarise()` regrouping output by &#39;SN&#39;, &#39;Overlap&#39; (override with `.groups` argument)</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Experiment 5 summary</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>vE5slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Overlap, vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(vstmCorr), <span class="dt">SD =</span> <span class="kw">sd</span>(vstmCorr)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
-<pre><code>## `summarise()` regrouping output by &#39;Overlap&#39; (override with `.groups` argument)</code></pre>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
+<span id="cb6-5"><a href="#cb6-5"></a></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co"># Experiment 5 summary</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>vE5slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Overlap, vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(vstmCorr), <span class="dt">SD =</span> <span class="kw">sd</span>(vstmCorr)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -848,64 +845,56 @@ pre code, pre, code {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># wide format, needed for geom_segments.</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a>vE5swide &lt;-<span class="st"> </span>vE5slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unite</span>(<span class="st">&quot;temp&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> temp, <span class="dt">value =</span> vstmCorr)</span>
-<span id="cb10-4"><a href="#cb10-4"></a></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co"># Rmisc must be called indirectly due to incompatibility between plyr and dplyr.</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a>vE5g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> vE5slong, <span class="dt">measurevar =</span> <span class="st">&quot;vstmCorr&quot;</span>, </span>
-<span id="cb10-8"><a href="#cb10-8"></a>                               <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Overlap&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>)</span>
-<span id="cb10-9"><a href="#cb10-9"></a></span>
-<span id="cb10-10"><a href="#cb10-10"></a>p1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">filter</span>(vE5slong, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>vstmCorr)) <span class="op">+</span></span>
-<span id="cb10-11"><a href="#cb10-11"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb10-12"><a href="#cb10-12"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>vE5swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>vE5swide<span class="op">$</span>NonOverlap_LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, </span>
-<span id="cb10-14"><a href="#cb10-14"></a>                   <span class="dt">yend=</span>vE5swide<span class="op">$</span>NonOverlap_HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-15"><a href="#cb10-15"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="kw">filter</span>(vE5g, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
-<span id="cb10-16"><a href="#cb10-16"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>vstmCorr, </span>
-<span id="cb10-17"><a href="#cb10-17"></a>                              <span class="dt">ymin =</span> vstmCorr <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> vstmCorr <span class="op">+</span><span class="st"> </span>ci), </span>
-<span id="cb10-18"><a href="#cb10-18"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb10-19"><a href="#cb10-19"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Non-Overlap&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Change Detection Accuracy&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-20"><a href="#cb10-20"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb10-21"><a href="#cb10-21"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-22"><a href="#cb10-22"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb10-23"><a href="#cb10-23"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb10-24"><a href="#cb10-24"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb10-25"><a href="#cb10-25"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb10-26"><a href="#cb10-26"></a></span>
-<span id="cb10-27"><a href="#cb10-27"></a>p2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">filter</span>(vE5slong, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>vstmCorr)) <span class="op">+</span></span>
-<span id="cb10-28"><a href="#cb10-28"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb10-29"><a href="#cb10-29"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
-<span id="cb10-30"><a href="#cb10-30"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>vE5swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>vE5swide<span class="op">$</span>Overlap_LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, </span>
-<span id="cb10-31"><a href="#cb10-31"></a>                   <span class="dt">yend=</span>vE5swide<span class="op">$</span>Overlap_HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-32"><a href="#cb10-32"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="kw">filter</span>(vE5g, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
-<span id="cb10-33"><a href="#cb10-33"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>vstmCorr, </span>
-<span id="cb10-34"><a href="#cb10-34"></a>                              <span class="dt">ymin =</span> vstmCorr <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> vstmCorr <span class="op">+</span><span class="st"> </span>ci), </span>
-<span id="cb10-35"><a href="#cb10-35"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb10-36"><a href="#cb10-36"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Overlap&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Change Detection Accuracy&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-37"><a href="#cb10-37"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb10-38"><a href="#cb10-38"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-39"><a href="#cb10-39"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb10-40"><a href="#cb10-40"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb10-41"><a href="#cb10-41"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb10-42"><a href="#cb10-42"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb10-43"><a href="#cb10-43"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb10-44"><a href="#cb10-44"></a></span>
-<span id="cb10-45"><a href="#cb10-45"></a>p1 <span class="op">+</span><span class="st"> </span>p2</span></code></pre></div>
-<pre><code>## Warning: Use of `vE5swide$NonOverlap_LowLoad` is discouraged. Use
-## `NonOverlap_LowLoad` instead.</code></pre>
-<pre><code>## Warning: Use of `vE5swide$NonOverlap_HighLoad` is discouraged. Use
-## `NonOverlap_HighLoad` instead.</code></pre>
-<pre><code>## Warning: Use of `vE5swide$Overlap_LowLoad` is discouraged. Use `Overlap_LowLoad`
-## instead.</code></pre>
-<pre><code>## Warning: Use of `vE5swide$Overlap_HighLoad` is discouraged. Use
-## `Overlap_HighLoad` instead.</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># wide format, needed for geom_segments.</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>vE5swide &lt;-<span class="st"> </span>vE5slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unite</span>(<span class="st">&quot;temp&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> temp, <span class="dt">value =</span> vstmCorr)</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co"># Rmisc must be called indirectly due to incompatibility between plyr and dplyr.</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>vE5g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> vE5slong, <span class="dt">measurevar =</span> <span class="st">&quot;vstmCorr&quot;</span>, </span>
+<span id="cb7-8"><a href="#cb7-8"></a>                               <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Overlap&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>)</span>
+<span id="cb7-9"><a href="#cb7-9"></a></span>
+<span id="cb7-10"><a href="#cb7-10"></a>p1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">filter</span>(vE5slong, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>vstmCorr)) <span class="op">+</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb7-12"><a href="#cb7-12"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>vE5swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>NonOverlap_LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, </span>
+<span id="cb7-14"><a href="#cb7-14"></a>                   <span class="dt">yend=</span>NonOverlap_HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="kw">filter</span>(vE5g, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
+<span id="cb7-16"><a href="#cb7-16"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>vstmCorr, </span>
+<span id="cb7-17"><a href="#cb7-17"></a>                              <span class="dt">ymin =</span> vstmCorr <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> vstmCorr <span class="op">+</span><span class="st"> </span>ci), </span>
+<span id="cb7-18"><a href="#cb7-18"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Non-Overlap&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Change Detection Accuracy&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb7-24"><a href="#cb7-24"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb7-25"><a href="#cb7-25"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb7-26"><a href="#cb7-26"></a></span>
+<span id="cb7-27"><a href="#cb7-27"></a>p2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">filter</span>(vE5slong, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>vstmCorr)) <span class="op">+</span></span>
+<span id="cb7-28"><a href="#cb7-28"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb7-29"><a href="#cb7-29"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
+<span id="cb7-30"><a href="#cb7-30"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>vE5swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>Overlap_LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, </span>
+<span id="cb7-31"><a href="#cb7-31"></a>                   <span class="dt">yend=</span>Overlap_HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-32"><a href="#cb7-32"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="kw">filter</span>(vE5g, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
+<span id="cb7-33"><a href="#cb7-33"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>vstmCorr, </span>
+<span id="cb7-34"><a href="#cb7-34"></a>                              <span class="dt">ymin =</span> vstmCorr <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> vstmCorr <span class="op">+</span><span class="st"> </span>ci), </span>
+<span id="cb7-35"><a href="#cb7-35"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb7-36"><a href="#cb7-36"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Overlap&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Change Detection Accuracy&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-37"><a href="#cb7-37"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb7-38"><a href="#cb7-38"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-39"><a href="#cb7-39"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb7-40"><a href="#cb7-40"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb7-41"><a href="#cb7-41"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb7-42"><a href="#cb7-42"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb7-43"><a href="#cb7-43"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb7-44"><a href="#cb7-44"></a></span>
+<span id="cb7-45"><a href="#cb7-45"></a>p1 <span class="op">+</span><span class="st"> </span>p2</span></code></pre></div>
 <p><img src="vstmAS5_files/figure-html/vstm_sum-1.png" width="672" /></p>
 <div id="anova" class="section level3">
 <h3><span class="header-section-number">2.1.1</span> ANOVA</h3>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> vE5slong, <span class="dt">dv =</span> <span class="st">&quot;vstmCorr&quot;</span>, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>,<span class="st">&quot;Overlap&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="st">  </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> vE5slong, <span class="dt">dv =</span> <span class="st">&quot;vstmCorr&quot;</span>, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>,<span class="st">&quot;Overlap&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -959,16 +948,15 @@ pre code, pre, code {
 <p>Accuracy in the attention task was generally high. There were no significant effects in the ANOVA.</p>
 <div id="accuracy-1" class="section level2">
 <h2><span class="header-section-number">3.1</span> Accuracy</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>aE5slong &lt;-<span class="st"> </span>E5 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, vstmLoad, Overlap, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Accuracy =</span> <span class="kw">mean</span>(Corr)<span class="op">*</span><span class="dv">100</span>, <span class="dt">N =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">ungroup</span>()</span></code></pre></div>
-<pre><code>## `summarise()` regrouping output by &#39;SN&#39;, &#39;vstmLoad&#39;, &#39;Overlap&#39; (override with `.groups` argument)</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>aE5slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Overlap, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(Accuracy),</span>
-<span id="cb18-3"><a href="#cb18-3"></a>            <span class="dt">SD =</span> <span class="kw">sd</span>(Accuracy)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-4"><a href="#cb18-4"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-5"><a href="#cb18-5"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
-<pre><code>## `summarise()` regrouping output by &#39;Overlap&#39;, &#39;vstmLoad&#39; (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>aE5slong &lt;-<span class="st"> </span>E5 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, vstmLoad, Overlap, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Accuracy =</span> <span class="kw">mean</span>(Corr)<span class="op">*</span><span class="dv">100</span>, <span class="dt">N =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a>aE5slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Overlap, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(Accuracy),</span>
+<span id="cb9-7"><a href="#cb9-7"></a>            <span class="dt">SD =</span> <span class="kw">sd</span>(Accuracy)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1038,58 +1026,58 @@ pre code, pre, code {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>aE5g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> aE5slong, <span class="dt">measurevar =</span> <span class="st">&quot;Accuracy&quot;</span>, </span>
-<span id="cb20-2"><a href="#cb20-2"></a>                       <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;Congruency&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span>
-<span id="cb20-3"><a href="#cb20-3"></a></span>
-<span id="cb20-4"><a href="#cb20-4"></a>w1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">filter</span>(aE5slong, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>Accuracy, <span class="dt">fill=</span>Congruency)) <span class="op">+</span></span>
-<span id="cb20-5"><a href="#cb20-5"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.7</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span></span>
-<span id="cb20-6"><a href="#cb20-6"></a><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="dt">dodge.width =</span> <span class="fl">0.7</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.4</span>, </span>
-<span id="cb20-7"><a href="#cb20-7"></a>                               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb20-8"><a href="#cb20-8"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="dt">data=</span><span class="kw">filter</span>(aE5g, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>),</span>
-<span id="cb20-9"><a href="#cb20-9"></a>                  <span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">ymin =</span> Accuracy<span class="op">-</span>ci, <span class="dt">ymax =</span> Accuracy<span class="op">+</span>ci, <span class="dt">color =</span> Congruency),</span>
-<span id="cb20-10"><a href="#cb20-10"></a>                  <span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="fl">0.7</span>), <span class="dt">color =</span> <span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb20-11"><a href="#cb20-11"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb20-12"><a href="#cb20-12"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Non-Overlap&quot;</span>,</span>
-<span id="cb20-13"><a href="#cb20-13"></a>       <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, </span>
-<span id="cb20-14"><a href="#cb20-14"></a>       <span class="dt">y =</span> <span class="st">&quot;Accuracy (%)&quot;</span>, </span>
-<span id="cb20-15"><a href="#cb20-15"></a>       <span class="dt">fill=</span><span class="st">&quot;Congruency&quot;</span>) <span class="op">+</span></span>
-<span id="cb20-16"><a href="#cb20-16"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb20-17"><a href="#cb20-17"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
-<span id="cb20-18"><a href="#cb20-18"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
-<span id="cb20-19"><a href="#cb20-19"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb20-20"><a href="#cb20-20"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, </span>
-<span id="cb20-21"><a href="#cb20-21"></a>        <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb20-22"><a href="#cb20-22"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb20-23"><a href="#cb20-23"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>)) </span>
-<span id="cb20-24"><a href="#cb20-24"></a></span>
-<span id="cb20-25"><a href="#cb20-25"></a>w2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">filter</span>(aE5slong, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>Accuracy, <span class="dt">fill=</span>Congruency)) <span class="op">+</span></span>
-<span id="cb20-26"><a href="#cb20-26"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.7</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span></span>
-<span id="cb20-27"><a href="#cb20-27"></a><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="dt">dodge.width =</span> <span class="fl">0.7</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.4</span>, </span>
-<span id="cb20-28"><a href="#cb20-28"></a>                               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb20-29"><a href="#cb20-29"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="dt">data=</span><span class="kw">filter</span>(aE5g, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>),</span>
-<span id="cb20-30"><a href="#cb20-30"></a>                  <span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">ymin =</span> Accuracy<span class="op">-</span>ci, <span class="dt">ymax =</span> Accuracy<span class="op">+</span>ci, <span class="dt">color =</span> Congruency),</span>
-<span id="cb20-31"><a href="#cb20-31"></a>                  <span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="fl">0.7</span>), <span class="dt">color =</span> <span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb20-32"><a href="#cb20-32"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb20-33"><a href="#cb20-33"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Overlap&quot;</span>,</span>
-<span id="cb20-34"><a href="#cb20-34"></a>       <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, </span>
-<span id="cb20-35"><a href="#cb20-35"></a>       <span class="dt">y =</span> <span class="st">&quot;Accuracy (%)&quot;</span>, </span>
-<span id="cb20-36"><a href="#cb20-36"></a>       <span class="dt">fill=</span><span class="st">&quot;Congruency&quot;</span>) <span class="op">+</span></span>
-<span id="cb20-37"><a href="#cb20-37"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb20-38"><a href="#cb20-38"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
-<span id="cb20-39"><a href="#cb20-39"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
-<span id="cb20-40"><a href="#cb20-40"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb20-41"><a href="#cb20-41"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb20-42"><a href="#cb20-42"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb20-43"><a href="#cb20-43"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb20-44"><a href="#cb20-44"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb20-45"><a href="#cb20-45"></a>        <span class="dt">legend.position =</span> <span class="kw">c</span>(.<span class="dv">6</span>, <span class="fl">.2</span>)) </span>
-<span id="cb20-46"><a href="#cb20-46"></a></span>
-<span id="cb20-47"><a href="#cb20-47"></a>w1 <span class="op">+</span><span class="st"> </span>w2</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>aE5g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> aE5slong, <span class="dt">measurevar =</span> <span class="st">&quot;Accuracy&quot;</span>, </span>
+<span id="cb10-2"><a href="#cb10-2"></a>                       <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;Congruency&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a>w1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">filter</span>(aE5slong, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>Accuracy, <span class="dt">fill=</span>Congruency)) <span class="op">+</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.7</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="dt">dodge.width =</span> <span class="fl">0.7</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.4</span>, </span>
+<span id="cb10-7"><a href="#cb10-7"></a>                               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="dt">data=</span><span class="kw">filter</span>(aE5g, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>),</span>
+<span id="cb10-9"><a href="#cb10-9"></a>                  <span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">ymin =</span> Accuracy<span class="op">-</span>ci, <span class="dt">ymax =</span> Accuracy<span class="op">+</span>ci, <span class="dt">color =</span> Congruency),</span>
+<span id="cb10-10"><a href="#cb10-10"></a>                  <span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="fl">0.7</span>), <span class="dt">color =</span> <span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Non-Overlap&quot;</span>,</span>
+<span id="cb10-13"><a href="#cb10-13"></a>       <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, </span>
+<span id="cb10-14"><a href="#cb10-14"></a>       <span class="dt">y =</span> <span class="st">&quot;Accuracy (%)&quot;</span>, </span>
+<span id="cb10-15"><a href="#cb10-15"></a>       <span class="dt">fill=</span><span class="st">&quot;Congruency&quot;</span>) <span class="op">+</span></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
+<span id="cb10-18"><a href="#cb10-18"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb10-20"><a href="#cb10-20"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, </span>
+<span id="cb10-21"><a href="#cb10-21"></a>        <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb10-22"><a href="#cb10-22"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb10-23"><a href="#cb10-23"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>)) </span>
+<span id="cb10-24"><a href="#cb10-24"></a></span>
+<span id="cb10-25"><a href="#cb10-25"></a>w2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">filter</span>(aE5slong, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>Accuracy, <span class="dt">fill=</span>Congruency)) <span class="op">+</span></span>
+<span id="cb10-26"><a href="#cb10-26"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.7</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span></span>
+<span id="cb10-27"><a href="#cb10-27"></a><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="dt">dodge.width =</span> <span class="fl">0.7</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.4</span>, </span>
+<span id="cb10-28"><a href="#cb10-28"></a>                               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb10-29"><a href="#cb10-29"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="dt">data=</span><span class="kw">filter</span>(aE5g, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>),</span>
+<span id="cb10-30"><a href="#cb10-30"></a>                  <span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">ymin =</span> Accuracy<span class="op">-</span>ci, <span class="dt">ymax =</span> Accuracy<span class="op">+</span>ci, <span class="dt">color =</span> Congruency),</span>
+<span id="cb10-31"><a href="#cb10-31"></a>                  <span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="fl">0.7</span>), <span class="dt">color =</span> <span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb10-32"><a href="#cb10-32"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb10-33"><a href="#cb10-33"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Overlap&quot;</span>,</span>
+<span id="cb10-34"><a href="#cb10-34"></a>       <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, </span>
+<span id="cb10-35"><a href="#cb10-35"></a>       <span class="dt">y =</span> <span class="st">&quot;Accuracy (%)&quot;</span>, </span>
+<span id="cb10-36"><a href="#cb10-36"></a>       <span class="dt">fill=</span><span class="st">&quot;Congruency&quot;</span>) <span class="op">+</span></span>
+<span id="cb10-37"><a href="#cb10-37"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb10-38"><a href="#cb10-38"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
+<span id="cb10-39"><a href="#cb10-39"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
+<span id="cb10-40"><a href="#cb10-40"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb10-41"><a href="#cb10-41"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb10-42"><a href="#cb10-42"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb10-43"><a href="#cb10-43"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb10-44"><a href="#cb10-44"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb10-45"><a href="#cb10-45"></a>        <span class="dt">legend.position =</span> <span class="kw">c</span>(.<span class="dv">6</span>, <span class="fl">.2</span>)) </span>
+<span id="cb10-46"><a href="#cb10-46"></a></span>
+<span id="cb10-47"><a href="#cb10-47"></a>w1 <span class="op">+</span><span class="st"> </span>w2</span></code></pre></div>
 <p><img src="vstmAS5_files/figure-html/attention_acc-1.png" width="672" /></p>
 <div id="anova-1" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> ANOVA</h3>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> aE5slong, <span class="dt">dv =</span> <span class="st">&quot;Accuracy&quot;</span>, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb21-2"><a href="#cb21-2"></a><span class="st">  </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> aE5slong, <span class="dt">dv =</span> <span class="st">&quot;Accuracy&quot;</span>, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1177,58 +1165,56 @@ pre code, pre, code {
 <h2><span class="header-section-number">3.2</span> RT</h2>
 <div id="trimming" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Trimming</h3>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># filtering out incorrect trials</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a>cE5 &lt;-<span class="st"> </span>E5 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Corr<span class="op">==</span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>vstmCorr<span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RT =</span> RT<span class="op">*</span><span class="dv">1000</span>)</span>
-<span id="cb22-3"><a href="#cb22-3"></a></span>
-<span id="cb22-4"><a href="#cb22-4"></a><span class="co"># trimming by 2.5 MAD.</span></span>
-<span id="cb22-5"><a href="#cb22-5"></a>rE5 &lt;-<span class="st"> </span>cE5 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(RT <span class="op">&gt;</span><span class="st"> </span><span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-6"><a href="#cb22-6"></a><span class="st">  </span><span class="kw">group_by</span>(SN) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-7"><a href="#cb22-7"></a><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-8"><a href="#cb22-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lbound =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="kw">median</span>(.<span class="op">$</span>RT)<span class="op">-</span><span class="fl">2.5</span><span class="op">*</span><span class="kw">mad</span>(.<span class="op">$</span>RT)),</span>
-<span id="cb22-9"><a href="#cb22-9"></a>         <span class="dt">ubound =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="kw">median</span>(.<span class="op">$</span>RT)<span class="op">+</span><span class="fl">2.5</span><span class="op">*</span><span class="kw">mad</span>(.<span class="op">$</span>RT))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-10"><a href="#cb22-10"></a><span class="st">  </span><span class="kw">unnest</span>(lbound, ubound) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-11"><a href="#cb22-11"></a><span class="st">  </span><span class="kw">unnest</span>(data) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-12"><a href="#cb22-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Outlier =</span> (RT <span class="op">&lt;</span><span class="st"> </span>lbound)<span class="op">|</span>(RT <span class="op">&gt;</span><span class="st"> </span>ubound)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-13"><a href="#cb22-13"></a><span class="st">  </span><span class="kw">filter</span>(Outlier <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb22-14"><a href="#cb22-14"></a><span class="st">  </span>ungroup <span class="op">%&gt;%</span></span>
-<span id="cb22-15"><a href="#cb22-15"></a><span class="st">  </span><span class="kw">select</span>(SN, Overlap, vstmLoad, Congruency, RT, vstmRT)</span></code></pre></div>
-<pre><code>## Warning: unnest() has a new interface. See ?unnest for details.
-## Try `df %&gt;% unnest(c(lbound, ubound))`, with `mutate()` if needed</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># percentage trimmed.</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a>(<span class="kw">nrow</span>(cE5)<span class="op">-</span><span class="kw">nrow</span>(rE5))<span class="op">/</span><span class="kw">nrow</span>(cE5)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># filtering out incorrect trials</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>cE5 &lt;-<span class="st"> </span>E5 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Corr<span class="op">==</span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>vstmCorr<span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RT =</span> RT<span class="op">*</span><span class="dv">1000</span>)</span>
+<span id="cb12-3"><a href="#cb12-3"></a></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="co"># trimming by 2.5 MAD.</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a>rE5 &lt;-<span class="st"> </span>cE5 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(RT <span class="op">&gt;</span><span class="st"> </span><span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="st">  </span><span class="kw">group_by</span>(SN) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lbound =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="kw">median</span>(.<span class="op">$</span>RT)<span class="op">-</span><span class="fl">2.5</span><span class="op">*</span><span class="kw">mad</span>(.<span class="op">$</span>RT)),</span>
+<span id="cb12-9"><a href="#cb12-9"></a>         <span class="dt">ubound =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="kw">median</span>(.<span class="op">$</span>RT)<span class="op">+</span><span class="fl">2.5</span><span class="op">*</span><span class="kw">mad</span>(.<span class="op">$</span>RT))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-10"><a href="#cb12-10"></a><span class="st">  </span><span class="kw">unnest</span>(<span class="kw">c</span>(lbound, ubound)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-11"><a href="#cb12-11"></a><span class="st">  </span><span class="kw">unnest</span>(data) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-12"><a href="#cb12-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Outlier =</span> (RT <span class="op">&lt;</span><span class="st"> </span>lbound)<span class="op">|</span>(RT <span class="op">&gt;</span><span class="st"> </span>ubound)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-13"><a href="#cb12-13"></a><span class="st">  </span><span class="kw">filter</span>(Outlier <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-14"><a href="#cb12-14"></a><span class="st">  </span>ungroup <span class="op">%&gt;%</span></span>
+<span id="cb12-15"><a href="#cb12-15"></a><span class="st">  </span><span class="kw">select</span>(SN, Overlap, vstmLoad, Congruency, RT, vstmRT)</span>
+<span id="cb12-16"><a href="#cb12-16"></a></span>
+<span id="cb12-17"><a href="#cb12-17"></a><span class="co"># percentage trimmed.</span></span>
+<span id="cb12-18"><a href="#cb12-18"></a>(<span class="kw">nrow</span>(cE5)<span class="op">-</span><span class="kw">nrow</span>(rE5))<span class="op">/</span><span class="kw">nrow</span>(cE5)</span></code></pre></div>
 <pre><code>## [1] 0.05282774</code></pre>
 <p>5.28%의 가외치가 제거되었다.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>den1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cE5, <span class="kw">aes</span>(<span class="dt">x=</span>RT)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb26-2"><a href="#cb26-2"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb26-3"><a href="#cb26-3"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb26-4"><a href="#cb26-4"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb26-5"><a href="#cb26-5"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb26-6"><a href="#cb26-6"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb26-7"><a href="#cb26-7"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()) </span>
-<span id="cb26-8"><a href="#cb26-8"></a>den2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(rE5, <span class="kw">aes</span>(<span class="dt">x=</span>RT)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb26-9"><a href="#cb26-9"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb26-10"><a href="#cb26-10"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb26-11"><a href="#cb26-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Trimmed RT&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb26-12"><a href="#cb26-12"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb26-13"><a href="#cb26-13"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb26-14"><a href="#cb26-14"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb26-15"><a href="#cb26-15"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()) </span>
-<span id="cb26-16"><a href="#cb26-16"></a>den1 <span class="op">+</span><span class="st"> </span>den2</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>den1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cE5, <span class="kw">aes</span>(<span class="dt">x=</span>RT)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb14-5"><a href="#cb14-5"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb14-6"><a href="#cb14-6"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb14-7"><a href="#cb14-7"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()) </span>
+<span id="cb14-8"><a href="#cb14-8"></a>den2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(rE5, <span class="kw">aes</span>(<span class="dt">x=</span>RT)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb14-11"><a href="#cb14-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Trimmed RT&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb14-12"><a href="#cb14-12"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb14-13"><a href="#cb14-13"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb14-14"><a href="#cb14-14"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb14-15"><a href="#cb14-15"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()) </span>
+<span id="cb14-16"><a href="#cb14-16"></a>den1 <span class="op">+</span><span class="st"> </span>den2</span></code></pre></div>
 <p><img src="vstmAS5_files/figure-html/rt_distribution-1.png" width="672" /></p>
 </div>
 <div id="mean-rts" class="section level3">
 <h3><span class="header-section-number">3.2.2</span> Mean RTs</h3>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Attention RT, Experiment 5, subject-level, long format</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a>rE5slong &lt;-<span class="st"> </span>rE5 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, Overlap, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">RT =</span> <span class="kw">mean</span>(RT)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb27-4"><a href="#cb27-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span></code></pre></div>
-<pre><code>## `summarise()` regrouping output by &#39;SN&#39;, &#39;Overlap&#39;, &#39;vstmLoad&#39; (override with `.groups` argument)</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># Experiment 5 summary</span></span>
-<span id="cb29-2"><a href="#cb29-2"></a>rE5slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Overlap, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-3"><a href="#cb29-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(RT), <span class="dt">SD =</span> <span class="kw">sd</span>(RT)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-4"><a href="#cb29-4"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-5"><a href="#cb29-5"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
-<pre><code>## `summarise()` regrouping output by &#39;Overlap&#39;, &#39;vstmLoad&#39; (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Attention RT, Experiment 5, subject-level, long format</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>rE5slong &lt;-<span class="st"> </span>rE5 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, Overlap, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">RT =</span> <span class="kw">mean</span>(RT)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
+<span id="cb15-5"><a href="#cb15-5"></a></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="co"># Experiment 5 summary</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>rE5slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Overlap, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(RT), <span class="dt">SD =</span> <span class="kw">sd</span>(RT)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-9"><a href="#cb15-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-10"><a href="#cb15-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1298,28 +1284,27 @@ pre code, pre, code {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># wide format, needed for geom_segments.</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a>rE5swide &lt;-<span class="st"> </span>rE5slong <span class="op">%&gt;%</span><span class="st">  </span></span>
-<span id="cb31-3"><a href="#cb31-3"></a><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;temp&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb31-4"><a href="#cb31-4"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> temp, <span class="dt">value =</span> RT)</span>
-<span id="cb31-5"><a href="#cb31-5"></a></span>
-<span id="cb31-6"><a href="#cb31-6"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
-<span id="cb31-7"><a href="#cb31-7"></a>rE5g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> rE5slong, <span class="dt">measurevar =</span> <span class="st">&quot;RT&quot;</span>, </span>
-<span id="cb31-8"><a href="#cb31-8"></a>                               <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;Congruency&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># wide format, needed for geom_segments.</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>rE5swide &lt;-<span class="st"> </span>rE5slong <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;temp&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> temp, <span class="dt">value =</span> RT)</span>
+<span id="cb16-5"><a href="#cb16-5"></a></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a>rE5g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> rE5slong, <span class="dt">measurevar =</span> <span class="st">&quot;RT&quot;</span>, </span>
+<span id="cb16-8"><a href="#cb16-8"></a>                               <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;Congruency&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span></code></pre></div>
 </div>
 <div id="rt-congruency-effect" class="section level3">
 <h3><span class="header-section-number">3.2.3</span> RT Congruency Effect</h3>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># Four conditions summary long format</span></span>
-<span id="cb32-2"><a href="#cb32-2"></a>rE5CEslong &lt;-<span class="st"> </span>rE5slong <span class="op">%&gt;%</span></span>
-<span id="cb32-3"><a href="#cb32-3"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> Congruency, <span class="dt">value =</span> RT) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb32-4"><a href="#cb32-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cEffect =</span> Incongruent <span class="op">-</span><span class="st"> </span>Congruent) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb32-5"><a href="#cb32-5"></a><span class="st">  </span><span class="kw">select</span>(SN, Overlap, vstmLoad, cEffect)</span>
-<span id="cb32-6"><a href="#cb32-6"></a></span>
-<span id="cb32-7"><a href="#cb32-7"></a>rE5CEslong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Overlap, vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb32-8"><a href="#cb32-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(cEffect), <span class="dt">SD =</span> <span class="kw">sd</span>(cEffect)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb32-9"><a href="#cb32-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb32-10"><a href="#cb32-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
-<pre><code>## `summarise()` regrouping output by &#39;Overlap&#39; (override with `.groups` argument)</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Four conditions summary long format</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>rE5CEslong &lt;-<span class="st"> </span>rE5slong <span class="op">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> Congruency, <span class="dt">value =</span> RT) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cEffect =</span> Incongruent <span class="op">-</span><span class="st"> </span>Congruent) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="st">  </span><span class="kw">select</span>(SN, Overlap, vstmLoad, cEffect)</span>
+<span id="cb17-6"><a href="#cb17-6"></a></span>
+<span id="cb17-7"><a href="#cb17-7"></a>rE5CEslong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Overlap, vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(cEffect), <span class="dt">SD =</span> <span class="kw">sd</span>(cEffect)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1356,127 +1341,119 @@ pre code, pre, code {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>rE5CEswide &lt;-<span class="st"> </span>rE5CEslong <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;temp&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb34-3"><a href="#cb34-3"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> temp, <span class="dt">value =</span> cEffect)</span>
-<span id="cb34-4"><a href="#cb34-4"></a></span>
-<span id="cb34-5"><a href="#cb34-5"></a>rE5CEg &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> rE5CEslong, <span class="dt">measurevar =</span> <span class="st">&quot;cEffect&quot;</span>, </span>
-<span id="cb34-6"><a href="#cb34-6"></a>                               <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span></code></pre></div>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="co"># Eight conditions</span></span>
-<span id="cb35-2"><a href="#cb35-2"></a>r1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb35-3"><a href="#cb35-3"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5g, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">fill=</span>Congruency),</span>
-<span id="cb35-4"><a href="#cb35-4"></a>           <span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">width=</span><span class="fl">0.7</span>, <span class="dt">color=</span><span class="st">&quot;black&quot;</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(.<span class="dv">8</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb35-5"><a href="#cb35-5"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5g, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), </span>
-<span id="cb35-6"><a href="#cb35-6"></a>                 <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">ymin=</span>RT<span class="op">-</span>ci, <span class="dt">ymax=</span>RT<span class="op">+</span>ci, <span class="dt">group=</span>Congruency),</span>
-<span id="cb35-7"><a href="#cb35-7"></a>                 <span class="dt">size=</span><span class="dv">1</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.8</span>)) <span class="op">+</span></span>
-<span id="cb35-8"><a href="#cb35-8"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
-<span id="cb35-9"><a href="#cb35-9"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
-<span id="cb35-10"><a href="#cb35-10"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5slong, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), </span>
-<span id="cb35-11"><a href="#cb35-11"></a>             <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">group=</span>Congruency),</span>
-<span id="cb35-12"><a href="#cb35-12"></a>             <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.6</span>), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
-<span id="cb35-13"><a href="#cb35-13"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), </span>
-<span id="cb35-14"><a href="#cb35-14"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span><span class="fl">-.15</span>, <span class="dt">y=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>)<span class="op">$</span>LowLoad_Incongruent,</span>
-<span id="cb35-15"><a href="#cb35-15"></a>                   <span class="dt">xend=</span><span class="dv">1</span><span class="fl">+.15</span>, <span class="dt">yend=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>)<span class="op">$</span>LowLoad_Congruent),</span>
-<span id="cb35-16"><a href="#cb35-16"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-17"><a href="#cb35-17"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), </span>
-<span id="cb35-18"><a href="#cb35-18"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">2</span><span class="fl">-.15</span>, <span class="dt">y=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>)<span class="op">$</span>HighLoad_Incongruent,</span>
-<span id="cb35-19"><a href="#cb35-19"></a>                   <span class="dt">xend=</span><span class="dv">2</span><span class="fl">+.15</span>, <span class="dt">yend=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>)<span class="op">$</span>HighLoad_Congruent),</span>
-<span id="cb35-20"><a href="#cb35-20"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-21"><a href="#cb35-21"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Non-Overlap&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Reaction Time (ms)&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-22"><a href="#cb35-22"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb35-23"><a href="#cb35-23"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">500</span>, <span class="dv">1200</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-24"><a href="#cb35-24"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">500</span>,<span class="dv">600</span>,<span class="dv">700</span>,<span class="dv">800</span>,<span class="dv">900</span>,<span class="dv">1000</span>,<span class="dv">1100</span>,<span class="dv">1200</span>)) <span class="op">+</span></span>
-<span id="cb35-25"><a href="#cb35-25"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb35-26"><a href="#cb35-26"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb35-27"><a href="#cb35-27"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb35-28"><a href="#cb35-28"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), </span>
-<span id="cb35-29"><a href="#cb35-29"></a>        <span class="dt">legend.background =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb35-30"><a href="#cb35-30"></a>        <span class="dt">legend.position =</span> <span class="kw">c</span>(.<span class="dv">35</span>, <span class="fl">.85</span>),</span>
-<span id="cb35-31"><a href="#cb35-31"></a>        <span class="dt">axis.title.x =</span> <span class="kw">element_blank</span>())</span>
-<span id="cb35-32"><a href="#cb35-32"></a></span>
-<span id="cb35-33"><a href="#cb35-33"></a>r2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb35-34"><a href="#cb35-34"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5g, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">fill=</span>Congruency),</span>
-<span id="cb35-35"><a href="#cb35-35"></a>           <span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">width=</span><span class="fl">0.7</span>, <span class="dt">color=</span><span class="st">&quot;black&quot;</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(.<span class="dv">8</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb35-36"><a href="#cb35-36"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5g, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), </span>
-<span id="cb35-37"><a href="#cb35-37"></a>                 <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">ymin=</span>RT<span class="op">-</span>ci, <span class="dt">ymax=</span>RT<span class="op">+</span>ci, <span class="dt">group=</span>Congruency),</span>
-<span id="cb35-38"><a href="#cb35-38"></a>                 <span class="dt">size=</span><span class="dv">1</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.8</span>)) <span class="op">+</span></span>
-<span id="cb35-39"><a href="#cb35-39"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
-<span id="cb35-40"><a href="#cb35-40"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
-<span id="cb35-41"><a href="#cb35-41"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5slong, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), </span>
-<span id="cb35-42"><a href="#cb35-42"></a>             <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">group=</span>Congruency),</span>
-<span id="cb35-43"><a href="#cb35-43"></a>             <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.6</span>), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
-<span id="cb35-44"><a href="#cb35-44"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), </span>
-<span id="cb35-45"><a href="#cb35-45"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span><span class="fl">-.15</span>, <span class="dt">y=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>)<span class="op">$</span>LowLoad_Incongruent,</span>
-<span id="cb35-46"><a href="#cb35-46"></a>                   <span class="dt">xend=</span><span class="dv">1</span><span class="fl">+.15</span>, <span class="dt">yend=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>)<span class="op">$</span>LowLoad_Congruent),</span>
-<span id="cb35-47"><a href="#cb35-47"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-48"><a href="#cb35-48"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), </span>
-<span id="cb35-49"><a href="#cb35-49"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">2</span><span class="fl">-.15</span>, <span class="dt">y=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>)<span class="op">$</span>HighLoad_Incongruent,</span>
-<span id="cb35-50"><a href="#cb35-50"></a>                   <span class="dt">xend=</span><span class="dv">2</span><span class="fl">+.15</span>, <span class="dt">yend=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>)<span class="op">$</span>HighLoad_Congruent),</span>
-<span id="cb35-51"><a href="#cb35-51"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-52"><a href="#cb35-52"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Overlap&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Reaction Time (ms)&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-53"><a href="#cb35-53"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb35-54"><a href="#cb35-54"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">500</span>, <span class="dv">1200</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-55"><a href="#cb35-55"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">500</span>,<span class="dv">600</span>,<span class="dv">700</span>,<span class="dv">800</span>,<span class="dv">900</span>,<span class="dv">1000</span>,<span class="dv">1100</span>,<span class="dv">1200</span>)) <span class="op">+</span></span>
-<span id="cb35-56"><a href="#cb35-56"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb35-57"><a href="#cb35-57"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;none&quot;</span>,</span>
-<span id="cb35-58"><a href="#cb35-58"></a>        <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb35-59"><a href="#cb35-59"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb35-60"><a href="#cb35-60"></a>        <span class="dt">axis.title.x =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb35-61"><a href="#cb35-61"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb35-62"><a href="#cb35-62"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb35-63"><a href="#cb35-63"></a></span>
-<span id="cb35-64"><a href="#cb35-64"></a>z1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">filter</span>(rE5CEslong, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>cEffect)) <span class="op">+</span></span>
-<span id="cb35-65"><a href="#cb35-65"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb35-66"><a href="#cb35-66"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
-<span id="cb35-67"><a href="#cb35-67"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE5CEswide, </span>
-<span id="cb35-68"><a href="#cb35-68"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>rE5CEswide<span class="op">$</span>NonOverlap_LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, </span>
-<span id="cb35-69"><a href="#cb35-69"></a>                   <span class="dt">yend=</span>rE5CEswide<span class="op">$</span>NonOverlap_HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-70"><a href="#cb35-70"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="kw">filter</span>(rE5CEg, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
-<span id="cb35-71"><a href="#cb35-71"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>cEffect, </span>
-<span id="cb35-72"><a href="#cb35-72"></a>                              <span class="dt">ymin =</span> cEffect <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> cEffect <span class="op">+</span><span class="st"> </span>ci), </span>
-<span id="cb35-73"><a href="#cb35-73"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb35-74"><a href="#cb35-74"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Congruency Effect (ms)&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-75"><a href="#cb35-75"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb35-76"><a href="#cb35-76"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">50</span>, <span class="dv">200</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-77"><a href="#cb35-77"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb35-78"><a href="#cb35-78"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb35-79"><a href="#cb35-79"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>())</span>
-<span id="cb35-80"><a href="#cb35-80"></a></span>
-<span id="cb35-81"><a href="#cb35-81"></a>z2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">filter</span>(rE5CEslong, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>cEffect)) <span class="op">+</span></span>
-<span id="cb35-82"><a href="#cb35-82"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb35-83"><a href="#cb35-83"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
-<span id="cb35-84"><a href="#cb35-84"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE5CEswide, </span>
-<span id="cb35-85"><a href="#cb35-85"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>rE5CEswide<span class="op">$</span>Overlap_LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, </span>
-<span id="cb35-86"><a href="#cb35-86"></a>                   <span class="dt">yend=</span>rE5CEswide<span class="op">$</span>Overlap_HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-87"><a href="#cb35-87"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="kw">filter</span>(rE5CEg, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
-<span id="cb35-88"><a href="#cb35-88"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>cEffect, </span>
-<span id="cb35-89"><a href="#cb35-89"></a>                              <span class="dt">ymin =</span> cEffect <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> cEffect <span class="op">+</span><span class="st"> </span>ci), </span>
-<span id="cb35-90"><a href="#cb35-90"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb35-91"><a href="#cb35-91"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Congruency Effect (ms)&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-92"><a href="#cb35-92"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb35-93"><a href="#cb35-93"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">50</span>, <span class="dv">200</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb35-94"><a href="#cb35-94"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb35-95"><a href="#cb35-95"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb35-96"><a href="#cb35-96"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb35-97"><a href="#cb35-97"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>())</span>
-<span id="cb35-98"><a href="#cb35-98"></a></span>
-<span id="cb35-99"><a href="#cb35-99"></a>(r1 <span class="op">|</span><span class="st"> </span>r2) <span class="op">/</span><span class="st"> </span>(z1 <span class="op">|</span><span class="st"> </span>z2)</span></code></pre></div>
-<pre><code>## Warning: Use of `rE5CEswide$NonOverlap_LowLoad` is discouraged. Use
-## `NonOverlap_LowLoad` instead.</code></pre>
-<pre><code>## Warning: Use of `rE5CEswide$NonOverlap_HighLoad` is discouraged. Use
-## `NonOverlap_HighLoad` instead.</code></pre>
-<pre><code>## Warning: Use of `rE5CEswide$Overlap_LowLoad` is discouraged. Use
-## `Overlap_LowLoad` instead.</code></pre>
-<pre><code>## Warning: Use of `rE5CEswide$Overlap_HighLoad` is discouraged. Use
-## `Overlap_HighLoad` instead.</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>rE5CEswide &lt;-<span class="st"> </span>rE5CEslong <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;temp&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> temp, <span class="dt">value =</span> cEffect)</span>
+<span id="cb18-4"><a href="#cb18-4"></a></span>
+<span id="cb18-5"><a href="#cb18-5"></a>rE5CEg &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> rE5CEslong, <span class="dt">measurevar =</span> <span class="st">&quot;cEffect&quot;</span>, </span>
+<span id="cb18-6"><a href="#cb18-6"></a>                               <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Eight conditions</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>r1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5g, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">fill=</span>Congruency),</span>
+<span id="cb19-4"><a href="#cb19-4"></a>           <span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">width=</span><span class="fl">0.7</span>, <span class="dt">color=</span><span class="st">&quot;black&quot;</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(.<span class="dv">8</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-5"><a href="#cb19-5"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5g, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), </span>
+<span id="cb19-6"><a href="#cb19-6"></a>                 <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">ymin=</span>RT<span class="op">-</span>ci, <span class="dt">ymax=</span>RT<span class="op">+</span>ci, <span class="dt">group=</span>Congruency),</span>
+<span id="cb19-7"><a href="#cb19-7"></a>                 <span class="dt">size=</span><span class="dv">1</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.8</span>)) <span class="op">+</span></span>
+<span id="cb19-8"><a href="#cb19-8"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
+<span id="cb19-9"><a href="#cb19-9"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
+<span id="cb19-10"><a href="#cb19-10"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5slong, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), </span>
+<span id="cb19-11"><a href="#cb19-11"></a>             <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">group=</span>Congruency),</span>
+<span id="cb19-12"><a href="#cb19-12"></a>             <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.6</span>), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
+<span id="cb19-13"><a href="#cb19-13"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), </span>
+<span id="cb19-14"><a href="#cb19-14"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span><span class="fl">-.15</span>, <span class="dt">y=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>)<span class="op">$</span>LowLoad_Incongruent,</span>
+<span id="cb19-15"><a href="#cb19-15"></a>                   <span class="dt">xend=</span><span class="dv">1</span><span class="fl">+.15</span>, <span class="dt">yend=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>)<span class="op">$</span>LowLoad_Congruent),</span>
+<span id="cb19-16"><a href="#cb19-16"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-17"><a href="#cb19-17"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), </span>
+<span id="cb19-18"><a href="#cb19-18"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">2</span><span class="fl">-.15</span>, <span class="dt">y=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>)<span class="op">$</span>HighLoad_Incongruent,</span>
+<span id="cb19-19"><a href="#cb19-19"></a>                   <span class="dt">xend=</span><span class="dv">2</span><span class="fl">+.15</span>, <span class="dt">yend=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>)<span class="op">$</span>HighLoad_Congruent),</span>
+<span id="cb19-20"><a href="#cb19-20"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-21"><a href="#cb19-21"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Non-Overlap&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Reaction Time (ms)&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-22"><a href="#cb19-22"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb19-23"><a href="#cb19-23"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">500</span>, <span class="dv">1200</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-24"><a href="#cb19-24"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">500</span>,<span class="dv">600</span>,<span class="dv">700</span>,<span class="dv">800</span>,<span class="dv">900</span>,<span class="dv">1000</span>,<span class="dv">1100</span>,<span class="dv">1200</span>)) <span class="op">+</span></span>
+<span id="cb19-25"><a href="#cb19-25"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb19-26"><a href="#cb19-26"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb19-27"><a href="#cb19-27"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb19-28"><a href="#cb19-28"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>), </span>
+<span id="cb19-29"><a href="#cb19-29"></a>        <span class="dt">legend.background =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb19-30"><a href="#cb19-30"></a>        <span class="dt">legend.position =</span> <span class="kw">c</span>(.<span class="dv">35</span>, <span class="fl">.85</span>),</span>
+<span id="cb19-31"><a href="#cb19-31"></a>        <span class="dt">axis.title.x =</span> <span class="kw">element_blank</span>())</span>
+<span id="cb19-32"><a href="#cb19-32"></a></span>
+<span id="cb19-33"><a href="#cb19-33"></a>r2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-34"><a href="#cb19-34"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5g, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">fill=</span>Congruency),</span>
+<span id="cb19-35"><a href="#cb19-35"></a>           <span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">width=</span><span class="fl">0.7</span>, <span class="dt">color=</span><span class="st">&quot;black&quot;</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(.<span class="dv">8</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-36"><a href="#cb19-36"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5g, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), </span>
+<span id="cb19-37"><a href="#cb19-37"></a>                 <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">ymin=</span>RT<span class="op">-</span>ci, <span class="dt">ymax=</span>RT<span class="op">+</span>ci, <span class="dt">group=</span>Congruency),</span>
+<span id="cb19-38"><a href="#cb19-38"></a>                 <span class="dt">size=</span><span class="dv">1</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.8</span>)) <span class="op">+</span></span>
+<span id="cb19-39"><a href="#cb19-39"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
+<span id="cb19-40"><a href="#cb19-40"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
+<span id="cb19-41"><a href="#cb19-41"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5slong, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), </span>
+<span id="cb19-42"><a href="#cb19-42"></a>             <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">group=</span>Congruency),</span>
+<span id="cb19-43"><a href="#cb19-43"></a>             <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.6</span>), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
+<span id="cb19-44"><a href="#cb19-44"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), </span>
+<span id="cb19-45"><a href="#cb19-45"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span><span class="fl">-.15</span>, <span class="dt">y=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>)<span class="op">$</span>LowLoad_Incongruent,</span>
+<span id="cb19-46"><a href="#cb19-46"></a>                   <span class="dt">xend=</span><span class="dv">1</span><span class="fl">+.15</span>, <span class="dt">yend=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>)<span class="op">$</span>LowLoad_Congruent),</span>
+<span id="cb19-47"><a href="#cb19-47"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-48"><a href="#cb19-48"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), </span>
+<span id="cb19-49"><a href="#cb19-49"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">2</span><span class="fl">-.15</span>, <span class="dt">y=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>)<span class="op">$</span>HighLoad_Incongruent,</span>
+<span id="cb19-50"><a href="#cb19-50"></a>                   <span class="dt">xend=</span><span class="dv">2</span><span class="fl">+.15</span>, <span class="dt">yend=</span><span class="kw">filter</span>(rE5swide, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>)<span class="op">$</span>HighLoad_Congruent),</span>
+<span id="cb19-51"><a href="#cb19-51"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-52"><a href="#cb19-52"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Overlap&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Reaction Time (ms)&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-53"><a href="#cb19-53"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb19-54"><a href="#cb19-54"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">500</span>, <span class="dv">1200</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-55"><a href="#cb19-55"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">500</span>,<span class="dv">600</span>,<span class="dv">700</span>,<span class="dv">800</span>,<span class="dv">900</span>,<span class="dv">1000</span>,<span class="dv">1100</span>,<span class="dv">1200</span>)) <span class="op">+</span></span>
+<span id="cb19-56"><a href="#cb19-56"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb19-57"><a href="#cb19-57"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;none&quot;</span>,</span>
+<span id="cb19-58"><a href="#cb19-58"></a>        <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb19-59"><a href="#cb19-59"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb19-60"><a href="#cb19-60"></a>        <span class="dt">axis.title.x =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb19-61"><a href="#cb19-61"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb19-62"><a href="#cb19-62"></a>        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb19-63"><a href="#cb19-63"></a></span>
+<span id="cb19-64"><a href="#cb19-64"></a>z1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">filter</span>(rE5CEslong, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>cEffect)) <span class="op">+</span></span>
+<span id="cb19-65"><a href="#cb19-65"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-66"><a href="#cb19-66"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
+<span id="cb19-67"><a href="#cb19-67"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE5CEswide, </span>
+<span id="cb19-68"><a href="#cb19-68"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>NonOverlap_LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, </span>
+<span id="cb19-69"><a href="#cb19-69"></a>                   <span class="dt">yend=</span>NonOverlap_HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-70"><a href="#cb19-70"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="kw">filter</span>(rE5CEg, Overlap<span class="op">==</span><span class="st">&quot;NonOverlap&quot;</span>), <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
+<span id="cb19-71"><a href="#cb19-71"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>cEffect, </span>
+<span id="cb19-72"><a href="#cb19-72"></a>                              <span class="dt">ymin =</span> cEffect <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> cEffect <span class="op">+</span><span class="st"> </span>ci), </span>
+<span id="cb19-73"><a href="#cb19-73"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb19-74"><a href="#cb19-74"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Congruency Effect (ms)&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-75"><a href="#cb19-75"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb19-76"><a href="#cb19-76"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">50</span>, <span class="dv">200</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-77"><a href="#cb19-77"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb19-78"><a href="#cb19-78"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb19-79"><a href="#cb19-79"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>())</span>
+<span id="cb19-80"><a href="#cb19-80"></a></span>
+<span id="cb19-81"><a href="#cb19-81"></a>z2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">filter</span>(rE5CEslong, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>cEffect)) <span class="op">+</span></span>
+<span id="cb19-82"><a href="#cb19-82"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-83"><a href="#cb19-83"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
+<span id="cb19-84"><a href="#cb19-84"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE5CEswide, </span>
+<span id="cb19-85"><a href="#cb19-85"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>Overlap_LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, </span>
+<span id="cb19-86"><a href="#cb19-86"></a>                   <span class="dt">yend=</span>Overlap_HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-87"><a href="#cb19-87"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="kw">filter</span>(rE5CEg, Overlap<span class="op">==</span><span class="st">&quot;Overlap&quot;</span>), <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
+<span id="cb19-88"><a href="#cb19-88"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>cEffect, </span>
+<span id="cb19-89"><a href="#cb19-89"></a>                              <span class="dt">ymin =</span> cEffect <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> cEffect <span class="op">+</span><span class="st"> </span>ci), </span>
+<span id="cb19-90"><a href="#cb19-90"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb19-91"><a href="#cb19-91"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Congruency Effect (ms)&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-92"><a href="#cb19-92"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb19-93"><a href="#cb19-93"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">50</span>, <span class="dv">200</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-94"><a href="#cb19-94"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb19-95"><a href="#cb19-95"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb19-96"><a href="#cb19-96"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb19-97"><a href="#cb19-97"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>())</span>
+<span id="cb19-98"><a href="#cb19-98"></a></span>
+<span id="cb19-99"><a href="#cb19-99"></a>(r1 <span class="op">|</span><span class="st"> </span>r2) <span class="op">/</span><span class="st"> </span>(z1 <span class="op">|</span><span class="st"> </span>z2)</span></code></pre></div>
 <p><img src="vstmAS5_files/figure-html/rt_plots-1.png" width="672" /></p>
 </div>
 <div id="anova-2" class="section level3">
 <h3><span class="header-section-number">3.2.4</span> ANOVA</h3>
 <div id="mean-rts-1" class="section level4">
 <h4><span class="header-section-number">3.2.4.1</span> Mean RTs</h4>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>rt8con.aov &lt;-<span class="st">  </span><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> rE5, <span class="dt">dv =</span> <span class="st">&quot;RT&quot;</span>, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) </span>
-<span id="cb40-2"><a href="#cb40-2"></a>rt8con.aov <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>rt8con.aov &lt;-<span class="st">  </span><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> rE5, <span class="dt">dv =</span> <span class="st">&quot;RT&quot;</span>, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) </span>
+<span id="cb20-2"><a href="#cb20-2"></a>rt8con.aov <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1558,8 +1535,8 @@ pre code, pre, code {
 </div>
 <div id="congruency-effects" class="section level4">
 <h4><span class="header-section-number">3.2.4.2</span> Congruency Effects</h4>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>rt4con.aov &lt;-<span class="st">  </span><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> rE5CEslong, <span class="dt">dv =</span> <span class="st">&quot;cEffect&quot;</span>, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>)) </span>
-<span id="cb41-2"><a href="#cb41-2"></a>rt4con.aov <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>rt4con.aov &lt;-<span class="st">  </span><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> rE5CEslong, <span class="dt">dv =</span> <span class="st">&quot;cEffect&quot;</span>, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;Overlap&quot;</span>, <span class="st">&quot;vstmLoad&quot;</span>)) </span>
+<span id="cb21-2"><a href="#cb21-2"></a>rt4con.aov <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1611,117 +1588,117 @@ pre code, pre, code {
 </div>
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">4</span> Session Info</h1>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">sessionInfo</span>()</span>
-<span id="cb42-2"><a href="#cb42-2"></a><span class="co">## R version 4.0.2 (2020-06-22)</span></span>
-<span id="cb42-3"><a href="#cb42-3"></a><span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
-<span id="cb42-4"><a href="#cb42-4"></a><span class="co">## Running under: macOS Mojave 10.14.6</span></span>
-<span id="cb42-5"><a href="#cb42-5"></a><span class="co">## </span></span>
-<span id="cb42-6"><a href="#cb42-6"></a><span class="co">## Matrix products: default</span></span>
-<span id="cb42-7"><a href="#cb42-7"></a><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib</span></span>
-<span id="cb42-8"><a href="#cb42-8"></a><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib</span></span>
-<span id="cb42-9"><a href="#cb42-9"></a><span class="co">## </span></span>
-<span id="cb42-10"><a href="#cb42-10"></a><span class="co">## locale:</span></span>
-<span id="cb42-11"><a href="#cb42-11"></a><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
-<span id="cb42-12"><a href="#cb42-12"></a><span class="co">## </span></span>
-<span id="cb42-13"><a href="#cb42-13"></a><span class="co">## attached base packages:</span></span>
-<span id="cb42-14"><a href="#cb42-14"></a><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb42-15"><a href="#cb42-15"></a><span class="co">## </span></span>
-<span id="cb42-16"><a href="#cb42-16"></a><span class="co">## other attached packages:</span></span>
-<span id="cb42-17"><a href="#cb42-17"></a><span class="co">##  [1] klippy_0.0.0.9500      patchwork_1.0.1        ggstatsplot_0.6.0     </span></span>
-<span id="cb42-18"><a href="#cb42-18"></a><span class="co">##  [4] BayesFactor_0.9.12-4.2 coda_0.19-3            emmeans_1.5.1         </span></span>
-<span id="cb42-19"><a href="#cb42-19"></a><span class="co">##  [7] afex_0.28-0            lme4_1.1-23            Matrix_1.2-18         </span></span>
-<span id="cb42-20"><a href="#cb42-20"></a><span class="co">## [10] powerAnalysis_0.2.1    knitr_1.29             forcats_0.5.0         </span></span>
-<span id="cb42-21"><a href="#cb42-21"></a><span class="co">## [13] stringr_1.4.0          dplyr_1.0.2            purrr_0.3.4           </span></span>
-<span id="cb42-22"><a href="#cb42-22"></a><span class="co">## [16] readr_1.3.1            tidyr_1.1.2            tibble_3.0.3          </span></span>
-<span id="cb42-23"><a href="#cb42-23"></a><span class="co">## [19] ggplot2_3.3.2          tidyverse_1.3.0        Rmisc_1.5             </span></span>
-<span id="cb42-24"><a href="#cb42-24"></a><span class="co">## [22] plyr_1.8.6             lattice_0.20-41        pacman_0.5.1          </span></span>
-<span id="cb42-25"><a href="#cb42-25"></a><span class="co">## </span></span>
-<span id="cb42-26"><a href="#cb42-26"></a><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span id="cb42-27"><a href="#cb42-27"></a><span class="co">##   [1] utf8_1.1.4                tidyselect_1.1.0         </span></span>
-<span id="cb42-28"><a href="#cb42-28"></a><span class="co">##   [3] grid_4.0.2                dunn.test_1.3.5          </span></span>
-<span id="cb42-29"><a href="#cb42-29"></a><span class="co">##   [5] gmp_0.6-0                 munsell_0.5.0            </span></span>
-<span id="cb42-30"><a href="#cb42-30"></a><span class="co">##   [7] codetools_0.2-16          effectsize_0.3.3         </span></span>
-<span id="cb42-31"><a href="#cb42-31"></a><span class="co">##   [9] statmod_1.4.34            miniUI_0.1.1.1           </span></span>
-<span id="cb42-32"><a href="#cb42-32"></a><span class="co">##  [11] withr_2.2.0               Brobdingnag_1.2-6        </span></span>
-<span id="cb42-33"><a href="#cb42-33"></a><span class="co">##  [13] metaBMA_0.6.3             colorspace_1.4-1         </span></span>
-<span id="cb42-34"><a href="#cb42-34"></a><span class="co">##  [15] highr_0.8                 rstudioapi_0.11          </span></span>
-<span id="cb42-35"><a href="#cb42-35"></a><span class="co">##  [17] stats4_4.0.2              DescTools_0.99.38        </span></span>
-<span id="cb42-36"><a href="#cb42-36"></a><span class="co">##  [19] ipmisc_3.2.0              rcompanion_2.3.25        </span></span>
-<span id="cb42-37"><a href="#cb42-37"></a><span class="co">##  [21] ggsignif_0.6.0            labeling_0.3             </span></span>
-<span id="cb42-38"><a href="#cb42-38"></a><span class="co">##  [23] rstan_2.21.2              bbmle_1.0.23.1           </span></span>
-<span id="cb42-39"><a href="#cb42-39"></a><span class="co">##  [25] farver_2.0.3              bridgesampling_1.0-0     </span></span>
-<span id="cb42-40"><a href="#cb42-40"></a><span class="co">##  [27] vctrs_0.3.4               generics_0.0.2           </span></span>
-<span id="cb42-41"><a href="#cb42-41"></a><span class="co">##  [29] TH.data_1.0-10            tidyBF_0.3.0             </span></span>
-<span id="cb42-42"><a href="#cb42-42"></a><span class="co">##  [31] metafor_2.4-0             xfun_0.17                </span></span>
-<span id="cb42-43"><a href="#cb42-43"></a><span class="co">##  [33] BWStest_0.2.2             R6_2.4.1                 </span></span>
-<span id="cb42-44"><a href="#cb42-44"></a><span class="co">##  [35] ggbeeswarm_0.6.0          reshape_0.8.8            </span></span>
-<span id="cb42-45"><a href="#cb42-45"></a><span class="co">##  [37] logspline_2.1.16          assertthat_0.2.1         </span></span>
-<span id="cb42-46"><a href="#cb42-46"></a><span class="co">##  [39] promises_1.1.1            scales_1.1.1             </span></span>
-<span id="cb42-47"><a href="#cb42-47"></a><span class="co">##  [41] multcomp_1.4-13           beeswarm_0.2.3           </span></span>
-<span id="cb42-48"><a href="#cb42-48"></a><span class="co">##  [43] ggExtra_0.9               gtable_0.3.0             </span></span>
-<span id="cb42-49"><a href="#cb42-49"></a><span class="co">##  [45] multcompView_0.1-8        processx_3.4.4           </span></span>
-<span id="cb42-50"><a href="#cb42-50"></a><span class="co">##  [47] lmom_2.8                  sandwich_2.5-1           </span></span>
-<span id="cb42-51"><a href="#cb42-51"></a><span class="co">##  [49] rlang_0.4.7               MatrixModels_0.4-1       </span></span>
-<span id="cb42-52"><a href="#cb42-52"></a><span class="co">##  [51] EMT_1.1                   zeallot_0.1.0            </span></span>
-<span id="cb42-53"><a href="#cb42-53"></a><span class="co">##  [53] PMCMRplus_1.5.0           splines_4.0.2            </span></span>
-<span id="cb42-54"><a href="#cb42-54"></a><span class="co">##  [55] TMB_1.7.18                broom_0.7.0              </span></span>
-<span id="cb42-55"><a href="#cb42-55"></a><span class="co">##  [57] inline_0.3.16             yaml_2.2.1               </span></span>
-<span id="cb42-56"><a href="#cb42-56"></a><span class="co">##  [59] reshape2_1.4.4            abind_1.4-5              </span></span>
-<span id="cb42-57"><a href="#cb42-57"></a><span class="co">##  [61] modelr_0.1.8              backports_1.1.10         </span></span>
-<span id="cb42-58"><a href="#cb42-58"></a><span class="co">##  [63] httpuv_1.5.4              tools_4.0.2              </span></span>
-<span id="cb42-59"><a href="#cb42-59"></a><span class="co">##  [65] ellipsis_0.3.1            WRS2_1.1-0               </span></span>
-<span id="cb42-60"><a href="#cb42-60"></a><span class="co">##  [67] ez_4.4-0                  Rcpp_1.0.5               </span></span>
-<span id="cb42-61"><a href="#cb42-61"></a><span class="co">##  [69] ps_1.3.4                  prettyunits_1.1.1        </span></span>
-<span id="cb42-62"><a href="#cb42-62"></a><span class="co">##  [71] pbapply_1.4-3             cowplot_1.1.0            </span></span>
-<span id="cb42-63"><a href="#cb42-63"></a><span class="co">##  [73] correlation_0.3.0         zoo_1.8-8                </span></span>
-<span id="cb42-64"><a href="#cb42-64"></a><span class="co">##  [75] LaplacesDemon_16.1.4      haven_2.3.1              </span></span>
-<span id="cb42-65"><a href="#cb42-65"></a><span class="co">##  [77] ggrepel_0.8.2             fs_1.5.0                 </span></span>
-<span id="cb42-66"><a href="#cb42-66"></a><span class="co">##  [79] magrittr_1.5              data.table_1.13.0        </span></span>
-<span id="cb42-67"><a href="#cb42-67"></a><span class="co">##  [81] openxlsx_4.2.2            lmerTest_3.1-2           </span></span>
-<span id="cb42-68"><a href="#cb42-68"></a><span class="co">##  [83] lmtest_0.9-38             reprex_0.3.0             </span></span>
-<span id="cb42-69"><a href="#cb42-69"></a><span class="co">##  [85] mvtnorm_1.1-1             broomExtra_4.0.6         </span></span>
-<span id="cb42-70"><a href="#cb42-70"></a><span class="co">##  [87] matrixStats_0.56.0        hms_0.5.3                </span></span>
-<span id="cb42-71"><a href="#cb42-71"></a><span class="co">##  [89] mime_0.9                  evaluate_0.14            </span></span>
-<span id="cb42-72"><a href="#cb42-72"></a><span class="co">##  [91] xtable_1.8-4              rio_0.5.16               </span></span>
-<span id="cb42-73"><a href="#cb42-73"></a><span class="co">##  [93] pairwiseComparisons_2.0.1 broom.mixed_0.2.6        </span></span>
-<span id="cb42-74"><a href="#cb42-74"></a><span class="co">##  [95] readxl_1.3.1              gridExtra_2.3            </span></span>
-<span id="cb42-75"><a href="#cb42-75"></a><span class="co">##  [97] rstantools_2.1.1          bdsmatrix_1.3-4          </span></span>
-<span id="cb42-76"><a href="#cb42-76"></a><span class="co">##  [99] compiler_4.0.2            V8_3.2.0                 </span></span>
-<span id="cb42-77"><a href="#cb42-77"></a><span class="co">## [101] crayon_1.3.4              minqa_1.2.4              </span></span>
-<span id="cb42-78"><a href="#cb42-78"></a><span class="co">## [103] StanHeaders_2.21.0-6      htmltools_0.5.0          </span></span>
-<span id="cb42-79"><a href="#cb42-79"></a><span class="co">## [105] mgcv_1.8-33               mc2d_0.1-18              </span></span>
-<span id="cb42-80"><a href="#cb42-80"></a><span class="co">## [107] later_1.1.0.1             libcoin_1.0-6            </span></span>
-<span id="cb42-81"><a href="#cb42-81"></a><span class="co">## [109] expm_0.999-5              Exact_2.0                </span></span>
-<span id="cb42-82"><a href="#cb42-82"></a><span class="co">## [111] RcppParallel_5.0.2        lubridate_1.7.9          </span></span>
-<span id="cb42-83"><a href="#cb42-83"></a><span class="co">## [113] DBI_1.1.0                 SuppDists_1.1-9.5        </span></span>
-<span id="cb42-84"><a href="#cb42-84"></a><span class="co">## [115] kSamples_1.2-9            dbplyr_1.4.4             </span></span>
-<span id="cb42-85"><a href="#cb42-85"></a><span class="co">## [117] MASS_7.3-53               boot_1.3-25              </span></span>
-<span id="cb42-86"><a href="#cb42-86"></a><span class="co">## [119] car_3.0-9                 cli_2.0.2                </span></span>
-<span id="cb42-87"><a href="#cb42-87"></a><span class="co">## [121] parallel_4.0.2            insight_0.9.6            </span></span>
-<span id="cb42-88"><a href="#cb42-88"></a><span class="co">## [123] pkgconfig_2.0.3           metaplus_0.7-11          </span></span>
-<span id="cb42-89"><a href="#cb42-89"></a><span class="co">## [125] statsExpressions_0.5.0    coin_1.3-1               </span></span>
-<span id="cb42-90"><a href="#cb42-90"></a><span class="co">## [127] numDeriv_2016.8-1.1       foreign_0.8-80           </span></span>
-<span id="cb42-91"><a href="#cb42-91"></a><span class="co">## [129] xml2_1.3.2                paletteer_1.2.0          </span></span>
-<span id="cb42-92"><a href="#cb42-92"></a><span class="co">## [131] vipor_0.4.5               ggcorrplot_0.1.3         </span></span>
-<span id="cb42-93"><a href="#cb42-93"></a><span class="co">## [133] estimability_1.3          rvest_0.3.6              </span></span>
-<span id="cb42-94"><a href="#cb42-94"></a><span class="co">## [135] callr_3.4.4               digest_0.6.25            </span></span>
-<span id="cb42-95"><a href="#cb42-95"></a><span class="co">## [137] parameters_0.8.5          fastGHQuad_1.0           </span></span>
-<span id="cb42-96"><a href="#cb42-96"></a><span class="co">## [139] rmarkdown_2.3             cellranger_1.1.0         </span></span>
-<span id="cb42-97"><a href="#cb42-97"></a><span class="co">## [141] nortest_1.0-4             gld_2.6.2                </span></span>
-<span id="cb42-98"><a href="#cb42-98"></a><span class="co">## [143] curl_4.3                  modeltools_0.2-23        </span></span>
-<span id="cb42-99"><a href="#cb42-99"></a><span class="co">## [145] shiny_1.5.0               gtools_3.8.2             </span></span>
-<span id="cb42-100"><a href="#cb42-100"></a><span class="co">## [147] nloptr_1.2.2.2            lifecycle_0.2.0          </span></span>
-<span id="cb42-101"><a href="#cb42-101"></a><span class="co">## [149] nlme_3.1-149              jsonlite_1.7.1           </span></span>
-<span id="cb42-102"><a href="#cb42-102"></a><span class="co">## [151] carData_3.0-4             fansi_0.4.1              </span></span>
-<span id="cb42-103"><a href="#cb42-103"></a><span class="co">## [153] pillar_1.4.6              loo_2.3.1                </span></span>
-<span id="cb42-104"><a href="#cb42-104"></a><span class="co">## [155] fastmap_1.0.1             httr_1.4.2               </span></span>
-<span id="cb42-105"><a href="#cb42-105"></a><span class="co">## [157] pkgbuild_1.1.0            survival_3.2-3           </span></span>
-<span id="cb42-106"><a href="#cb42-106"></a><span class="co">## [159] glue_1.4.2                bayestestR_0.7.2         </span></span>
-<span id="cb42-107"><a href="#cb42-107"></a><span class="co">## [161] zip_2.1.1                 class_7.3-17             </span></span>
-<span id="cb42-108"><a href="#cb42-108"></a><span class="co">## [163] stringi_1.5.3             performance_0.5.0        </span></span>
-<span id="cb42-109"><a href="#cb42-109"></a><span class="co">## [165] rematch2_2.1.2            blob_1.2.1               </span></span>
-<span id="cb42-110"><a href="#cb42-110"></a><span class="co">## [167] memoise_1.1.0             Rmpfr_0.8-1              </span></span>
-<span id="cb42-111"><a href="#cb42-111"></a><span class="co">## [169] e1071_1.7-3</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">sessionInfo</span>()</span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="co">## R version 4.0.2 (2020-06-22)</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="co">## Running under: macOS High Sierra 10.13.6</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a><span class="co">## </span></span>
+<span id="cb22-6"><a href="#cb22-6"></a><span class="co">## Matrix products: default</span></span>
+<span id="cb22-7"><a href="#cb22-7"></a><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib</span></span>
+<span id="cb22-8"><a href="#cb22-8"></a><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib</span></span>
+<span id="cb22-9"><a href="#cb22-9"></a><span class="co">## </span></span>
+<span id="cb22-10"><a href="#cb22-10"></a><span class="co">## locale:</span></span>
+<span id="cb22-11"><a href="#cb22-11"></a><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
+<span id="cb22-12"><a href="#cb22-12"></a><span class="co">## </span></span>
+<span id="cb22-13"><a href="#cb22-13"></a><span class="co">## attached base packages:</span></span>
+<span id="cb22-14"><a href="#cb22-14"></a><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb22-15"><a href="#cb22-15"></a><span class="co">## </span></span>
+<span id="cb22-16"><a href="#cb22-16"></a><span class="co">## other attached packages:</span></span>
+<span id="cb22-17"><a href="#cb22-17"></a><span class="co">##  [1] klippy_0.0.0.9500      patchwork_1.0.1        ggstatsplot_0.6.0     </span></span>
+<span id="cb22-18"><a href="#cb22-18"></a><span class="co">##  [4] BayesFactor_0.9.12-4.2 coda_0.19-3            emmeans_1.5.1         </span></span>
+<span id="cb22-19"><a href="#cb22-19"></a><span class="co">##  [7] afex_0.28-0            lme4_1.1-23            Matrix_1.2-18         </span></span>
+<span id="cb22-20"><a href="#cb22-20"></a><span class="co">## [10] powerAnalysis_0.2.1    knitr_1.29             forcats_0.5.0         </span></span>
+<span id="cb22-21"><a href="#cb22-21"></a><span class="co">## [13] stringr_1.4.0          dplyr_1.0.2            purrr_0.3.4           </span></span>
+<span id="cb22-22"><a href="#cb22-22"></a><span class="co">## [16] readr_1.3.1            tidyr_1.1.2            tibble_3.0.3          </span></span>
+<span id="cb22-23"><a href="#cb22-23"></a><span class="co">## [19] ggplot2_3.3.2          tidyverse_1.3.0        Rmisc_1.5             </span></span>
+<span id="cb22-24"><a href="#cb22-24"></a><span class="co">## [22] plyr_1.8.6             lattice_0.20-41        pacman_0.5.1          </span></span>
+<span id="cb22-25"><a href="#cb22-25"></a><span class="co">## </span></span>
+<span id="cb22-26"><a href="#cb22-26"></a><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span id="cb22-27"><a href="#cb22-27"></a><span class="co">##   [1] utf8_1.1.4                tidyselect_1.1.0         </span></span>
+<span id="cb22-28"><a href="#cb22-28"></a><span class="co">##   [3] grid_4.0.2                dunn.test_1.3.5          </span></span>
+<span id="cb22-29"><a href="#cb22-29"></a><span class="co">##   [5] gmp_0.6-0                 munsell_0.5.0            </span></span>
+<span id="cb22-30"><a href="#cb22-30"></a><span class="co">##   [7] codetools_0.2-16          effectsize_0.3.3         </span></span>
+<span id="cb22-31"><a href="#cb22-31"></a><span class="co">##   [9] statmod_1.4.34            miniUI_0.1.1.1           </span></span>
+<span id="cb22-32"><a href="#cb22-32"></a><span class="co">##  [11] withr_2.2.0               Brobdingnag_1.2-6        </span></span>
+<span id="cb22-33"><a href="#cb22-33"></a><span class="co">##  [13] metaBMA_0.6.3             colorspace_1.4-1         </span></span>
+<span id="cb22-34"><a href="#cb22-34"></a><span class="co">##  [15] highr_0.8                 rstudioapi_0.11          </span></span>
+<span id="cb22-35"><a href="#cb22-35"></a><span class="co">##  [17] stats4_4.0.2              DescTools_0.99.38        </span></span>
+<span id="cb22-36"><a href="#cb22-36"></a><span class="co">##  [19] ipmisc_3.2.0              rcompanion_2.3.25        </span></span>
+<span id="cb22-37"><a href="#cb22-37"></a><span class="co">##  [21] ggsignif_0.6.0            labeling_0.3             </span></span>
+<span id="cb22-38"><a href="#cb22-38"></a><span class="co">##  [23] rstan_2.21.2              bbmle_1.0.23.1           </span></span>
+<span id="cb22-39"><a href="#cb22-39"></a><span class="co">##  [25] farver_2.0.3              bridgesampling_1.0-0     </span></span>
+<span id="cb22-40"><a href="#cb22-40"></a><span class="co">##  [27] vctrs_0.3.4               generics_0.0.2           </span></span>
+<span id="cb22-41"><a href="#cb22-41"></a><span class="co">##  [29] TH.data_1.0-10            tidyBF_0.3.0             </span></span>
+<span id="cb22-42"><a href="#cb22-42"></a><span class="co">##  [31] metafor_2.4-0             xfun_0.17                </span></span>
+<span id="cb22-43"><a href="#cb22-43"></a><span class="co">##  [33] BWStest_0.2.2             R6_2.4.1                 </span></span>
+<span id="cb22-44"><a href="#cb22-44"></a><span class="co">##  [35] ggbeeswarm_0.6.0          reshape_0.8.8            </span></span>
+<span id="cb22-45"><a href="#cb22-45"></a><span class="co">##  [37] logspline_2.1.16          assertthat_0.2.1         </span></span>
+<span id="cb22-46"><a href="#cb22-46"></a><span class="co">##  [39] promises_1.1.1            scales_1.1.1             </span></span>
+<span id="cb22-47"><a href="#cb22-47"></a><span class="co">##  [41] multcomp_1.4-13           beeswarm_0.2.3           </span></span>
+<span id="cb22-48"><a href="#cb22-48"></a><span class="co">##  [43] ggExtra_0.9               gtable_0.3.0             </span></span>
+<span id="cb22-49"><a href="#cb22-49"></a><span class="co">##  [45] multcompView_0.1-8        processx_3.4.4           </span></span>
+<span id="cb22-50"><a href="#cb22-50"></a><span class="co">##  [47] lmom_2.8                  sandwich_2.5-1           </span></span>
+<span id="cb22-51"><a href="#cb22-51"></a><span class="co">##  [49] rlang_0.4.7               MatrixModels_0.4-1       </span></span>
+<span id="cb22-52"><a href="#cb22-52"></a><span class="co">##  [51] EMT_1.1                   zeallot_0.1.0            </span></span>
+<span id="cb22-53"><a href="#cb22-53"></a><span class="co">##  [53] PMCMRplus_1.5.0           splines_4.0.2            </span></span>
+<span id="cb22-54"><a href="#cb22-54"></a><span class="co">##  [55] TMB_1.7.18                broom_0.7.0.9001         </span></span>
+<span id="cb22-55"><a href="#cb22-55"></a><span class="co">##  [57] inline_0.3.16             yaml_2.2.1               </span></span>
+<span id="cb22-56"><a href="#cb22-56"></a><span class="co">##  [59] reshape2_1.4.4            abind_1.4-5              </span></span>
+<span id="cb22-57"><a href="#cb22-57"></a><span class="co">##  [61] modelr_0.1.8              backports_1.1.10         </span></span>
+<span id="cb22-58"><a href="#cb22-58"></a><span class="co">##  [63] httpuv_1.5.4              tools_4.0.2              </span></span>
+<span id="cb22-59"><a href="#cb22-59"></a><span class="co">##  [65] ellipsis_0.3.1            WRS2_1.1-0               </span></span>
+<span id="cb22-60"><a href="#cb22-60"></a><span class="co">##  [67] ez_4.4-0                  Rcpp_1.0.5.2             </span></span>
+<span id="cb22-61"><a href="#cb22-61"></a><span class="co">##  [69] ps_1.3.4                  prettyunits_1.1.1        </span></span>
+<span id="cb22-62"><a href="#cb22-62"></a><span class="co">##  [71] pbapply_1.4-3             cowplot_1.1.0            </span></span>
+<span id="cb22-63"><a href="#cb22-63"></a><span class="co">##  [73] correlation_0.3.0         zoo_1.8-8                </span></span>
+<span id="cb22-64"><a href="#cb22-64"></a><span class="co">##  [75] LaplacesDemon_16.1.4      haven_2.3.1              </span></span>
+<span id="cb22-65"><a href="#cb22-65"></a><span class="co">##  [77] ggrepel_0.8.2             fs_1.5.0                 </span></span>
+<span id="cb22-66"><a href="#cb22-66"></a><span class="co">##  [79] magrittr_1.5              data.table_1.13.0        </span></span>
+<span id="cb22-67"><a href="#cb22-67"></a><span class="co">##  [81] openxlsx_4.2.2            lmerTest_3.1-2           </span></span>
+<span id="cb22-68"><a href="#cb22-68"></a><span class="co">##  [83] lmtest_0.9-38             reprex_0.3.0             </span></span>
+<span id="cb22-69"><a href="#cb22-69"></a><span class="co">##  [85] mvtnorm_1.1-1             broomExtra_4.0.6         </span></span>
+<span id="cb22-70"><a href="#cb22-70"></a><span class="co">##  [87] matrixStats_0.56.0        hms_0.5.3                </span></span>
+<span id="cb22-71"><a href="#cb22-71"></a><span class="co">##  [89] mime_0.9                  evaluate_0.14            </span></span>
+<span id="cb22-72"><a href="#cb22-72"></a><span class="co">##  [91] xtable_1.8-4              rio_0.5.16               </span></span>
+<span id="cb22-73"><a href="#cb22-73"></a><span class="co">##  [93] pairwiseComparisons_2.0.1 broom.mixed_0.2.6        </span></span>
+<span id="cb22-74"><a href="#cb22-74"></a><span class="co">##  [95] readxl_1.3.1              gridExtra_2.3            </span></span>
+<span id="cb22-75"><a href="#cb22-75"></a><span class="co">##  [97] rstantools_2.1.1          bdsmatrix_1.3-4          </span></span>
+<span id="cb22-76"><a href="#cb22-76"></a><span class="co">##  [99] compiler_4.0.2            V8_3.2.0                 </span></span>
+<span id="cb22-77"><a href="#cb22-77"></a><span class="co">## [101] crayon_1.3.4              minqa_1.2.4              </span></span>
+<span id="cb22-78"><a href="#cb22-78"></a><span class="co">## [103] StanHeaders_2.21.0-6      htmltools_0.5.0          </span></span>
+<span id="cb22-79"><a href="#cb22-79"></a><span class="co">## [105] mgcv_1.8-33               mc2d_0.1-18              </span></span>
+<span id="cb22-80"><a href="#cb22-80"></a><span class="co">## [107] later_1.1.0.1             libcoin_1.0-6            </span></span>
+<span id="cb22-81"><a href="#cb22-81"></a><span class="co">## [109] expm_0.999-5              Exact_2.0                </span></span>
+<span id="cb22-82"><a href="#cb22-82"></a><span class="co">## [111] RcppParallel_5.0.2        lubridate_1.7.9          </span></span>
+<span id="cb22-83"><a href="#cb22-83"></a><span class="co">## [113] DBI_1.1.0                 SuppDists_1.1-9.5        </span></span>
+<span id="cb22-84"><a href="#cb22-84"></a><span class="co">## [115] kSamples_1.2-9            dbplyr_1.4.4             </span></span>
+<span id="cb22-85"><a href="#cb22-85"></a><span class="co">## [117] MASS_7.3-53               boot_1.3-25              </span></span>
+<span id="cb22-86"><a href="#cb22-86"></a><span class="co">## [119] car_3.0-9                 cli_2.0.2                </span></span>
+<span id="cb22-87"><a href="#cb22-87"></a><span class="co">## [121] parallel_4.0.2            insight_0.9.6            </span></span>
+<span id="cb22-88"><a href="#cb22-88"></a><span class="co">## [123] pkgconfig_2.0.3           metaplus_0.7-11          </span></span>
+<span id="cb22-89"><a href="#cb22-89"></a><span class="co">## [125] statsExpressions_0.5.0    coin_1.3-1               </span></span>
+<span id="cb22-90"><a href="#cb22-90"></a><span class="co">## [127] numDeriv_2016.8-1.1       foreign_0.8-80           </span></span>
+<span id="cb22-91"><a href="#cb22-91"></a><span class="co">## [129] xml2_1.3.2                paletteer_1.2.0          </span></span>
+<span id="cb22-92"><a href="#cb22-92"></a><span class="co">## [131] vipor_0.4.5               ggcorrplot_0.1.3         </span></span>
+<span id="cb22-93"><a href="#cb22-93"></a><span class="co">## [133] estimability_1.3          rvest_0.3.6              </span></span>
+<span id="cb22-94"><a href="#cb22-94"></a><span class="co">## [135] callr_3.4.4               digest_0.6.25            </span></span>
+<span id="cb22-95"><a href="#cb22-95"></a><span class="co">## [137] parameters_0.8.5          fastGHQuad_1.0           </span></span>
+<span id="cb22-96"><a href="#cb22-96"></a><span class="co">## [139] rmarkdown_2.3             cellranger_1.1.0         </span></span>
+<span id="cb22-97"><a href="#cb22-97"></a><span class="co">## [141] nortest_1.0-4             gld_2.6.2                </span></span>
+<span id="cb22-98"><a href="#cb22-98"></a><span class="co">## [143] curl_4.3                  modeltools_0.2-23        </span></span>
+<span id="cb22-99"><a href="#cb22-99"></a><span class="co">## [145] shiny_1.5.0               gtools_3.8.2             </span></span>
+<span id="cb22-100"><a href="#cb22-100"></a><span class="co">## [147] nloptr_1.2.2.2            lifecycle_0.2.0          </span></span>
+<span id="cb22-101"><a href="#cb22-101"></a><span class="co">## [149] nlme_3.1-149              jsonlite_1.7.1           </span></span>
+<span id="cb22-102"><a href="#cb22-102"></a><span class="co">## [151] carData_3.0-4             fansi_0.4.1              </span></span>
+<span id="cb22-103"><a href="#cb22-103"></a><span class="co">## [153] pillar_1.4.6              loo_2.3.1                </span></span>
+<span id="cb22-104"><a href="#cb22-104"></a><span class="co">## [155] fastmap_1.0.1             httr_1.4.2               </span></span>
+<span id="cb22-105"><a href="#cb22-105"></a><span class="co">## [157] pkgbuild_1.1.0            survival_3.2-3           </span></span>
+<span id="cb22-106"><a href="#cb22-106"></a><span class="co">## [159] glue_1.4.2                bayestestR_0.7.2         </span></span>
+<span id="cb22-107"><a href="#cb22-107"></a><span class="co">## [161] zip_2.1.1                 class_7.3-17             </span></span>
+<span id="cb22-108"><a href="#cb22-108"></a><span class="co">## [163] stringi_1.5.3             performance_0.5.0        </span></span>
+<span id="cb22-109"><a href="#cb22-109"></a><span class="co">## [165] rematch2_2.1.2            blob_1.2.1               </span></span>
+<span id="cb22-110"><a href="#cb22-110"></a><span class="co">## [167] memoise_1.1.0             Rmpfr_0.8-1              </span></span>
+<span id="cb22-111"><a href="#cb22-111"></a><span class="co">## [169] e1071_1.7-3</span></span></code></pre></div>
 </div>
 
 
