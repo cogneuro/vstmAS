@@ -1,0 +1,485 @@
+---
+title: "Experiment 5 (Spatial Overlap)"
+author: "Hyuksu Lee, Do-Joon Yi"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapse: false
+      smooth_scroll: false
+    number_sections: true
+    theme: cosmo 
+    highlight: haddock
+    code_folding: hide
+subtitle: Effects of visual short-term memory load on response selection
+mainfont: Noto Sans CJK KR
+---
+
+```{r wd, echo=FALSE}
+setwd("~/Dropbox/2017Experiment/vstmAS/")
+```
+
+```{css, echo=FALSE}
+pre code, pre, code {
+  white-space: pre !important;
+  overflow-x: scroll !important;
+  word-break: keep-all !important;
+  word-wrap: initial !important;
+}
+```
+
+```{r setup, message=FALSE}
+set.seed(12345) # for reproducibility
+options(knitr.kable.NA = '')
+
+# Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. 
+if (!require("pacman", quietly = TRUE)) install.packages("pacman")
+if (!require("Rmisc", quietly = TRUE)) install.packages("Rmisc") # Never load it directly.
+pacman::p_load(tidyverse, knitr,
+               powerAnalysis, afex, emmeans, BayesFactor, 
+               ggstatsplot)
+pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
+
+klippy::klippy()
+```
+
+# Data
+
+A short version of task description here.
+
+```{r data, collapse=TRUE}
+E5 <- read.csv("data/data_vstmAS5.csv", header = T)
+
+E5$SN <- factor(E5$SN)
+E5$vstmLoad <- factor(E5$vstmLoad, levels=c(1,2), labels=c("LowLoad","HighLoad"))
+E5$Congruency <- factor(E5$Congruency, levels=c(0,1), labels=c("Incongruent","Congruent"))
+E5$Overlap <- factor(E5$Overlap, levels=c(0,1), labels=c("NonOverlap","Overlap"))
+E5$Corr <- ifelse(E5$Targ==E5$Resp,1,0)
+E5$vstmCorr <- ifelse(E5$vstmCond==E5$vstmResp,1,0)
+
+# Description of raw data columns.
+# 1. SN: participant ID
+# 2. Trial: 1~384
+# 3. Block: 1~8
+# 4. vstmLoad: VSTM load. 1 = low, 2 = high
+# 5. Overlap: 0 = Non overlap, 1 = Overlap
+# 6. Targ: target type. 1 or 2
+# 7. Flnk: flanker type. 1 or 2
+# 8. TargPos: target position. 1~6
+# 9. FlnkPos: flanker position. 1 or 2
+# 10. Congruency: 0 = incongruent, 1 = congruent
+# 11. Resp: 1 or 2, 7 = no response
+# 12. RT: response time in second
+# 13. vstmPos: VSTM sample position. 1 or 2
+# 14. vstmCond: change = 1 or not = 2
+# 15. vstmResp: 1 or 2, 7 = no response
+# 16. vstmRT: response time in second
+# 17. Corr: attention task correctness, 1=correct, 0 = incorrect
+# 18. vstmCorr: VSTM task correctness, 1=correct, 0 = incorrect
+
+glimpse(E5, width=70)
+
+```
+
+**Spatial overlap**, **VSTM Load**, and **congruency** were within-subject factors.
+
+```{r design}
+table(E5$Overlap, E5$SN) %>% kable()
+table(E5$vstmLoad, E5$SN) %>% kable()
+table(E5$Congruency, E5$SN) %>% kable()
+```
+
+
+<br><br>
+
+****
+
+<br><br>
+
+
+# Change Detection Task
+
+## Accuracy
+
+```{r vstm_sum}
+# VSTM, Experiment 5, subject-level, long format
+vE5slong <- E5 %>% group_by(SN, Overlap, vstmLoad) %>% 
+  summarise(vstmCorr = mean(vstmCorr)*100) %>% 
+  ungroup()
+
+# Experiment 5 summary
+vE5slong %>% group_by(Overlap, vstmLoad) %>% 
+  summarise(M = mean(vstmCorr), SD = sd(vstmCorr)) %>% 
+  ungroup() %>% 
+  kable()
+
+# wide format, needed for geom_segments.
+vE5swide <- vE5slong %>% unite("temp", c("Overlap", "vstmLoad")) %>% 
+  spread(key = temp, value = vstmCorr)
+
+# group level, needed for printing & geom_pointrange
+# Rmisc must be called indirectly due to incompatibility between plyr and dplyr.
+vE5g <- Rmisc::summarySEwithin(data = vE5slong, measurevar = "vstmCorr", 
+                               withinvars = c("vstmLoad", "Overlap"), idvar = "SN")
+
+p1 <- ggplot(filter(vE5slong, Overlap=="NonOverlap"), aes(x=vstmLoad, y=vstmCorr)) +
+  geom_violin(width = 0.5, trim=TRUE) + 
+  geom_point(color="gray80", size=1.8) +
+  geom_segment(data=vE5swide, aes(x=1, y=vE5swide$NonOverlap_LowLoad, xend=2, 
+                   yend=vE5swide$NonOverlap_HighLoad), color="gray80") +
+  geom_pointrange(filter(vE5g, Overlap=="NonOverlap"), inherit.aes=FALSE,
+                  mapping=aes(x = vstmLoad, y=vstmCorr, 
+                              ymin = vstmCorr - ci, ymax = vstmCorr + ci), 
+                  colour="darkred", size = 1) +
+  labs(title = "Non-Overlap", x = "VSTM Load", y = "Change Detection Accuracy") +
+  scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
+  coord_cartesian(ylim = c(50, 100), clip = "on") +
+  theme_bw(base_size = 18) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5))
+
+p2 <- ggplot(filter(vE5slong, Overlap=="Overlap"), aes(x=vstmLoad, y=vstmCorr)) +
+  geom_violin(width = 0.5, trim=TRUE) + 
+  geom_point(color="gray80", size=1.8) +
+  geom_segment(data=vE5swide, aes(x=1, y=vE5swide$Overlap_LowLoad, xend=2, 
+                   yend=vE5swide$Overlap_HighLoad), color="gray80") +
+  geom_pointrange(filter(vE5g, Overlap=="Overlap"), inherit.aes=FALSE,
+                  mapping=aes(x = vstmLoad, y=vstmCorr, 
+                              ymin = vstmCorr - ci, ymax = vstmCorr + ci), 
+                  colour="darkred", size = 1) +
+  labs(title = "Overlap", x = "VSTM Load", y = "Change Detection Accuracy") +
+  scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
+  coord_cartesian(ylim = c(50, 100), clip = "on") +
+  theme_bw(base_size = 18) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title = element_text(hjust = 0.5))
+
+p1 + p2
+```
+
+### ANOVA
+
+
+```{r vstm_aov, warning=FALSE, message=FALSE}
+aov_ez(id = "SN", data = vE5slong, dv = "vstmCorr", within = c("vstmLoad","Overlap")) %>% 
+  anova(es = "pes") %>% kable(digits = 4)
+```
+
+<br><br>
+
+****
+
+<br><br>
+
+
+
+# Flanker Task
+
+Accuracy in the attention task was generally high. There were no significant effects in the ANOVA. 
+
+## Accuracy
+
+```{r attention_acc}
+aE5slong <- E5 %>% group_by(SN, vstmLoad, Overlap, Congruency) %>% 
+  summarise(Accuracy = mean(Corr)*100, N = n()) %>% 
+  ungroup()
+
+aE5slong %>% group_by(Overlap, vstmLoad, Congruency) %>% 
+  summarise(M = mean(Accuracy),
+            SD = sd(Accuracy)) %>% 
+  ungroup() %>% 
+  kable()
+
+aE5g <- Rmisc::summarySEwithin(data = aE5slong, measurevar = "Accuracy", 
+                       withinvars = c("vstmLoad", "Overlap", "Congruency"), idvar = "SN") 
+
+w1 <- ggplot(data=filter(aE5slong, Overlap=="NonOverlap"), aes(x=vstmLoad, y=Accuracy, fill=Congruency)) +
+  geom_violin(width = 0.7, trim=TRUE) +
+  ggbeeswarm::geom_quasirandom(dodge.width = 0.7, color = "gray80", size = 3, alpha = 0.4, 
+                               show.legend = FALSE) +
+  geom_pointrange(data=filter(aE5g, Overlap=="NonOverlap"),
+                  aes(x = vstmLoad, ymin = Accuracy-ci, ymax = Accuracy+ci, color = Congruency),
+                  position = position_dodge(0.7), color = "darkred", size = 1, show.legend = FALSE) +
+  coord_cartesian(ylim = c(50, 100), clip = "on") +
+  labs(title = "Non-Overlap",
+       x = "VSTM Load", 
+       y = "Accuracy (%)", 
+       fill="Congruency") +
+  scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
+  scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+                    labels=c("Incongruent", "Congruent")) +
+  theme_bw(base_size = 18) +
+  theme(legend.position = "none", 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5)) 
+
+w2 <- ggplot(data=filter(aE5slong, Overlap=="Overlap"), aes(x=vstmLoad, y=Accuracy, fill=Congruency)) +
+  geom_violin(width = 0.7, trim=TRUE) +
+  ggbeeswarm::geom_quasirandom(dodge.width = 0.7, color = "gray80", size = 3, alpha = 0.4, 
+                               show.legend = FALSE) +
+  geom_pointrange(data=filter(aE5g, Overlap=="Overlap"),
+                  aes(x = vstmLoad, ymin = Accuracy-ci, ymax = Accuracy+ci, color = Congruency),
+                  position = position_dodge(0.7), color = "darkred", size = 1, show.legend = FALSE) +
+  coord_cartesian(ylim = c(50, 100), clip = "on") +
+  labs(title = "Overlap",
+       x = "VSTM Load", 
+       y = "Accuracy (%)", 
+       fill="Congruency") +
+  scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
+  scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+                    labels=c("Incongruent", "Congruent")) +
+  theme_bw(base_size = 18) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = c(.6, .2)) 
+
+w1 + w2
+```
+
+### ANOVA
+
+```{r attention_aov, attention_aov, warning=FALSE, message=FALSE}
+aov_ez(id = "SN", data = aE5slong, dv = "Accuracy", within = c("vstmLoad", "Overlap", "Congruency")) %>% 
+  anova(es = "pes") %>% kable(digits = 4)
+```
+
+<br><br>
+
+****
+
+<br><br>
+
+
+## RT
+
+### Trimming
+
+```{r trimming}
+# filtering out incorrect trials
+cE5 <- E5 %>% filter(Corr==1 & vstmCorr==1) %>% mutate(RT = RT*1000)
+
+# trimming by 2.5 MAD.
+rE5 <- cE5 %>% filter(RT > 200) %>% 
+  group_by(SN) %>% 
+  nest() %>% 
+  mutate(lbound = map(data, ~median(.$RT)-2.5*mad(.$RT)),
+         ubound = map(data, ~median(.$RT)+2.5*mad(.$RT))) %>% 
+  unnest(lbound, ubound) %>% 
+  unnest(data) %>% 
+  mutate(Outlier = (RT < lbound)|(RT > ubound)) %>% 
+  filter(Outlier == FALSE) %>% 
+  ungroup %>%
+  select(SN, Overlap, vstmLoad, Congruency, RT, vstmRT)
+
+# percentage trimmed.
+(nrow(cE5)-nrow(rE5))/nrow(cE5)
+```
+
+`r round(100*(nrow(cE5)-nrow(rE5))/nrow(cE5), digits=2)`%의 가외치가 제거되었다.
+
+```{r rt_distribution, fig.asp = .4}
+den1 <- ggplot(cE5, aes(x=RT)) + 
+  geom_density() + 
+  theme_bw(base_size = 18) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) 
+den2 <- ggplot(rE5, aes(x=RT)) + 
+  geom_density() + 
+  theme_bw(base_size = 18) + 
+  labs(x = "Trimmed RT") + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) 
+den1 + den2
+```
+
+
+### Mean RTs
+
+```{r 8con_rt_sum}
+# Attention RT, Experiment 5, subject-level, long format
+rE5slong <- rE5 %>% group_by(SN, Overlap, vstmLoad, Congruency) %>% 
+  summarise(RT = mean(RT)) %>% 
+  ungroup()
+
+# Experiment 5 summary
+rE5slong %>% group_by(Overlap, vstmLoad, Congruency) %>% 
+  summarise(M = mean(RT), SD = sd(RT)) %>% 
+  ungroup() %>% 
+  kable()
+
+# wide format, needed for geom_segments.
+rE5swide <- rE5slong %>%  
+  unite("temp", c("vstmLoad", "Congruency")) %>% 
+  spread(key = temp, value = RT)
+
+# group level, needed for printing & geom_pointrange
+rE5g <- Rmisc::summarySEwithin(data = rE5slong, measurevar = "RT", 
+                               withinvars = c("vstmLoad", "Overlap", "Congruency"), idvar = "SN") 
+
+```
+
+### RT Congruency Effect
+
+```{r congruency_sum}
+# Four conditions summary long format
+rE5CEslong <- rE5slong %>%
+  spread(key = Congruency, value = RT) %>% 
+  mutate(cEffect = Incongruent - Congruent) %>% 
+  select(SN, Overlap, vstmLoad, cEffect)
+
+rE5CEslong %>% group_by(Overlap, vstmLoad) %>% 
+  summarise(M = mean(cEffect), SD = sd(cEffect)) %>% 
+  ungroup() %>% 
+  kable()
+
+rE5CEswide <- rE5CEslong %>% 
+  unite("temp", c("Overlap", "vstmLoad")) %>% 
+  spread(key = temp, value = cEffect)
+
+rE5CEg <- Rmisc::summarySEwithin(data = rE5CEslong, measurevar = "cEffect", 
+                               withinvars = c("Overlap", "vstmLoad"), idvar = "SN") 
+```
+
+```{r rt_plots, fig.height=10}
+# Eight conditions
+r1 <- ggplot() + 
+  geom_bar(data=filter(rE5g, Overlap=="NonOverlap"), aes(x=vstmLoad, y=RT, fill=Congruency),
+           stat="identity", width=0.7, color="black", position=position_dodge(.8)) + 
+  geom_linerange(data=filter(rE5g, Overlap=="NonOverlap"), 
+                 aes(x=vstmLoad, ymin=RT-ci, ymax=RT+ci, group=Congruency),
+                 size=1, position=position_dodge(0.8)) +
+  scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+                    labels=c("Incongruent", "Congruent")) +
+  geom_point(data=filter(rE5slong, Overlap=="NonOverlap"), 
+             aes(x=vstmLoad, y=RT, group=Congruency),
+             position=position_dodge(0.6), color="gray80", size=1.8) +
+  geom_segment(data=filter(rE5swide, Overlap=="NonOverlap"), 
+               aes(x=1-.15, y=filter(rE5swide, Overlap=="NonOverlap")$LowLoad_Incongruent,
+                   xend=1+.15, yend=filter(rE5swide, Overlap=="NonOverlap")$LowLoad_Congruent),
+               color="gray80") +
+  geom_segment(data=filter(rE5swide, Overlap=="NonOverlap"), 
+               aes(x=2-.15, y=filter(rE5swide, Overlap=="NonOverlap")$HighLoad_Incongruent,
+                   xend=2+.15, yend=filter(rE5swide, Overlap=="NonOverlap")$HighLoad_Congruent),
+               color="gray80") +
+  labs(title = "Non-Overlap", x = "VSTM Load", y = "Reaction Time (ms)") +
+  scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
+  coord_cartesian(ylim = c(500, 1200), clip = "on") +
+  scale_y_continuous(breaks=c(500,600,700,800,900,1000,1100,1200)) +
+  theme_bw(base_size = 18) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5), 
+        legend.background = element_blank(),
+        legend.position = c(.35, .85),
+        axis.title.x = element_blank())
+
+r2 <- ggplot() + 
+  geom_bar(data=filter(rE5g, Overlap=="Overlap"), aes(x=vstmLoad, y=RT, fill=Congruency),
+           stat="identity", width=0.7, color="black", position=position_dodge(.8)) + 
+  geom_linerange(data=filter(rE5g, Overlap=="Overlap"), 
+                 aes(x=vstmLoad, ymin=RT-ci, ymax=RT+ci, group=Congruency),
+                 size=1, position=position_dodge(0.8)) +
+  scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+                    labels=c("Incongruent", "Congruent")) +
+  geom_point(data=filter(rE5slong, Overlap=="Overlap"), 
+             aes(x=vstmLoad, y=RT, group=Congruency),
+             position=position_dodge(0.6), color="gray80", size=1.8) +
+  geom_segment(data=filter(rE5swide, Overlap=="Overlap"), 
+               aes(x=1-.15, y=filter(rE5swide, Overlap=="Overlap")$LowLoad_Incongruent,
+                   xend=1+.15, yend=filter(rE5swide, Overlap=="Overlap")$LowLoad_Congruent),
+               color="gray80") +
+  geom_segment(data=filter(rE5swide, Overlap=="Overlap"), 
+               aes(x=2-.15, y=filter(rE5swide, Overlap=="Overlap")$HighLoad_Incongruent,
+                   xend=2+.15, yend=filter(rE5swide, Overlap=="Overlap")$HighLoad_Congruent),
+               color="gray80") +
+  labs(title = "Overlap", x = "VSTM Load", y = "Reaction Time (ms)") +
+  scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
+  coord_cartesian(ylim = c(500, 1200), clip = "on") +
+  scale_y_continuous(breaks=c(500,600,700,800,900,1000,1100,1200)) +
+  theme_bw(base_size = 18) +
+  theme(legend.position="none",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title = element_text(hjust = 0.5))
+
+z1 <- ggplot(filter(rE5CEslong, Overlap=="NonOverlap"), aes(x=vstmLoad, y=cEffect)) +
+  geom_violin(width = 0.5, trim=TRUE) + 
+  geom_point(color="gray80", size=1.8) +
+  geom_segment(data=rE5CEswide, 
+               aes(x=1, y=rE5CEswide$NonOverlap_LowLoad, xend=2, 
+                   yend=rE5CEswide$NonOverlap_HighLoad), color="gray80") +
+  geom_pointrange(filter(rE5CEg, Overlap=="NonOverlap"), inherit.aes=FALSE,
+                  mapping=aes(x = vstmLoad, y=cEffect, 
+                              ymin = cEffect - ci, ymax = cEffect + ci), 
+                  colour="darkred", size = 1) +
+  labs(x = "VSTM Load", y = "Congruency Effect (ms)") +
+  scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
+  coord_cartesian(ylim = c(-50, 200), clip = "on") +
+  theme_bw(base_size = 18) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank())
+
+z2 <- ggplot(filter(rE5CEslong, Overlap=="Overlap"), aes(x=vstmLoad, y=cEffect)) +
+  geom_violin(width = 0.5, trim=TRUE) + 
+  geom_point(color="gray80", size=1.8) +
+  geom_segment(data=rE5CEswide, 
+               aes(x=1, y=rE5CEswide$Overlap_LowLoad, xend=2, 
+                   yend=rE5CEswide$Overlap_HighLoad), color="gray80") +
+  geom_pointrange(filter(rE5CEg, Overlap=="Overlap"), inherit.aes=FALSE,
+                  mapping=aes(x = vstmLoad, y=cEffect, 
+                              ymin = cEffect - ci, ymax = cEffect + ci), 
+                  colour="darkred", size = 1) +
+  labs(x = "VSTM Load", y = "Congruency Effect (ms)") +
+  scale_x_discrete(labels=c("LowLoad" = "Low", "HighLoad" = "High")) +
+  coord_cartesian(ylim = c(-50, 200), clip = "on") +
+  theme_bw(base_size = 18) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.title.y = element_blank())
+
+(r1 | r2) / (z1 | z2)
+```
+
+
+
+### ANOVA
+#### Mean RTs
+```{r 8con_rt_anova, warning=FALSE, message=FALSE}
+rt8con.aov <-  aov_ez(id = "SN", data = rE5, dv = "RT", within = c("Overlap", "vstmLoad", "Congruency")) 
+rt8con.aov %>% anova(es = "pes") %>% kable(digits = 4)
+```
+
+#### Congruency Effects
+```{r congruency_anova, warning=FALSE, message=FALSE}
+rt4con.aov <-  aov_ez(id = "SN", data = rE5CEslong, dv = "cEffect", within = c("Overlap", "vstmLoad")) 
+rt4con.aov %>% anova(es = "pes") %>% kable(digits = 4)
+```
+
+
+<br><br>
+
+****
+
+<br><br>
+
+
+# Session Info
+```{r sinfo, collapse=TRUE}
+sessionInfo()
+```
+
+

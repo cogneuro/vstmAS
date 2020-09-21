@@ -1,0 +1,280 @@
+---
+title: "Equivalence Test"
+author: "Hyuksu Lee, Do-Joon Yi"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapse: false
+      smooth_scroll: false
+    number_sections: true
+    theme: cosmo 
+    highlight: haddock
+    code_folding: hide
+subtitle: Effects of visual short-term memory load on response selection
+mainfont: Noto Sans CJK KR
+---
+
+```{r wd, echo=FALSE}
+setwd("~/Dropbox/2017Experiment/vstmAS/")
+```
+
+```{css, echo=FALSE}
+pre code, pre, code {
+  white-space: pre !important;
+  overflow-x: scroll !important;
+  word-break: keep-all !important;
+  word-wrap: initial !important;
+}
+```
+
+```{r setup, message=FALSE}
+set.seed(12345) # for reproducibility
+options(knitr.kable.NA = '')
+
+# Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. 
+if (!require("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load(tidyverse, TOSTER, pwr, Hmisc, BayesFactor, ggbeeswarm)
+# pacman::p_load_gh("crsh/papaja", "thomasp85/patchwork")
+```
+
+# Data
+
+We combined data from Experiment 1~3 and 5. Since each experiment recruited 20 participants, there were 80 participants total. 
+
+```{r data, collapse=TRUE}
+# Exp 1
+E1 <- read.csv("data/data_vstmAS1.csv", header = T) %>% 
+  select(SN, vstmLoad, Congruency, RT, Targ, Resp, vstmCond, vstmResp) %>% 
+  mutate(SN = SN + 100, 
+         Corr = ifelse(Targ==Resp,1,0),
+         vstmCorr = ifelse(vstmCond==vstmResp,1,0),
+         RT = RT*1000) %>% 
+  filter(Corr==1 & vstmCorr==1 & RT > 200) %>% 
+  group_by(SN) %>% 
+  nest() %>% 
+  mutate(lbound = map(data, ~median(.$RT)-2.5*mad(.$RT)),
+         ubound = map(data, ~median(.$RT)+2.5*mad(.$RT))) %>% 
+  unnest(lbound, ubound) %>% 
+  unnest(data) %>% 
+  mutate(Outlier = (RT < lbound)|(RT > ubound), Exp = 1) %>% 
+  filter(Outlier == FALSE) %>% 
+  ungroup %>%
+  select(Exp, SN, vstmLoad, Congruency, RT)
+
+# Exp 2
+E2 <- read.csv("data/data_vstmAS2.csv", header = T) %>% 
+  select(SN, vstmLoad, Congruency, RT, Targ, Resp, vstmCond, vstmResp) %>% 
+  mutate(SN = SN + 200, 
+         Corr = ifelse(Targ==Resp,1,0),
+         vstmCorr = ifelse(vstmCond==vstmResp,1,0),
+         RT = RT*1000) %>% 
+  filter(Corr==1 & vstmCorr==1 & RT > 200) %>% 
+  group_by(SN) %>% 
+  nest() %>% 
+  mutate(lbound = map(data, ~median(.$RT)-2.5*mad(.$RT)),
+         ubound = map(data, ~median(.$RT)+2.5*mad(.$RT))) %>% 
+  unnest(lbound, ubound) %>% 
+  unnest(data) %>% 
+  mutate(Outlier = (RT < lbound)|(RT > ubound), Exp = 2) %>% 
+  filter(Outlier == FALSE) %>% 
+  ungroup %>%
+  select(Exp, SN, vstmLoad, Congruency, RT)
+
+# Exp 3
+E3 <- read.csv("data/data_vstmAS3.csv", header = T) %>% 
+  select(SN, vstmLoad, Congruency, RT, Targ, Resp, vstmCond, vstmResp) %>% 
+  mutate(SN = SN + 300, 
+         Corr = ifelse(Targ==Resp,1,0),
+         vstmCorr = ifelse(vstmLoad==1,1,ifelse(vstmCond==vstmResp,1,0)),
+         RT = RT*1000) %>% 
+  filter(Corr==1 & vstmCorr==1 & RT > 200) %>% 
+  group_by(SN) %>% 
+  nest() %>% 
+  mutate(lbound = map(data, ~median(.$RT)-2.5*mad(.$RT)),
+         ubound = map(data, ~median(.$RT)+2.5*mad(.$RT))) %>% 
+  unnest(lbound, ubound) %>% 
+  unnest(data) %>% 
+  mutate(Outlier = (RT < lbound)|(RT > ubound), Exp = 3) %>% 
+  filter(Outlier == FALSE) %>% 
+  ungroup %>%
+  select(Exp, SN, vstmLoad, Congruency, RT)
+
+# Exp 5
+E5 <- read.csv("data/data_vstmAS5.csv", header = T) %>% 
+  select(SN, vstmLoad, Congruency, RT, Targ, Resp, vstmCond, vstmResp) %>% 
+  mutate(SN = SN + 500, 
+         Corr = ifelse(Targ==Resp,1,0),
+         vstmCorr = ifelse(vstmCond==vstmResp,1,0),
+         RT = RT*1000) %>% 
+  filter(Corr==1 & vstmCorr==1 & RT > 200) %>% 
+  group_by(SN) %>% 
+  nest() %>% 
+  mutate(lbound = map(data, ~median(.$RT)-2.5*mad(.$RT)),
+         ubound = map(data, ~median(.$RT)+2.5*mad(.$RT))) %>% 
+  unnest(lbound, ubound) %>% 
+  unnest(data) %>% 
+  mutate(Outlier = (RT < lbound)|(RT > ubound), Exp = 5) %>% 
+  filter(Outlier == FALSE) %>% 
+  ungroup %>%
+  select(Exp, SN, vstmLoad, Congruency, RT)
+
+TT <- rbind(E1, E2, E3, E5)
+TT$SN <- factor(TT$SN)
+TT$Exp <- factor(TT$Exp, levels=c(1,2,3,5), labels=c("Exp1","Exp2","Exp3","Exp5"))
+TT$vstmLoad <- factor(TT$vstmLoad, levels=c(1,2), labels=c("LowLoad","HighLoad"))
+TT$Congruency <- factor(TT$Congruency, levels=c(0,1), labels=c("Incongruent","Congruent"))
+
+# Description of raw data columns.
+# 1. Exp: experiment 1~3, 5
+# 2. SN: participant ID. Exp 1 = 1XX, Exp 2 = 2XX, Exp 3 = 3XX, Exp 5 = 5XX
+# 3. vstmLoad: VSTM load. 1 = low, 2 = high
+# 4. Congruency: 0 = incongruent, 1 = congruent
+# 5. RT: response time in millisecond
+
+glimpse(TT)
+
+# Congruency effect, subject-level, long format
+T2CEslong <- TT %>% group_by(Exp, SN, vstmLoad, Congruency) %>% 
+  summarise(M = mean(RT)) %>% 
+  ungroup() %>% 
+  spread(Congruency, M) %>% 
+  mutate(cEffect = Incongruent - Congruent) %>% 
+  select(Exp, SN, vstmLoad, cEffect)
+
+# Congruency effect, subject-level, wide format
+T2CEswide <- T2CEslong %>% 
+  spread(key = vstmLoad, value = cEffect) %>% 
+  mutate(Diff = LowLoad - HighLoad,
+         Dummy = "Dummy")
+
+temp <- Hmisc::smean.cl.boot(T2CEswide$Diff)
+
+ggplot(T2CEswide, aes(x=Dummy, y=Diff)) +
+  # geom_hline(aes(yintercept=mean(Diff)), lty=1, size=8, col = alpha("#a6d8f0", 0.5)) +
+  geom_violin(width = 0.6, trim=TRUE) + 
+  ggbeeswarm::geom_quasirandom(aes(colour = Exp), size = 3, alpha = 0.9, width = 0.3) +
+  geom_hline(aes(yintercept=0), lty=1) +
+  stat_summary(fun.data="mean_cl_boot", shape=19,  colour="darkred", size = 1,
+               position=position_dodge(0.9)) +
+  coord_flip() + 
+  labs(y = "Congruency Difference \n (Low Load - High Load)") +
+  theme_classic(base_size = 18) +
+  theme(axis.line.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        legend.title = element_blank(),
+        legend.position = c(0.85, 0.25),
+        aspect.ratio = .5)
+```
+
+We calculated the difference in **congruency effects** between `low load` vs. `high load` conditions for each participant. The results plotted above show that the difference values are distributed evenly around zero. The global mean was `r round(temp[1], digits=2)` and 95% bootstrapped CI was [`r round(temp[2], digits=2)`, `r round(temp[3], digits=2)`] (shown in dark red). 
+
+
+<br><br>
+
+****
+
+<br><br>
+
+
+# T-Test
+
+`Low load`와 `high load`의 **congruency effect**를 NHST t-test로 비교하였다. 
+
+```{r}
+t.test(T2CEswide$LowLoad, T2CEswide$HighLoad, paired = TRUE)
+```
+
+NHST는 통계적으로 유의미하지 않았다. 
+
+
+<br><br>
+
+****
+
+<br><br>
+
+
+# TOST
+
+Simonsohn의 제안(링크 필요)에 따라, 원래 실험에서 검증력이 33%인 효과 크기를 계산한다. Konstantinou, Beal, King, Lavie(2014, APP) 실험에서 실험 1b의 참가자 수는 N=22. 따라서, 
+
+```{r}
+E33 = pwr::pwr.t.test(n=22, power = .33, sig.level = .05, type="paired")
+E33$d
+```
+
+효과크기 d=`r round(E33$d, digits=4)`보다 작은 효과는 *효과가 없다*고 할 수 있다. 재현에 필요한 표본의 크기는 효과크기 d=`r round(E33$d, digits=4)`에서 검증력이 80% 이상인 참가자 수이다. 
+
+```{r, warning=FALSE, message=FALSE}
+required_N = TOSTER::powerTOSTpaired(alpha = .05, statistical_power = .8, 
+                             low_eqbound_dz = -E33$d, high_eqbound_dz = E33$d)
+```
+
+최소 `r ceiling(required_N)`명이 필요하다. 
+
+```{r, collapse=TRUE, fig.height=3}
+tm <- TOSTpaired(n = 80, r12 = cor(T2CEswide$LowLoad, T2CEswide$HighLoad),
+                 m1 = mean(T2CEswide$LowLoad), m2 = mean(T2CEswide$HighLoad),
+                 sd1 = sd(T2CEswide$LowLoad), sd2 = sd(T2CEswide$HighLoad),
+                 low_eqbound_dz = -E33$d, high_eqbound_dz = E33$d, alpha=.05, 
+                 plot = FALSE)
+
+tm2 <- tm %>% plyr::ldply(data.frame) %>% 
+  spread(1, 2) %>% 
+  mutate(Dummy = "Dummy")
+
+ggplot(data=tm2, aes(x=Dummy, y=diff, ymin=LL_CI_TOST, ymax=UL_CI_TOST)) +
+  geom_errorbar(width = 0.2) +
+  geom_point(color = "darkred", size = 4) +
+  # geom_linerange(size=8, colour="#a6d8f0") +
+  # geom_point(size=3, shape=21, fill="#008fd5", colour = "white", stroke = 1) +
+  coord_flip(ylim = c(tm2$low_eqbound, tm2$high_eqbound)) +
+  geom_hline(yintercept = c(tm2$high_eqbound, tm2$low_eqbound),
+             linetype = "dashed") +
+  labs(y = "Congruency Difference \n (Low Load - High Load)") +
+  theme_classic(base_size = 18) +
+  theme(axis.line.y = element_blank(),
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        aspect.ratio = .2)
+```
+
+> The equivalence test was significant, t(79) = 2.352, p = 0.0106, given equivalence bounds of -10.494 and 10.494 (on a raw scale) and an alpha of 0.05. The null hypothesis test was non-significant, t(79) = -0.684, p = 0.496, given an alpha of 0.05. Based on the equivalence test and the null-hypothesis test combined, we can conclude that the observed effect is statistically not different from zero and statistically equivalent to zero.
+
+<br><br>
+
+****
+
+<br><br>
+
+# Bayes Factor
+
+베이지언 분석은 참가자수를 미리 정할 필요가 없으므로 모두 합쳐서 BF를 계산하는 데 문제가 없다.
+
+```{r}
+( bf <- ttestBF(x = T2CEswide$Diff) )
+
+1/bf
+```
+
+
+<br><br>
+
+****
+
+<br><br>
+
+
+
+# Session Info
+```{r sinfo, collapse=TRUE}
+sessionInfo()
+```
+
+
