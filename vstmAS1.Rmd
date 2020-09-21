@@ -18,7 +18,7 @@ mainfont: Noto Sans CJK KR
 ---
 
 ```{r wd, echo=FALSE}
-setwd("~/Dropbox/2017Experiment/vstmAS/")
+setwd("~/Documents/GitHub/vstmAS/")
 ```
 
 ```{css, echo=FALSE}
@@ -32,7 +32,6 @@ pre code, pre, code {
 
 ```{r setup, message=FALSE}
 set.seed(12345) # for reproducibility
-options(knitr.kable.NA = '')
 
 # Some packages need to be loaded. We use `pacman` as a package manager, which takes care of the other packages. 
 if (!require("pacman", quietly = TRUE)) install.packages("pacman")
@@ -42,6 +41,7 @@ pacman::p_load(tidyverse, knitr,
                ggstatsplot)
 pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
 
+options(knitr.kable.NA = '')
 klippy::klippy()
 ```
 

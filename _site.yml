@@ -1,9 +1,19 @@
-name: "my-website"
+name: "vstmAS"
 output_dir: "."
 navbar:
-  title: "My Website"
+  title: "vstmAS"
   left:
     - text: "Home"
       href: index.html
-    - text: "About"
-      href: about.html
+    - text: "Exp 1"
+      href: vstmAS1.html
+    - text: "Exp 2"
+      href: vstmAS2.html
+    - text: "Exp 3"
+      href: vstmAS3.html
+    - text: "Exp 4"
+      href: vstmAS4.html
+    - text: "Exp 5"
+      href: vstmAS5.html
+    - text: "TOST"
+      href: vstmAStost.html
