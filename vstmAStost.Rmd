@@ -18,7 +18,7 @@ mainfont: Noto Sans CJK KR
 ---
 
 ```{r wd, echo=FALSE}
-setwd("~/Dropbox/2017Experiment/vstmAS/")
+setwd("~/Documents/GitHub/vstmAS/")
 ```
 
 ```{css, echo=FALSE}
