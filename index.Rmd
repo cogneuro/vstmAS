@@ -9,4 +9,12 @@ output:
 mainfont: Noto Sans CJK KR
 ---
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# install.packages("devtools")
+devtools::install_github("ropenscilabs/icon")
+```
+
 manuscript in preparation
+
+***
+[[View on Github `r icon::fa("github", size = 3)`](https://github.com/cogneuro/vstmAS)]{style="float:right"}
