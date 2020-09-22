@@ -38,13 +38,21 @@ if (!require("pacman", quietly = TRUE)) install.packages("pacman")
 if (!require("Rmisc", quietly = TRUE)) install.packages("Rmisc") # Never load it directly.
 pacman::p_load(tidyverse, knitr,
                powerAnalysis, afex, emmeans, BayesFactor, 
-               ggstatsplot)
+               cowplot, ggstatsplot)
 pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
 
 options(knitr.kable.NA = '')
 options(dplyr.summarise.inform=FALSE) # 200603 supress warning in regards to regrouping 
 klippy::klippy()
 ```
+
+# Procedure 
+
+```{r procedure}
+ggdraw() + draw_image("fig/Exp2.png")
+```
+
+
 
 # Data
 

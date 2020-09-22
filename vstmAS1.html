@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hyuksu Lee, Do-Joon Yi" />
 
-<meta name="date" content="2020-09-21" />
+<meta name="date" content="2020-09-22" />
 
 <title>Experiment 1 (Interleaved 1 vs. 4)</title>
 
@@ -69,35 +69,30 @@ div.sourceCode
 @media screen {
 code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
+code span.al { color: #ff0000; } /* Alert */
+code span.an { color: #008000; } /* Annotation */
+code span.at { } /* Attribute */
 code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
+code span.cf { color: #0000ff; } /* ControlFlow */
+code span.ch { color: #008080; } /* Char */
+code span.cn { } /* Constant */
+code span.co { color: #008000; } /* Comment */
+code span.cv { color: #008000; } /* CommentVar */
+code span.do { color: #008000; } /* Documentation */
 code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
 code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.in { color: #008000; } /* Information */
+code span.kw { color: #0000ff; } /* Keyword */
+code span.op { } /* Operator */
+code span.ot { color: #ff4000; } /* Other */
+code span.pp { color: #ff4000; } /* Preprocessor */
+code span.sc { color: #008080; } /* SpecialChar */
+code span.ss { color: #008080; } /* SpecialString */
+code span.st { color: #008080; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #008080; } /* VerbatimString */
+code span.wa { color: #008000; font-weight: bold; } /* Warning */
 
 .sourceCode .row {
   width: 100%;
@@ -484,7 +479,7 @@ div.tocify {
 <h1 class="title toc-ignore">Experiment 1 (Interleaved 1 vs. 4)</h1>
 <h3 class="subtitle">Effects of visual short-term memory load on response selection</h3>
 <h4 class="author">Hyuksu Lee, Do-Joon Yi</h4>
-<h4 class="date">2020-09-21</h4>
+<h4 class="date">2020-09-22</h4>
 
 </div>
 
@@ -504,7 +499,7 @@ pre code, pre, code {
 <span id="cb1-5"><a href="#cb1-5"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;Rmisc&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;Rmisc&quot;</span>) <span class="co"># Never load it directly.</span></span>
 <span id="cb1-6"><a href="#cb1-6"></a>pacman<span class="op">::</span><span class="kw">p_load</span>(tidyverse, knitr,</span>
 <span id="cb1-7"><a href="#cb1-7"></a>               powerAnalysis, afex, emmeans, BayesFactor, </span>
-<span id="cb1-8"><a href="#cb1-8"></a>               ggstatsplot)</span>
+<span id="cb1-8"><a href="#cb1-8"></a>               cowplot, ggstatsplot)</span>
 <span id="cb1-9"><a href="#cb1-9"></a>pacman<span class="op">::</span><span class="kw">p_load_gh</span>(<span class="st">&quot;thomasp85/patchwork&quot;</span>, <span class="st">&quot;RLesur/klippy&quot;</span>)</span>
 <span id="cb1-10"><a href="#cb1-10"></a></span>
 <span id="cb1-11"><a href="#cb1-11"></a><span class="kw">options</span>(<span class="dt">knitr.kable.NA =</span> <span class="st">&#39;&#39;</span>)</span>
@@ -514,50 +509,55 @@ pre code, pre, code {
   addClassKlippyTo("pre.r, pre.markdown");
   addKlippy('left', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script>
+<div id="procedure" class="section level1">
+<h1><span class="header-section-number">1</span> Procedure</h1>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">ggdraw</span>() <span class="op">+</span><span class="st"> </span><span class="kw">draw_image</span>(<span class="st">&quot;fig/Exp1.png&quot;</span>)</span></code></pre></div>
+<p><img src="vstmAS1_files/figure-html/procedure-1.png" width="672" /></p>
+</div>
 <div id="data" class="section level1">
-<h1><span class="header-section-number">1</span> Data</h1>
+<h1><span class="header-section-number">2</span> Data</h1>
 <p>A short version of task description here.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>E1 &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/data_vstmAS1.csv&quot;</span>, <span class="dt">header =</span> T)</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a>E1<span class="op">$</span>SN &lt;-<span class="st"> </span><span class="kw">factor</span>(E1<span class="op">$</span>SN)</span>
-<span id="cb2-4"><a href="#cb2-4"></a>E1<span class="op">$</span>vstmLoad &lt;-<span class="st"> </span><span class="kw">factor</span>(E1<span class="op">$</span>vstmLoad, <span class="dt">levels=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span>,<span class="st">&quot;HighLoad&quot;</span>))</span>
-<span id="cb2-5"><a href="#cb2-5"></a>E1<span class="op">$</span>Congruency &lt;-<span class="st"> </span><span class="kw">factor</span>(E1<span class="op">$</span>Congruency, <span class="dt">levels=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>,<span class="st">&quot;Congruent&quot;</span>))</span>
-<span id="cb2-6"><a href="#cb2-6"></a>E1<span class="op">$</span>Corr &lt;-<span class="st"> </span><span class="kw">ifelse</span>(E1<span class="op">$</span>Targ<span class="op">==</span>E1<span class="op">$</span>Resp,<span class="dv">1</span>,<span class="dv">0</span>)</span>
-<span id="cb2-7"><a href="#cb2-7"></a>E1<span class="op">$</span>vstmCorr &lt;-<span class="st"> </span><span class="kw">ifelse</span>(E1<span class="op">$</span>vstmCond<span class="op">==</span>E1<span class="op">$</span>vstmResp,<span class="dv">1</span>,<span class="dv">0</span>)</span>
-<span id="cb2-8"><a href="#cb2-8"></a></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="co"># Description of raw data columns.</span></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="co"># 1. SN: participant ID</span></span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="co"># 2. Trial: 1~192</span></span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="co"># 3. vstmLoad: VSTM load. 1 = low, 2 = high</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="co"># 4. Targ: target type. 1 or 2</span></span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="co"># 5. Flnk: flanker type. 1 or 2</span></span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="co"># 6. Congruency: 0 = incongruent, 1 = congruent</span></span>
-<span id="cb2-16"><a href="#cb2-16"></a><span class="co"># 7. Resp: 1 or 2, 7 = no response</span></span>
-<span id="cb2-17"><a href="#cb2-17"></a><span class="co"># 8. RT: response time in second</span></span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="co"># 9. vstmCond: change = 1 or not = 2</span></span>
-<span id="cb2-19"><a href="#cb2-19"></a><span class="co"># 10. vstmResp: 1 or 2, 7 = no response</span></span>
-<span id="cb2-20"><a href="#cb2-20"></a><span class="co"># 11. vstmRT: response time in second</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="co"># 12. Corr: attention task correctness, 1=correct, 0 = incorrect</span></span>
-<span id="cb2-22"><a href="#cb2-22"></a><span class="co"># 13. vstmCorr: VSTM task correctness, 1=correct, 0 = incorrect</span></span>
-<span id="cb2-23"><a href="#cb2-23"></a></span>
-<span id="cb2-24"><a href="#cb2-24"></a><span class="kw">glimpse</span>(E1, <span class="dt">width=</span><span class="dv">70</span>)</span>
-<span id="cb2-25"><a href="#cb2-25"></a><span class="co">## Rows: 3,840</span></span>
-<span id="cb2-26"><a href="#cb2-26"></a><span class="co">## Columns: 13</span></span>
-<span id="cb2-27"><a href="#cb2-27"></a><span class="co">## $ SN         &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …</span></span>
-<span id="cb2-28"><a href="#cb2-28"></a><span class="co">## $ Trial      &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1…</span></span>
-<span id="cb2-29"><a href="#cb2-29"></a><span class="co">## $ vstmLoad   &lt;fct&gt; LowLoad, HighLoad, LowLoad, LowLoad, LowLoad, Hi…</span></span>
-<span id="cb2-30"><a href="#cb2-30"></a><span class="co">## $ Targ       &lt;int&gt; 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, …</span></span>
-<span id="cb2-31"><a href="#cb2-31"></a><span class="co">## $ Flnk       &lt;int&gt; 1, 2, 1, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 2, 1, 2, …</span></span>
-<span id="cb2-32"><a href="#cb2-32"></a><span class="co">## $ Congruency &lt;fct&gt; Congruent, Incongruent, Incongruent, Incongruent…</span></span>
-<span id="cb2-33"><a href="#cb2-33"></a><span class="co">## $ Resp       &lt;int&gt; 1, 1, 2, 1, 1, 7, 1, 1, 1, 1, 7, 1, 2, 2, 2, 2, …</span></span>
-<span id="cb2-34"><a href="#cb2-34"></a><span class="co">## $ RT         &lt;dbl&gt; 1.1466, 1.3619, 0.8450, 1.2057, 1.0779, 7.0000, …</span></span>
-<span id="cb2-35"><a href="#cb2-35"></a><span class="co">## $ vstmCond   &lt;int&gt; 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 1, 2, 1, 2, 1, 1, …</span></span>
-<span id="cb2-36"><a href="#cb2-36"></a><span class="co">## $ vstmResp   &lt;int&gt; 2, 2, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, …</span></span>
-<span id="cb2-37"><a href="#cb2-37"></a><span class="co">## $ vstmRT     &lt;dbl&gt; 1.1304, 1.2176, 0.7007, 0.6774, 0.6777, 1.2781, …</span></span>
-<span id="cb2-38"><a href="#cb2-38"></a><span class="co">## $ Corr       &lt;dbl&gt; 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, …</span></span>
-<span id="cb2-39"><a href="#cb2-39"></a><span class="co">## $ vstmCorr   &lt;dbl&gt; 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, …</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>E1 &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data/data_vstmAS1.csv&quot;</span>, <span class="dt">header =</span> T)</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a>E1<span class="op">$</span>SN &lt;-<span class="st"> </span><span class="kw">factor</span>(E1<span class="op">$</span>SN)</span>
+<span id="cb3-4"><a href="#cb3-4"></a>E1<span class="op">$</span>vstmLoad &lt;-<span class="st"> </span><span class="kw">factor</span>(E1<span class="op">$</span>vstmLoad, <span class="dt">levels=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span>,<span class="st">&quot;HighLoad&quot;</span>))</span>
+<span id="cb3-5"><a href="#cb3-5"></a>E1<span class="op">$</span>Congruency &lt;-<span class="st"> </span><span class="kw">factor</span>(E1<span class="op">$</span>Congruency, <span class="dt">levels=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>,<span class="st">&quot;Congruent&quot;</span>))</span>
+<span id="cb3-6"><a href="#cb3-6"></a>E1<span class="op">$</span>Corr &lt;-<span class="st"> </span><span class="kw">ifelse</span>(E1<span class="op">$</span>Targ<span class="op">==</span>E1<span class="op">$</span>Resp,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb3-7"><a href="#cb3-7"></a>E1<span class="op">$</span>vstmCorr &lt;-<span class="st"> </span><span class="kw">ifelse</span>(E1<span class="op">$</span>vstmCond<span class="op">==</span>E1<span class="op">$</span>vstmResp,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co"># Description of raw data columns.</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co"># 1. SN: participant ID</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co"># 2. Trial: 1~192</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co"># 3. vstmLoad: VSTM load. 1 = low, 2 = high</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="co"># 4. Targ: target type. 1 or 2</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="co"># 5. Flnk: flanker type. 1 or 2</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co"># 6. Congruency: 0 = incongruent, 1 = congruent</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="co"># 7. Resp: 1 or 2, 7 = no response</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co"># 8. RT: response time in second</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="co"># 9. vstmCond: change = 1 or not = 2</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="co"># 10. vstmResp: 1 or 2, 7 = no response</span></span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="co"># 11. vstmRT: response time in second</span></span>
+<span id="cb3-21"><a href="#cb3-21"></a><span class="co"># 12. Corr: attention task correctness, 1=correct, 0 = incorrect</span></span>
+<span id="cb3-22"><a href="#cb3-22"></a><span class="co"># 13. vstmCorr: VSTM task correctness, 1=correct, 0 = incorrect</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a></span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="kw">glimpse</span>(E1, <span class="dt">width=</span><span class="dv">70</span>)</span>
+<span id="cb3-25"><a href="#cb3-25"></a><span class="co">## Rows: 3,840</span></span>
+<span id="cb3-26"><a href="#cb3-26"></a><span class="co">## Columns: 13</span></span>
+<span id="cb3-27"><a href="#cb3-27"></a><span class="co">## $ SN         &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …</span></span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="co">## $ Trial      &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1…</span></span>
+<span id="cb3-29"><a href="#cb3-29"></a><span class="co">## $ vstmLoad   &lt;fct&gt; LowLoad, HighLoad, LowLoad, LowLoad, LowLoad, Hi…</span></span>
+<span id="cb3-30"><a href="#cb3-30"></a><span class="co">## $ Targ       &lt;int&gt; 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, …</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a><span class="co">## $ Flnk       &lt;int&gt; 1, 2, 1, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 2, 1, 2, …</span></span>
+<span id="cb3-32"><a href="#cb3-32"></a><span class="co">## $ Congruency &lt;fct&gt; Congruent, Incongruent, Incongruent, Incongruent…</span></span>
+<span id="cb3-33"><a href="#cb3-33"></a><span class="co">## $ Resp       &lt;int&gt; 1, 1, 2, 1, 1, 7, 1, 1, 1, 1, 7, 1, 2, 2, 2, 2, …</span></span>
+<span id="cb3-34"><a href="#cb3-34"></a><span class="co">## $ RT         &lt;dbl&gt; 1.1466, 1.3619, 0.8450, 1.2057, 1.0779, 7.0000, …</span></span>
+<span id="cb3-35"><a href="#cb3-35"></a><span class="co">## $ vstmCond   &lt;int&gt; 2, 1, 1, 2, 2, 2, 1, 1, 2, 2, 1, 2, 1, 2, 1, 1, …</span></span>
+<span id="cb3-36"><a href="#cb3-36"></a><span class="co">## $ vstmResp   &lt;int&gt; 2, 2, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, …</span></span>
+<span id="cb3-37"><a href="#cb3-37"></a><span class="co">## $ vstmRT     &lt;dbl&gt; 1.1304, 1.2176, 0.7007, 0.6774, 0.6777, 1.2781, …</span></span>
+<span id="cb3-38"><a href="#cb3-38"></a><span class="co">## $ Corr       &lt;dbl&gt; 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, …</span></span>
+<span id="cb3-39"><a href="#cb3-39"></a><span class="co">## $ vstmCorr   &lt;dbl&gt; 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, …</span></span></code></pre></div>
 <p>Both <strong>VSTM Load</strong> and <strong>Congruency</strong> were within-subject factors.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">table</span>(E1<span class="op">$</span>vstmLoad, E1<span class="op">$</span>SN) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">table</span>(E1<span class="op">$</span>vstmLoad, E1<span class="op">$</span>SN) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -633,7 +633,7 @@ pre code, pre, code {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">table</span>(E1<span class="op">$</span>Congruency, E1<span class="op">$</span>SN) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">table</span>(E1<span class="op">$</span>Congruency, E1<span class="op">$</span>SN) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -714,19 +714,19 @@ pre code, pre, code {
 <p><br><br></p>
 </div>
 <div id="change-detection-task" class="section level1">
-<h1><span class="header-section-number">2</span> Change Detection Task</h1>
+<h1><span class="header-section-number">3</span> Change Detection Task</h1>
 <div id="accuracy" class="section level2">
-<h2><span class="header-section-number">2.1</span> Accuracy</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># VSTM, Experiment 1, subject-level, long format</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>vE1slong &lt;-<span class="st"> </span>E1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">vstmCorr =</span> <span class="kw">mean</span>(vstmCorr)<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
-<span id="cb5-5"><a href="#cb5-5"></a></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co"># Experiment 1 summary</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a>vE1slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(vstmCorr), <span class="dt">SD =</span> <span class="kw">sd</span>(vstmCorr)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
+<h2><span class="header-section-number">3.1</span> Accuracy</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># VSTM, Experiment 1, subject-level, long format</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>vE1slong &lt;-<span class="st"> </span>E1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">vstmCorr =</span> <span class="kw">mean</span>(vstmCorr)<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
+<span id="cb6-5"><a href="#cb6-5"></a></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co"># Experiment 1 summary</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>vE1slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(vstmCorr), <span class="dt">SD =</span> <span class="kw">sd</span>(vstmCorr)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -748,34 +748,34 @@ pre code, pre, code {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># wide format, needed for geom_segments.</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>vE1swide &lt;-<span class="st"> </span>vE1slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spread</span>(<span class="dt">key =</span> <span class="st">&quot;vstmLoad&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;vstmCorr&quot;</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># Rmisc must be called indirectly due to incompatibility between plyr and dplyr.</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a>vE1g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> vE1slong, <span class="dt">measurevar =</span> <span class="st">&quot;vstmCorr&quot;</span>, </span>
-<span id="cb6-7"><a href="#cb6-7"></a>                       <span class="dt">withinvars =</span> <span class="st">&quot;vstmLoad&quot;</span>, <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span>
-<span id="cb6-8"><a href="#cb6-8"></a></span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="kw">ggplot</span>(vE1slong, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>vstmCorr)) <span class="op">+</span></span>
-<span id="cb6-10"><a href="#cb6-10"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>vE1swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>LowLoad, </span>
-<span id="cb6-13"><a href="#cb6-13"></a>                                  <span class="dt">xend=</span><span class="dv">2</span>, <span class="dt">yend=</span>HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb6-14"><a href="#cb6-14"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(vE1g, <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
-<span id="cb6-15"><a href="#cb6-15"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>vstmCorr, </span>
-<span id="cb6-16"><a href="#cb6-16"></a>                              <span class="dt">ymin =</span> vstmCorr <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> vstmCorr <span class="op">+</span><span class="st"> </span>ci), </span>
-<span id="cb6-17"><a href="#cb6-17"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Change Detection Accuracy&quot;</span>) <span class="op">+</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb6-20"><a href="#cb6-20"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb6-21"><a href="#cb6-21"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb6-22"><a href="#cb6-22"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb6-23"><a href="#cb6-23"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># wide format, needed for geom_segments.</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>vE1swide &lt;-<span class="st"> </span>vE1slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spread</span>(<span class="dt">key =</span> <span class="st">&quot;vstmLoad&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;vstmCorr&quot;</span>)</span>
+<span id="cb7-3"><a href="#cb7-3"></a></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># Rmisc must be called indirectly due to incompatibility between plyr and dplyr.</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>vE1g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> vE1slong, <span class="dt">measurevar =</span> <span class="st">&quot;vstmCorr&quot;</span>, </span>
+<span id="cb7-7"><a href="#cb7-7"></a>                       <span class="dt">withinvars =</span> <span class="st">&quot;vstmLoad&quot;</span>, <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span>
+<span id="cb7-8"><a href="#cb7-8"></a></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="kw">ggplot</span>(vE1slong, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>vstmCorr)) <span class="op">+</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>vE1swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>LowLoad, </span>
+<span id="cb7-13"><a href="#cb7-13"></a>                                  <span class="dt">xend=</span><span class="dv">2</span>, <span class="dt">yend=</span>HighLoad), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(vE1g, <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
+<span id="cb7-15"><a href="#cb7-15"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>vstmCorr, </span>
+<span id="cb7-16"><a href="#cb7-16"></a>                              <span class="dt">ymin =</span> vstmCorr <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> vstmCorr <span class="op">+</span><span class="st"> </span>ci), </span>
+<span id="cb7-17"><a href="#cb7-17"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Change Detection Accuracy&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb7-23"><a href="#cb7-23"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
 <p><img src="vstmAS1_files/figure-html/vstm_sum-1.png" width="672" /></p>
 <div id="t-test" class="section level3">
-<h3><span class="header-section-number">2.1.1</span> T-Test</h3>
+<h3><span class="header-section-number">3.1.1</span> T-Test</h3>
 <p>A t-test. Effect size followed.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>( t1 &lt;-<span class="st"> </span><span class="kw">t.test</span>(vstmCorr <span class="op">~</span><span class="st"> </span>vstmLoad, vE1slong, <span class="dt">paired =</span> <span class="ot">TRUE</span>) )</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>( t1 &lt;-<span class="st"> </span><span class="kw">t.test</span>(vstmCorr <span class="op">~</span><span class="st"> </span>vstmLoad, vE1slong, <span class="dt">paired =</span> <span class="ot">TRUE</span>) )</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -787,7 +787,7 @@ pre code, pre, code {
 ## sample estimates:
 ## mean of the differences 
 ##                13.28125</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">ES.t.paired</span>(<span class="dt">t =</span> t1<span class="op">$</span>statistic, <span class="dt">df =</span> t1<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">ES.t.paired</span>(<span class="dt">t =</span> t1<span class="op">$</span>statistic, <span class="dt">df =</span> t1<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## 
 ##      effect size (Cohen&#39;s d) of paired two-sample t test 
 ## 
@@ -805,20 +805,20 @@ pre code, pre, code {
 </div>
 </div>
 <div id="flanker-task" class="section level1">
-<h1><span class="header-section-number">3</span> Flanker Task</h1>
+<h1><span class="header-section-number">4</span> Flanker Task</h1>
 <p>Accuracy in the attention task was generally high. There were no significant effects in the ANOVA.</p>
 <div id="accuracy-1" class="section level2">
-<h2><span class="header-section-number">3.1</span> Accuracy</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Attention, Experiment 1, subject-level, long format</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>aE1slong &lt;-<span class="st"> </span>E1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Accuracy =</span> <span class="kw">mean</span>(Corr)<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
-<span id="cb11-5"><a href="#cb11-5"></a></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="co"># Experiment 1 summary</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a>aE1slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-8"><a href="#cb11-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(Accuracy), <span class="dt">SD =</span> <span class="kw">sd</span>(Accuracy)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-9"><a href="#cb11-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
+<h2><span class="header-section-number">4.1</span> Accuracy</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Attention, Experiment 1, subject-level, long format</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>aE1slong &lt;-<span class="st"> </span>E1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Accuracy =</span> <span class="kw">mean</span>(Corr)<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
+<span id="cb12-5"><a href="#cb12-5"></a></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="co"># Experiment 1 summary</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a>aE1slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(Accuracy), <span class="dt">SD =</span> <span class="kw">sd</span>(Accuracy)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-10"><a href="#cb12-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -855,34 +855,34 @@ pre code, pre, code {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="co"># Rmisc must be called indirectly due to incompatibility between plyr and dplyr.</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a>aE1g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> aE1slong, <span class="dt">measurevar =</span> <span class="st">&quot;Accuracy&quot;</span>, </span>
-<span id="cb12-4"><a href="#cb12-4"></a>                       <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>)</span>
-<span id="cb12-5"><a href="#cb12-5"></a></span>
-<span id="cb12-6"><a href="#cb12-6"></a><span class="kw">ggplot</span>(<span class="dt">data=</span>aE1slong, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>Accuracy, <span class="dt">fill=</span>Congruency)) <span class="op">+</span></span>
-<span id="cb12-7"><a href="#cb12-7"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.7</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span></span>
-<span id="cb12-8"><a href="#cb12-8"></a><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="dt">dodge.width =</span> <span class="fl">0.7</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.4</span>, </span>
-<span id="cb12-9"><a href="#cb12-9"></a>                               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb12-10"><a href="#cb12-10"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="dt">data=</span>aE1g,</span>
-<span id="cb12-11"><a href="#cb12-11"></a>                  <span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">ymin =</span> Accuracy<span class="op">-</span>ci, <span class="dt">ymax =</span> Accuracy<span class="op">+</span>ci, <span class="dt">color =</span> Congruency),</span>
-<span id="cb12-12"><a href="#cb12-12"></a>                  <span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="fl">0.7</span>), <span class="dt">color =</span> <span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb12-13"><a href="#cb12-13"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb12-14"><a href="#cb12-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, </span>
-<span id="cb12-15"><a href="#cb12-15"></a>       <span class="dt">y =</span> <span class="st">&quot;Accuracy (%)&quot;</span>, </span>
-<span id="cb12-16"><a href="#cb12-16"></a>       <span class="dt">fill=</span><span class="st">&quot;Congruency&quot;</span>) <span class="op">+</span></span>
-<span id="cb12-17"><a href="#cb12-17"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb12-18"><a href="#cb12-18"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
-<span id="cb12-19"><a href="#cb12-19"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
-<span id="cb12-20"><a href="#cb12-20"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb12-21"><a href="#cb12-21"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb12-22"><a href="#cb12-22"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>()) </span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># Rmisc must be called indirectly due to incompatibility between plyr and dplyr.</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>aE1g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> aE1slong, <span class="dt">measurevar =</span> <span class="st">&quot;Accuracy&quot;</span>, </span>
+<span id="cb13-4"><a href="#cb13-4"></a>                       <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>)</span>
+<span id="cb13-5"><a href="#cb13-5"></a></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="kw">ggplot</span>(<span class="dt">data=</span>aE1slong, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>Accuracy, <span class="dt">fill=</span>Congruency)) <span class="op">+</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.7</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="st">  </span>ggbeeswarm<span class="op">::</span><span class="kw">geom_quasirandom</span>(<span class="dt">dodge.width =</span> <span class="fl">0.7</span>, <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">alpha =</span> <span class="fl">0.4</span>, </span>
+<span id="cb13-9"><a href="#cb13-9"></a>                               <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="dt">data=</span>aE1g,</span>
+<span id="cb13-11"><a href="#cb13-11"></a>                  <span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">ymin =</span> Accuracy<span class="op">-</span>ci, <span class="dt">ymax =</span> Accuracy<span class="op">+</span>ci, <span class="dt">color =</span> Congruency),</span>
+<span id="cb13-12"><a href="#cb13-12"></a>                  <span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="fl">0.7</span>), <span class="dt">color =</span> <span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb13-13"><a href="#cb13-13"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">100</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb13-14"><a href="#cb13-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, </span>
+<span id="cb13-15"><a href="#cb13-15"></a>       <span class="dt">y =</span> <span class="st">&quot;Accuracy (%)&quot;</span>, </span>
+<span id="cb13-16"><a href="#cb13-16"></a>       <span class="dt">fill=</span><span class="st">&quot;Congruency&quot;</span>) <span class="op">+</span></span>
+<span id="cb13-17"><a href="#cb13-17"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb13-18"><a href="#cb13-18"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
+<span id="cb13-19"><a href="#cb13-19"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
+<span id="cb13-20"><a href="#cb13-20"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb13-21"><a href="#cb13-21"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb13-22"><a href="#cb13-22"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>()) </span></code></pre></div>
 <p><img src="vstmAS1_files/figure-html/acc_sum-1.png" width="672" /></p>
 <div id="anova" class="section level3">
-<h3><span class="header-section-number">3.1.1</span> ANOVA</h3>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> aE1slong, <span class="dt">dv =</span> <span class="st">&quot;Accuracy&quot;</span>, </span>
-<span id="cb13-2"><a href="#cb13-2"></a>       <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="st">  </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<h3><span class="header-section-number">4.1.1</span> ANOVA</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">data =</span> aE1slong, <span class="dt">dv =</span> <span class="st">&quot;Accuracy&quot;</span>, </span>
+<span id="cb14-2"><a href="#cb14-2"></a>       <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="st">  </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -931,59 +931,59 @@ pre code, pre, code {
 </div>
 </div>
 <div id="rt" class="section level2">
-<h2><span class="header-section-number">3.2</span> RT</h2>
+<h2><span class="header-section-number">4.2</span> RT</h2>
 <div id="trimming" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Trimming</h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># filtering out incorrect trials</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a>cE1 &lt;-<span class="st"> </span>E1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Corr<span class="op">==</span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>vstmCorr<span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RT =</span> RT<span class="op">*</span><span class="dv">1000</span>)</span>
-<span id="cb14-3"><a href="#cb14-3"></a></span>
-<span id="cb14-4"><a href="#cb14-4"></a><span class="co"># trimming by 2.5 MAD.</span></span>
-<span id="cb14-5"><a href="#cb14-5"></a>rE1 &lt;-<span class="st"> </span>cE1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(RT <span class="op">&gt;</span><span class="st"> </span><span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb14-6"><a href="#cb14-6"></a><span class="st">  </span><span class="kw">group_by</span>(SN) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb14-7"><a href="#cb14-7"></a><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span></span>
-<span id="cb14-8"><a href="#cb14-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lbound =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="kw">median</span>(.<span class="op">$</span>RT)<span class="op">-</span><span class="fl">2.5</span><span class="op">*</span><span class="kw">mad</span>(.<span class="op">$</span>RT)),</span>
-<span id="cb14-9"><a href="#cb14-9"></a>         <span class="dt">ubound =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="kw">median</span>(.<span class="op">$</span>RT)<span class="op">+</span><span class="fl">2.5</span><span class="op">*</span><span class="kw">mad</span>(.<span class="op">$</span>RT))) <span class="op">%&gt;%</span></span>
-<span id="cb14-10"><a href="#cb14-10"></a><span class="st">  </span><span class="kw">unnest</span>(<span class="kw">c</span>(lbound, ubound)) <span class="op">%&gt;%</span></span>
-<span id="cb14-11"><a href="#cb14-11"></a><span class="st">  </span><span class="kw">unnest</span>(data) <span class="op">%&gt;%</span></span>
-<span id="cb14-12"><a href="#cb14-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Outlier =</span> (RT <span class="op">&lt;</span><span class="st"> </span>lbound)<span class="op">|</span>(RT <span class="op">&gt;</span><span class="st"> </span>ubound)) <span class="op">%&gt;%</span></span>
-<span id="cb14-13"><a href="#cb14-13"></a><span class="st">  </span><span class="kw">filter</span>(Outlier <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb14-14"><a href="#cb14-14"></a><span class="st">  </span>ungroup <span class="op">%&gt;%</span></span>
-<span id="cb14-15"><a href="#cb14-15"></a><span class="st">  </span><span class="kw">select</span>(SN, vstmLoad, Congruency, RT)</span>
-<span id="cb14-16"><a href="#cb14-16"></a></span>
-<span id="cb14-17"><a href="#cb14-17"></a><span class="co"># percentage trimmed.</span></span>
-<span id="cb14-18"><a href="#cb14-18"></a>(<span class="kw">nrow</span>(cE1)<span class="op">-</span><span class="kw">nrow</span>(rE1))<span class="op">/</span><span class="kw">nrow</span>(cE1)</span></code></pre></div>
+<h3><span class="header-section-number">4.2.1</span> Trimming</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># filtering out incorrect trials</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>cE1 &lt;-<span class="st"> </span>E1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Corr<span class="op">==</span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>vstmCorr<span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RT =</span> RT<span class="op">*</span><span class="dv">1000</span>)</span>
+<span id="cb15-3"><a href="#cb15-3"></a></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="co"># trimming by 2.5 MAD.</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>rE1 &lt;-<span class="st"> </span>cE1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(RT <span class="op">&gt;</span><span class="st"> </span><span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="st">  </span><span class="kw">group_by</span>(SN) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lbound =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="kw">median</span>(.<span class="op">$</span>RT)<span class="op">-</span><span class="fl">2.5</span><span class="op">*</span><span class="kw">mad</span>(.<span class="op">$</span>RT)),</span>
+<span id="cb15-9"><a href="#cb15-9"></a>         <span class="dt">ubound =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="kw">median</span>(.<span class="op">$</span>RT)<span class="op">+</span><span class="fl">2.5</span><span class="op">*</span><span class="kw">mad</span>(.<span class="op">$</span>RT))) <span class="op">%&gt;%</span></span>
+<span id="cb15-10"><a href="#cb15-10"></a><span class="st">  </span><span class="kw">unnest</span>(<span class="kw">c</span>(lbound, ubound)) <span class="op">%&gt;%</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a><span class="st">  </span><span class="kw">unnest</span>(data) <span class="op">%&gt;%</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Outlier =</span> (RT <span class="op">&lt;</span><span class="st"> </span>lbound)<span class="op">|</span>(RT <span class="op">&gt;</span><span class="st"> </span>ubound)) <span class="op">%&gt;%</span></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="st">  </span><span class="kw">filter</span>(Outlier <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a><span class="st">  </span>ungroup <span class="op">%&gt;%</span></span>
+<span id="cb15-15"><a href="#cb15-15"></a><span class="st">  </span><span class="kw">select</span>(SN, vstmLoad, Congruency, RT)</span>
+<span id="cb15-16"><a href="#cb15-16"></a></span>
+<span id="cb15-17"><a href="#cb15-17"></a><span class="co"># percentage trimmed.</span></span>
+<span id="cb15-18"><a href="#cb15-18"></a>(<span class="kw">nrow</span>(cE1)<span class="op">-</span><span class="kw">nrow</span>(rE1))<span class="op">/</span><span class="kw">nrow</span>(cE1)</span></code></pre></div>
 <pre><code>## [1] 0.05946451</code></pre>
 <p>5.95%의 가외치가 제거되었다.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>den1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cE1, <span class="kw">aes</span>(<span class="dt">x=</span>RT)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb16-5"><a href="#cb16-5"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb16-6"><a href="#cb16-6"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb16-7"><a href="#cb16-7"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()) </span>
-<span id="cb16-8"><a href="#cb16-8"></a>den2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(rE1, <span class="kw">aes</span>(<span class="dt">x=</span>RT)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb16-9"><a href="#cb16-9"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb16-10"><a href="#cb16-10"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Trimmed RT&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb16-12"><a href="#cb16-12"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb16-13"><a href="#cb16-13"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb16-14"><a href="#cb16-14"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb16-15"><a href="#cb16-15"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()) </span>
-<span id="cb16-16"><a href="#cb16-16"></a>den1 <span class="op">+</span><span class="st"> </span>den2</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>den1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cE1, <span class="kw">aes</span>(<span class="dt">x=</span>RT)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb17-5"><a href="#cb17-5"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb17-6"><a href="#cb17-6"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb17-7"><a href="#cb17-7"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()) </span>
+<span id="cb17-8"><a href="#cb17-8"></a>den2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(rE1, <span class="kw">aes</span>(<span class="dt">x=</span>RT)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-11"><a href="#cb17-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Trimmed RT&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-12"><a href="#cb17-12"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb17-13"><a href="#cb17-13"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb17-14"><a href="#cb17-14"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb17-15"><a href="#cb17-15"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()) </span>
+<span id="cb17-16"><a href="#cb17-16"></a>den1 <span class="op">+</span><span class="st"> </span>den2</span></code></pre></div>
 <p><img src="vstmAS1_files/figure-html/rt_distribution-1.png" width="672" /></p>
 </div>
 <div id="mean-rt" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Mean RT</h3>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Attention RT, Experiment 1, subject-level, long format</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>rE1slong &lt;-<span class="st"> </span>rE1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">RT =</span> <span class="kw">mean</span>(RT)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-4"><a href="#cb17-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
-<span id="cb17-5"><a href="#cb17-5"></a></span>
-<span id="cb17-6"><a href="#cb17-6"></a><span class="co"># Experiment 1 summary</span></span>
-<span id="cb17-7"><a href="#cb17-7"></a>rE1slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-8"><a href="#cb17-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(RT), <span class="dt">SD =</span> <span class="kw">sd</span>(RT)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-9"><a href="#cb17-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-10"><a href="#cb17-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
+<h3><span class="header-section-number">4.2.2</span> Mean RT</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Attention RT, Experiment 1, subject-level, long format</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>rE1slong &lt;-<span class="st"> </span>rE1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(SN, vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">RT =</span> <span class="kw">mean</span>(RT)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-4"><a href="#cb18-4"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
+<span id="cb18-5"><a href="#cb18-5"></a></span>
+<span id="cb18-6"><a href="#cb18-6"></a><span class="co"># Experiment 1 summary</span></span>
+<span id="cb18-7"><a href="#cb18-7"></a>rE1slong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(vstmLoad, Congruency) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-8"><a href="#cb18-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(RT), <span class="dt">SD =</span> <span class="kw">sd</span>(RT)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-9"><a href="#cb18-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb18-10"><a href="#cb18-10"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1022,18 +1022,18 @@ pre code, pre, code {
 </table>
 </div>
 <div id="rt-congruency-effect" class="section level3">
-<h3><span class="header-section-number">3.2.3</span> RT Congruency Effect</h3>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Experiment 1 Congruency Effect in RT, subject-level, long format</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>rE1CEslong &lt;-<span class="st"> </span>rE1slong <span class="op">%&gt;%</span></span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> Congruency, <span class="dt">value =</span> RT) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-4"><a href="#cb18-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cEffect =</span> Incongruent <span class="op">-</span><span class="st"> </span>Congruent) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-5"><a href="#cb18-5"></a><span class="st">  </span><span class="kw">select</span>(SN, vstmLoad, cEffect)</span>
-<span id="cb18-6"><a href="#cb18-6"></a></span>
-<span id="cb18-7"><a href="#cb18-7"></a><span class="co"># Experiment 1 summary</span></span>
-<span id="cb18-8"><a href="#cb18-8"></a>rE1CEslong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-9"><a href="#cb18-9"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(cEffect), <span class="dt">SD =</span> <span class="kw">sd</span>(cEffect)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-10"><a href="#cb18-10"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb18-11"><a href="#cb18-11"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
+<h3><span class="header-section-number">4.2.3</span> RT Congruency Effect</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Experiment 1 Congruency Effect in RT, subject-level, long format</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>rE1CEslong &lt;-<span class="st"> </span>rE1slong <span class="op">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> Congruency, <span class="dt">value =</span> RT) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cEffect =</span> Incongruent <span class="op">-</span><span class="st"> </span>Congruent) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-5"><a href="#cb19-5"></a><span class="st">  </span><span class="kw">select</span>(SN, vstmLoad, cEffect)</span>
+<span id="cb19-6"><a href="#cb19-6"></a></span>
+<span id="cb19-7"><a href="#cb19-7"></a><span class="co"># Experiment 1 summary</span></span>
+<span id="cb19-8"><a href="#cb19-8"></a>rE1CEslong <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(vstmLoad) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-9"><a href="#cb19-9"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">M =</span> <span class="kw">mean</span>(cEffect), <span class="dt">SD =</span> <span class="kw">sd</span>(cEffect)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-10"><a href="#cb19-10"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-11"><a href="#cb19-11"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1055,73 +1055,73 @@ pre code, pre, code {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a>rE1g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> rE1slong, <span class="dt">measurevar =</span> <span class="st">&quot;RT&quot;</span>, </span>
-<span id="cb19-3"><a href="#cb19-3"></a>                               <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span>
-<span id="cb19-4"><a href="#cb19-4"></a></span>
-<span id="cb19-5"><a href="#cb19-5"></a>rE1swide &lt;-<span class="st"> </span>rE1slong <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># wide format, needed for geom_segments.</span></span>
-<span id="cb19-6"><a href="#cb19-6"></a><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;temp&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb19-7"><a href="#cb19-7"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> temp, <span class="dt">value =</span> RT)</span>
-<span id="cb19-8"><a href="#cb19-8"></a></span>
-<span id="cb19-9"><a href="#cb19-9"></a>G1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb19-10"><a href="#cb19-10"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">data=</span>rE1g, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">fill=</span>Congruency),</span>
-<span id="cb19-11"><a href="#cb19-11"></a>           <span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">width=</span><span class="fl">0.7</span>, <span class="dt">color=</span><span class="st">&quot;black&quot;</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(.<span class="dv">8</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb19-12"><a href="#cb19-12"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span>rE1g, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">ymin=</span>RT<span class="op">-</span>ci, <span class="dt">ymax=</span>RT<span class="op">+</span>ci, <span class="dt">group=</span>Congruency),</span>
-<span id="cb19-13"><a href="#cb19-13"></a>                 <span class="dt">size=</span><span class="dv">1</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.8</span>)) <span class="op">+</span></span>
-<span id="cb19-14"><a href="#cb19-14"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
-<span id="cb19-15"><a href="#cb19-15"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
-<span id="cb19-16"><a href="#cb19-16"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data=</span>rE1slong, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">group=</span>Congruency),</span>
-<span id="cb19-17"><a href="#cb19-17"></a>             <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.6</span>), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
-<span id="cb19-18"><a href="#cb19-18"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE1swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span><span class="fl">-.15</span>, <span class="dt">y=</span>LowLoad_Incongruent, </span>
-<span id="cb19-19"><a href="#cb19-19"></a>                                    <span class="dt">xend=</span><span class="dv">1</span><span class="fl">+.15</span>, <span class="dt">yend=</span>LowLoad_Congruent),</span>
-<span id="cb19-20"><a href="#cb19-20"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb19-21"><a href="#cb19-21"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE1swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">2</span><span class="fl">-.15</span>, <span class="dt">y=</span>HighLoad_Incongruent, </span>
-<span id="cb19-22"><a href="#cb19-22"></a>                                    <span class="dt">xend=</span><span class="dv">2</span><span class="fl">+.15</span>, <span class="dt">yend=</span>HighLoad_Congruent),</span>
-<span id="cb19-23"><a href="#cb19-23"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
-<span id="cb19-24"><a href="#cb19-24"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Reaction Time (ms)&quot;</span>) <span class="op">+</span></span>
-<span id="cb19-25"><a href="#cb19-25"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb19-26"><a href="#cb19-26"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">500</span>, <span class="dv">1000</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb19-27"><a href="#cb19-27"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb19-28"><a href="#cb19-28"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;top&quot;</span>,</span>
-<span id="cb19-29"><a href="#cb19-29"></a>        <span class="dt">legend.spacing.x =</span> <span class="kw">unit</span>(<span class="fl">0.5</span>, <span class="st">&#39;lines&#39;</span>),</span>
-<span id="cb19-30"><a href="#cb19-30"></a>        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb19-31"><a href="#cb19-31"></a>        <span class="dt">legend.background =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb19-32"><a href="#cb19-32"></a>        <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb19-33"><a href="#cb19-33"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>())</span>
-<span id="cb19-34"><a href="#cb19-34"></a></span>
-<span id="cb19-35"><a href="#cb19-35"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
-<span id="cb19-36"><a href="#cb19-36"></a>rE1CEg &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> rE1CEslong, <span class="dt">measurevar =</span> <span class="st">&quot;cEffect&quot;</span>, </span>
-<span id="cb19-37"><a href="#cb19-37"></a>                                <span class="dt">withinvars =</span> <span class="st">&quot;vstmLoad&quot;</span>, <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span>
-<span id="cb19-38"><a href="#cb19-38"></a></span>
-<span id="cb19-39"><a href="#cb19-39"></a><span class="co"># wide format, needed for geom_segments.</span></span>
-<span id="cb19-40"><a href="#cb19-40"></a>rE1CEswide &lt;-<span class="st"> </span>rE1CEslong <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> vstmLoad, <span class="dt">value =</span> cEffect)</span>
-<span id="cb19-41"><a href="#cb19-41"></a></span>
-<span id="cb19-42"><a href="#cb19-42"></a>G2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(rE1CEslong, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>cEffect)) <span class="op">+</span></span>
-<span id="cb19-43"><a href="#cb19-43"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb19-44"><a href="#cb19-44"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
-<span id="cb19-45"><a href="#cb19-45"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE1CEswide, <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, </span>
-<span id="cb19-46"><a href="#cb19-46"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, <span class="dt">yend=</span>HighLoad)) <span class="op">+</span></span>
-<span id="cb19-47"><a href="#cb19-47"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(rE1CEg, <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
-<span id="cb19-48"><a href="#cb19-48"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>cEffect, </span>
-<span id="cb19-49"><a href="#cb19-49"></a>                              <span class="dt">ymin =</span> cEffect <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> cEffect <span class="op">+</span><span class="st"> </span>ci), </span>
-<span id="cb19-50"><a href="#cb19-50"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>)<span class="op">+</span></span>
-<span id="cb19-51"><a href="#cb19-51"></a><span class="st">  </span><span class="co"># labs(x = &quot;VSTM Load&quot;, y = &quot;Congruency Effect \n (Incongruent - Congruent)&quot;) +</span></span>
-<span id="cb19-52"><a href="#cb19-52"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Congruency Effect (ms)&quot;</span>) <span class="op">+</span></span>
-<span id="cb19-53"><a href="#cb19-53"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
-<span id="cb19-54"><a href="#cb19-54"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">120</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
-<span id="cb19-55"><a href="#cb19-55"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">0</span>, <span class="dv">40</span>, <span class="dv">80</span>, <span class="dv">120</span>)) <span class="op">+</span></span>
-<span id="cb19-56"><a href="#cb19-56"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
-<span id="cb19-57"><a href="#cb19-57"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb19-58"><a href="#cb19-58"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>())</span>
-<span id="cb19-59"><a href="#cb19-59"></a></span>
-<span id="cb19-60"><a href="#cb19-60"></a><span class="co"># Multipanel plot</span></span>
-<span id="cb19-61"><a href="#cb19-61"></a>G1 <span class="op">+</span><span class="st"> </span>G2 <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">nrow =</span> <span class="dv">1</span>, <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">1.3</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>rE1g &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> rE1slong, <span class="dt">measurevar =</span> <span class="st">&quot;RT&quot;</span>, </span>
+<span id="cb20-3"><a href="#cb20-3"></a>                               <span class="dt">withinvars =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>), <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span>
+<span id="cb20-4"><a href="#cb20-4"></a></span>
+<span id="cb20-5"><a href="#cb20-5"></a>rE1swide &lt;-<span class="st"> </span>rE1slong <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># wide format, needed for geom_segments.</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;temp&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb20-7"><a href="#cb20-7"></a><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> temp, <span class="dt">value =</span> RT)</span>
+<span id="cb20-8"><a href="#cb20-8"></a></span>
+<span id="cb20-9"><a href="#cb20-9"></a>G1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb20-10"><a href="#cb20-10"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">data=</span>rE1g, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">fill=</span>Congruency),</span>
+<span id="cb20-11"><a href="#cb20-11"></a>           <span class="dt">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="dt">width=</span><span class="fl">0.7</span>, <span class="dt">color=</span><span class="st">&quot;black&quot;</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(.<span class="dv">8</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb20-12"><a href="#cb20-12"></a><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="dt">data=</span>rE1g, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">ymin=</span>RT<span class="op">-</span>ci, <span class="dt">ymax=</span>RT<span class="op">+</span>ci, <span class="dt">group=</span>Congruency),</span>
+<span id="cb20-13"><a href="#cb20-13"></a>                 <span class="dt">size=</span><span class="dv">1</span>, <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.8</span>)) <span class="op">+</span></span>
+<span id="cb20-14"><a href="#cb20-14"></a><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&#39;#0073C2FF&#39;</span>,<span class="st">&#39;#EFC000FF&#39;</span>),</span>
+<span id="cb20-15"><a href="#cb20-15"></a>                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Incongruent&quot;</span>, <span class="st">&quot;Congruent&quot;</span>)) <span class="op">+</span></span>
+<span id="cb20-16"><a href="#cb20-16"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data=</span>rE1slong, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>RT, <span class="dt">group=</span>Congruency),</span>
+<span id="cb20-17"><a href="#cb20-17"></a>             <span class="dt">position=</span><span class="kw">position_dodge</span>(<span class="fl">0.6</span>), <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
+<span id="cb20-18"><a href="#cb20-18"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE1swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span><span class="fl">-.15</span>, <span class="dt">y=</span>LowLoad_Incongruent, </span>
+<span id="cb20-19"><a href="#cb20-19"></a>                                    <span class="dt">xend=</span><span class="dv">1</span><span class="fl">+.15</span>, <span class="dt">yend=</span>LowLoad_Congruent),</span>
+<span id="cb20-20"><a href="#cb20-20"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb20-21"><a href="#cb20-21"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE1swide, <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">2</span><span class="fl">-.15</span>, <span class="dt">y=</span>HighLoad_Incongruent, </span>
+<span id="cb20-22"><a href="#cb20-22"></a>                                    <span class="dt">xend=</span><span class="dv">2</span><span class="fl">+.15</span>, <span class="dt">yend=</span>HighLoad_Congruent),</span>
+<span id="cb20-23"><a href="#cb20-23"></a>               <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>) <span class="op">+</span></span>
+<span id="cb20-24"><a href="#cb20-24"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Reaction Time (ms)&quot;</span>) <span class="op">+</span></span>
+<span id="cb20-25"><a href="#cb20-25"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb20-26"><a href="#cb20-26"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">500</span>, <span class="dv">1000</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb20-27"><a href="#cb20-27"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb20-28"><a href="#cb20-28"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;top&quot;</span>,</span>
+<span id="cb20-29"><a href="#cb20-29"></a>        <span class="dt">legend.spacing.x =</span> <span class="kw">unit</span>(<span class="fl">0.5</span>, <span class="st">&#39;lines&#39;</span>),</span>
+<span id="cb20-30"><a href="#cb20-30"></a>        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb20-31"><a href="#cb20-31"></a>        <span class="dt">legend.background =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb20-32"><a href="#cb20-32"></a>        <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb20-33"><a href="#cb20-33"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>())</span>
+<span id="cb20-34"><a href="#cb20-34"></a></span>
+<span id="cb20-35"><a href="#cb20-35"></a><span class="co"># group level, needed for printing &amp; geom_pointrange</span></span>
+<span id="cb20-36"><a href="#cb20-36"></a>rE1CEg &lt;-<span class="st"> </span>Rmisc<span class="op">::</span><span class="kw">summarySEwithin</span>(<span class="dt">data =</span> rE1CEslong, <span class="dt">measurevar =</span> <span class="st">&quot;cEffect&quot;</span>, </span>
+<span id="cb20-37"><a href="#cb20-37"></a>                                <span class="dt">withinvars =</span> <span class="st">&quot;vstmLoad&quot;</span>, <span class="dt">idvar =</span> <span class="st">&quot;SN&quot;</span>) </span>
+<span id="cb20-38"><a href="#cb20-38"></a></span>
+<span id="cb20-39"><a href="#cb20-39"></a><span class="co"># wide format, needed for geom_segments.</span></span>
+<span id="cb20-40"><a href="#cb20-40"></a>rE1CEswide &lt;-<span class="st"> </span>rE1CEslong <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> vstmLoad, <span class="dt">value =</span> cEffect)</span>
+<span id="cb20-41"><a href="#cb20-41"></a></span>
+<span id="cb20-42"><a href="#cb20-42"></a>G2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(rE1CEslong, <span class="kw">aes</span>(<span class="dt">x=</span>vstmLoad, <span class="dt">y=</span>cEffect)) <span class="op">+</span></span>
+<span id="cb20-43"><a href="#cb20-43"></a><span class="st">  </span><span class="kw">geom_violin</span>(<span class="dt">width =</span> <span class="fl">0.5</span>, <span class="dt">trim=</span><span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb20-44"><a href="#cb20-44"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, <span class="dt">size=</span><span class="fl">1.8</span>) <span class="op">+</span></span>
+<span id="cb20-45"><a href="#cb20-45"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data=</span>rE1CEswide, <span class="dt">color=</span><span class="st">&quot;gray80&quot;</span>, </span>
+<span id="cb20-46"><a href="#cb20-46"></a>               <span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">y=</span>LowLoad, <span class="dt">xend=</span><span class="dv">2</span>, <span class="dt">yend=</span>HighLoad)) <span class="op">+</span></span>
+<span id="cb20-47"><a href="#cb20-47"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(rE1CEg, <span class="dt">inherit.aes=</span><span class="ot">FALSE</span>,</span>
+<span id="cb20-48"><a href="#cb20-48"></a>                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">x =</span> vstmLoad, <span class="dt">y=</span>cEffect, </span>
+<span id="cb20-49"><a href="#cb20-49"></a>                              <span class="dt">ymin =</span> cEffect <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> cEffect <span class="op">+</span><span class="st"> </span>ci), </span>
+<span id="cb20-50"><a href="#cb20-50"></a>                  <span class="dt">colour=</span><span class="st">&quot;darkred&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>)<span class="op">+</span></span>
+<span id="cb20-51"><a href="#cb20-51"></a><span class="st">  </span><span class="co"># labs(x = &quot;VSTM Load&quot;, y = &quot;Congruency Effect \n (Incongruent - Congruent)&quot;) +</span></span>
+<span id="cb20-52"><a href="#cb20-52"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;VSTM Load&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Congruency Effect (ms)&quot;</span>) <span class="op">+</span></span>
+<span id="cb20-53"><a href="#cb20-53"></a><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;LowLoad&quot;</span> =<span class="st"> &quot;Low&quot;</span>, <span class="st">&quot;HighLoad&quot;</span> =<span class="st"> &quot;High&quot;</span>)) <span class="op">+</span></span>
+<span id="cb20-54"><a href="#cb20-54"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">120</span>), <span class="dt">clip =</span> <span class="st">&quot;on&quot;</span>) <span class="op">+</span></span>
+<span id="cb20-55"><a href="#cb20-55"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="op">-</span><span class="dv">40</span>, <span class="dv">0</span>, <span class="dv">40</span>, <span class="dv">80</span>, <span class="dv">120</span>)) <span class="op">+</span></span>
+<span id="cb20-56"><a href="#cb20-56"></a><span class="st">  </span><span class="kw">theme_bw</span>(<span class="dt">base_size =</span> <span class="dv">18</span>) <span class="op">+</span></span>
+<span id="cb20-57"><a href="#cb20-57"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb20-58"><a href="#cb20-58"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>())</span>
+<span id="cb20-59"><a href="#cb20-59"></a></span>
+<span id="cb20-60"><a href="#cb20-60"></a><span class="co"># Multipanel plot</span></span>
+<span id="cb20-61"><a href="#cb20-61"></a>G1 <span class="op">+</span><span class="st"> </span>G2 <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">nrow =</span> <span class="dv">1</span>, <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">1.3</span>))</span></code></pre></div>
 <p><img src="vstmAS1_files/figure-html/congruency_sum-1.png" width="672" /></p>
 </div>
 <div id="anova-post-hoc" class="section level3">
-<h3><span class="header-section-number">3.2.4</span> ANOVA &amp; Post-hoc</h3>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>rt.aov &lt;-<span class="st"> </span><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">dv =</span> <span class="st">&quot;RT&quot;</span>, <span class="dt">data =</span> rE1, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) </span>
-<span id="cb20-2"><a href="#cb20-2"></a>rt.aov <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<h3><span class="header-section-number">4.2.4</span> ANOVA &amp; Post-hoc</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>rt.aov &lt;-<span class="st"> </span><span class="kw">aov_ez</span>(<span class="dt">id =</span> <span class="st">&quot;SN&quot;</span>, <span class="dt">dv =</span> <span class="st">&quot;RT&quot;</span>, <span class="dt">data =</span> rE1, <span class="dt">within =</span> <span class="kw">c</span>(<span class="st">&quot;vstmLoad&quot;</span>, <span class="st">&quot;Congruency&quot;</span>)) </span>
+<span id="cb21-2"><a href="#cb21-2"></a>rt.aov <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">anova</span>(<span class="dt">es =</span> <span class="st">&quot;pes&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1164,7 +1164,7 @@ pre code, pre, code {
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">emmeans</span>(rt.aov, pairwise <span class="op">~</span><span class="st"> </span>Congruency <span class="op">|</span><span class="st"> </span>vstmLoad)<span class="op">$</span>contrasts <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">emmeans</span>(rt.aov, pairwise <span class="op">~</span><span class="st"> </span>Congruency <span class="op">|</span><span class="st"> </span>vstmLoad)<span class="op">$</span>contrasts <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1200,10 +1200,10 @@ pre code, pre, code {
 </table>
 </div>
 <div id="bayes-factor" class="section level3">
-<h3><span class="header-section-number">3.2.5</span> Bayes Factor</h3>
+<h3><span class="header-section-number">4.2.5</span> Bayes Factor</h3>
 <p>ANOVA에서 BF를 쓰려면 여러가지 복잡한 사안들을 결정해야 한다. 본 연구의 가설은 congruency effect에 집중하는 만큼, <code>low load</code>와 <code>high load</code>의 차이만 비교하기로 한다.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>rE1CEswide<span class="op">$</span>CongEffDiff &lt;-<span class="st"> </span>rE1CEswide<span class="op">$</span>LowLoad <span class="op">-</span><span class="st"> </span>rE1CEswide<span class="op">$</span>HighLoad</span>
-<span id="cb22-2"><a href="#cb22-2"></a>( bf &lt;-<span class="st"> </span><span class="kw">ttestBF</span>(<span class="dt">x =</span> rE1CEswide<span class="op">$</span>CongEffDiff) )</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>rE1CEswide<span class="op">$</span>CongEffDiff &lt;-<span class="st"> </span>rE1CEswide<span class="op">$</span>LowLoad <span class="op">-</span><span class="st"> </span>rE1CEswide<span class="op">$</span>HighLoad</span>
+<span id="cb23-2"><a href="#cb23-2"></a>( bf &lt;-<span class="st"> </span><span class="kw">ttestBF</span>(<span class="dt">x =</span> rE1CEswide<span class="op">$</span>CongEffDiff) )</span></code></pre></div>
 <pre><code>## Bayes factor analysis
 ## --------------
 ## [1] Alt., r=0.707 : 0.2901357 ±0.02%
@@ -1212,7 +1212,7 @@ pre code, pre, code {
 ##   Null, mu = 0 
 ## ---
 ## Bayes factor type: BFoneSample, JZS</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="dv">1</span><span class="op">/</span>bf</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="dv">1</span><span class="op">/</span>bf</span></code></pre></div>
 <pre><code>## Bayes factor analysis
 ## --------------
 ## [1] Null, mu=0 : 3.446663 ±0.02%
@@ -1228,118 +1228,119 @@ pre code, pre, code {
 </div>
 </div>
 <div id="session-info" class="section level1">
-<h1><span class="header-section-number">4</span> Session Info</h1>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">sessionInfo</span>()</span>
-<span id="cb26-2"><a href="#cb26-2"></a><span class="co">## R version 4.0.2 (2020-06-22)</span></span>
-<span id="cb26-3"><a href="#cb26-3"></a><span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
-<span id="cb26-4"><a href="#cb26-4"></a><span class="co">## Running under: macOS High Sierra 10.13.6</span></span>
-<span id="cb26-5"><a href="#cb26-5"></a><span class="co">## </span></span>
-<span id="cb26-6"><a href="#cb26-6"></a><span class="co">## Matrix products: default</span></span>
-<span id="cb26-7"><a href="#cb26-7"></a><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib</span></span>
-<span id="cb26-8"><a href="#cb26-8"></a><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib</span></span>
-<span id="cb26-9"><a href="#cb26-9"></a><span class="co">## </span></span>
-<span id="cb26-10"><a href="#cb26-10"></a><span class="co">## locale:</span></span>
-<span id="cb26-11"><a href="#cb26-11"></a><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
-<span id="cb26-12"><a href="#cb26-12"></a><span class="co">## </span></span>
-<span id="cb26-13"><a href="#cb26-13"></a><span class="co">## attached base packages:</span></span>
-<span id="cb26-14"><a href="#cb26-14"></a><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb26-15"><a href="#cb26-15"></a><span class="co">## </span></span>
-<span id="cb26-16"><a href="#cb26-16"></a><span class="co">## other attached packages:</span></span>
-<span id="cb26-17"><a href="#cb26-17"></a><span class="co">##  [1] klippy_0.0.0.9500      patchwork_1.0.1        ggstatsplot_0.6.0     </span></span>
-<span id="cb26-18"><a href="#cb26-18"></a><span class="co">##  [4] BayesFactor_0.9.12-4.2 coda_0.19-3            emmeans_1.5.1         </span></span>
-<span id="cb26-19"><a href="#cb26-19"></a><span class="co">##  [7] afex_0.28-0            lme4_1.1-23            Matrix_1.2-18         </span></span>
-<span id="cb26-20"><a href="#cb26-20"></a><span class="co">## [10] powerAnalysis_0.2.1    knitr_1.29             forcats_0.5.0         </span></span>
-<span id="cb26-21"><a href="#cb26-21"></a><span class="co">## [13] stringr_1.4.0          dplyr_1.0.2            purrr_0.3.4           </span></span>
-<span id="cb26-22"><a href="#cb26-22"></a><span class="co">## [16] readr_1.3.1            tidyr_1.1.2            tibble_3.0.3          </span></span>
-<span id="cb26-23"><a href="#cb26-23"></a><span class="co">## [19] ggplot2_3.3.2          tidyverse_1.3.0        Rmisc_1.5             </span></span>
-<span id="cb26-24"><a href="#cb26-24"></a><span class="co">## [22] plyr_1.8.6             lattice_0.20-41        pacman_0.5.1          </span></span>
-<span id="cb26-25"><a href="#cb26-25"></a><span class="co">## </span></span>
-<span id="cb26-26"><a href="#cb26-26"></a><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span id="cb26-27"><a href="#cb26-27"></a><span class="co">##   [1] utf8_1.1.4                tidyselect_1.1.0         </span></span>
-<span id="cb26-28"><a href="#cb26-28"></a><span class="co">##   [3] grid_4.0.2                dunn.test_1.3.5          </span></span>
-<span id="cb26-29"><a href="#cb26-29"></a><span class="co">##   [5] gmp_0.6-0                 munsell_0.5.0            </span></span>
-<span id="cb26-30"><a href="#cb26-30"></a><span class="co">##   [7] codetools_0.2-16          effectsize_0.3.3         </span></span>
-<span id="cb26-31"><a href="#cb26-31"></a><span class="co">##   [9] statmod_1.4.34            miniUI_0.1.1.1           </span></span>
-<span id="cb26-32"><a href="#cb26-32"></a><span class="co">##  [11] withr_2.2.0               Brobdingnag_1.2-6        </span></span>
-<span id="cb26-33"><a href="#cb26-33"></a><span class="co">##  [13] metaBMA_0.6.3             colorspace_1.4-1         </span></span>
-<span id="cb26-34"><a href="#cb26-34"></a><span class="co">##  [15] highr_0.8                 rstudioapi_0.11          </span></span>
-<span id="cb26-35"><a href="#cb26-35"></a><span class="co">##  [17] stats4_4.0.2              DescTools_0.99.38        </span></span>
-<span id="cb26-36"><a href="#cb26-36"></a><span class="co">##  [19] ipmisc_3.2.0              rcompanion_2.3.25        </span></span>
-<span id="cb26-37"><a href="#cb26-37"></a><span class="co">##  [21] ggsignif_0.6.0            labeling_0.3             </span></span>
-<span id="cb26-38"><a href="#cb26-38"></a><span class="co">##  [23] rstan_2.21.2              bbmle_1.0.23.1           </span></span>
-<span id="cb26-39"><a href="#cb26-39"></a><span class="co">##  [25] farver_2.0.3              bridgesampling_1.0-0     </span></span>
-<span id="cb26-40"><a href="#cb26-40"></a><span class="co">##  [27] vctrs_0.3.4               generics_0.0.2           </span></span>
-<span id="cb26-41"><a href="#cb26-41"></a><span class="co">##  [29] TH.data_1.0-10            tidyBF_0.3.0             </span></span>
-<span id="cb26-42"><a href="#cb26-42"></a><span class="co">##  [31] metafor_2.4-0             xfun_0.17                </span></span>
-<span id="cb26-43"><a href="#cb26-43"></a><span class="co">##  [33] BWStest_0.2.2             R6_2.4.1                 </span></span>
-<span id="cb26-44"><a href="#cb26-44"></a><span class="co">##  [35] ggbeeswarm_0.6.0          reshape_0.8.8            </span></span>
-<span id="cb26-45"><a href="#cb26-45"></a><span class="co">##  [37] logspline_2.1.16          assertthat_0.2.1         </span></span>
-<span id="cb26-46"><a href="#cb26-46"></a><span class="co">##  [39] promises_1.1.1            scales_1.1.1             </span></span>
-<span id="cb26-47"><a href="#cb26-47"></a><span class="co">##  [41] multcomp_1.4-13           beeswarm_0.2.3           </span></span>
-<span id="cb26-48"><a href="#cb26-48"></a><span class="co">##  [43] ggExtra_0.9               gtable_0.3.0             </span></span>
-<span id="cb26-49"><a href="#cb26-49"></a><span class="co">##  [45] multcompView_0.1-8        processx_3.4.4           </span></span>
-<span id="cb26-50"><a href="#cb26-50"></a><span class="co">##  [47] lmom_2.8                  sandwich_2.5-1           </span></span>
-<span id="cb26-51"><a href="#cb26-51"></a><span class="co">##  [49] rlang_0.4.7               MatrixModels_0.4-1       </span></span>
-<span id="cb26-52"><a href="#cb26-52"></a><span class="co">##  [51] EMT_1.1                   zeallot_0.1.0            </span></span>
-<span id="cb26-53"><a href="#cb26-53"></a><span class="co">##  [53] PMCMRplus_1.5.0           splines_4.0.2            </span></span>
-<span id="cb26-54"><a href="#cb26-54"></a><span class="co">##  [55] TMB_1.7.18                broom_0.7.0.9001         </span></span>
-<span id="cb26-55"><a href="#cb26-55"></a><span class="co">##  [57] inline_0.3.16             yaml_2.2.1               </span></span>
-<span id="cb26-56"><a href="#cb26-56"></a><span class="co">##  [59] reshape2_1.4.4            abind_1.4-5              </span></span>
-<span id="cb26-57"><a href="#cb26-57"></a><span class="co">##  [61] modelr_0.1.8              backports_1.1.10         </span></span>
-<span id="cb26-58"><a href="#cb26-58"></a><span class="co">##  [63] httpuv_1.5.4              tools_4.0.2              </span></span>
-<span id="cb26-59"><a href="#cb26-59"></a><span class="co">##  [65] ellipsis_0.3.1            WRS2_1.1-0               </span></span>
-<span id="cb26-60"><a href="#cb26-60"></a><span class="co">##  [67] ez_4.4-0                  Rcpp_1.0.5.2             </span></span>
-<span id="cb26-61"><a href="#cb26-61"></a><span class="co">##  [69] ps_1.3.4                  prettyunits_1.1.1        </span></span>
-<span id="cb26-62"><a href="#cb26-62"></a><span class="co">##  [71] pbapply_1.4-3             cowplot_1.1.0            </span></span>
-<span id="cb26-63"><a href="#cb26-63"></a><span class="co">##  [73] correlation_0.3.0         zoo_1.8-8                </span></span>
-<span id="cb26-64"><a href="#cb26-64"></a><span class="co">##  [75] LaplacesDemon_16.1.4      haven_2.3.1              </span></span>
-<span id="cb26-65"><a href="#cb26-65"></a><span class="co">##  [77] ggrepel_0.8.2             fs_1.5.0                 </span></span>
-<span id="cb26-66"><a href="#cb26-66"></a><span class="co">##  [79] magrittr_1.5              data.table_1.13.0        </span></span>
-<span id="cb26-67"><a href="#cb26-67"></a><span class="co">##  [81] openxlsx_4.2.2            lmerTest_3.1-2           </span></span>
-<span id="cb26-68"><a href="#cb26-68"></a><span class="co">##  [83] lmtest_0.9-38             reprex_0.3.0             </span></span>
-<span id="cb26-69"><a href="#cb26-69"></a><span class="co">##  [85] mvtnorm_1.1-1             broomExtra_4.0.6         </span></span>
-<span id="cb26-70"><a href="#cb26-70"></a><span class="co">##  [87] matrixStats_0.56.0        hms_0.5.3                </span></span>
-<span id="cb26-71"><a href="#cb26-71"></a><span class="co">##  [89] mime_0.9                  evaluate_0.14            </span></span>
-<span id="cb26-72"><a href="#cb26-72"></a><span class="co">##  [91] xtable_1.8-4              rio_0.5.16               </span></span>
-<span id="cb26-73"><a href="#cb26-73"></a><span class="co">##  [93] pairwiseComparisons_2.0.1 broom.mixed_0.2.6        </span></span>
-<span id="cb26-74"><a href="#cb26-74"></a><span class="co">##  [95] readxl_1.3.1              gridExtra_2.3            </span></span>
-<span id="cb26-75"><a href="#cb26-75"></a><span class="co">##  [97] rstantools_2.1.1          bdsmatrix_1.3-4          </span></span>
-<span id="cb26-76"><a href="#cb26-76"></a><span class="co">##  [99] compiler_4.0.2            V8_3.2.0                 </span></span>
-<span id="cb26-77"><a href="#cb26-77"></a><span class="co">## [101] crayon_1.3.4              minqa_1.2.4              </span></span>
-<span id="cb26-78"><a href="#cb26-78"></a><span class="co">## [103] StanHeaders_2.21.0-6      htmltools_0.5.0          </span></span>
-<span id="cb26-79"><a href="#cb26-79"></a><span class="co">## [105] mgcv_1.8-33               mc2d_0.1-18              </span></span>
-<span id="cb26-80"><a href="#cb26-80"></a><span class="co">## [107] later_1.1.0.1             libcoin_1.0-6            </span></span>
-<span id="cb26-81"><a href="#cb26-81"></a><span class="co">## [109] expm_0.999-5              Exact_2.0                </span></span>
-<span id="cb26-82"><a href="#cb26-82"></a><span class="co">## [111] RcppParallel_5.0.2        lubridate_1.7.9          </span></span>
-<span id="cb26-83"><a href="#cb26-83"></a><span class="co">## [113] DBI_1.1.0                 SuppDists_1.1-9.5        </span></span>
-<span id="cb26-84"><a href="#cb26-84"></a><span class="co">## [115] kSamples_1.2-9            dbplyr_1.4.4             </span></span>
-<span id="cb26-85"><a href="#cb26-85"></a><span class="co">## [117] MASS_7.3-53               boot_1.3-25              </span></span>
-<span id="cb26-86"><a href="#cb26-86"></a><span class="co">## [119] car_3.0-9                 cli_2.0.2                </span></span>
-<span id="cb26-87"><a href="#cb26-87"></a><span class="co">## [121] parallel_4.0.2            insight_0.9.6            </span></span>
-<span id="cb26-88"><a href="#cb26-88"></a><span class="co">## [123] pkgconfig_2.0.3           metaplus_0.7-11          </span></span>
-<span id="cb26-89"><a href="#cb26-89"></a><span class="co">## [125] statsExpressions_0.5.0    coin_1.3-1               </span></span>
-<span id="cb26-90"><a href="#cb26-90"></a><span class="co">## [127] numDeriv_2016.8-1.1       foreign_0.8-80           </span></span>
-<span id="cb26-91"><a href="#cb26-91"></a><span class="co">## [129] xml2_1.3.2                paletteer_1.2.0          </span></span>
-<span id="cb26-92"><a href="#cb26-92"></a><span class="co">## [131] vipor_0.4.5               ggcorrplot_0.1.3         </span></span>
-<span id="cb26-93"><a href="#cb26-93"></a><span class="co">## [133] estimability_1.3          rvest_0.3.6              </span></span>
-<span id="cb26-94"><a href="#cb26-94"></a><span class="co">## [135] callr_3.4.4               digest_0.6.25            </span></span>
-<span id="cb26-95"><a href="#cb26-95"></a><span class="co">## [137] parameters_0.8.5          fastGHQuad_1.0           </span></span>
-<span id="cb26-96"><a href="#cb26-96"></a><span class="co">## [139] rmarkdown_2.3             cellranger_1.1.0         </span></span>
-<span id="cb26-97"><a href="#cb26-97"></a><span class="co">## [141] nortest_1.0-4             gld_2.6.2                </span></span>
-<span id="cb26-98"><a href="#cb26-98"></a><span class="co">## [143] curl_4.3                  modeltools_0.2-23        </span></span>
-<span id="cb26-99"><a href="#cb26-99"></a><span class="co">## [145] shiny_1.5.0               gtools_3.8.2             </span></span>
-<span id="cb26-100"><a href="#cb26-100"></a><span class="co">## [147] nloptr_1.2.2.2            lifecycle_0.2.0          </span></span>
-<span id="cb26-101"><a href="#cb26-101"></a><span class="co">## [149] nlme_3.1-149              jsonlite_1.7.1           </span></span>
-<span id="cb26-102"><a href="#cb26-102"></a><span class="co">## [151] carData_3.0-4             fansi_0.4.1              </span></span>
-<span id="cb26-103"><a href="#cb26-103"></a><span class="co">## [153] pillar_1.4.6              loo_2.3.1                </span></span>
-<span id="cb26-104"><a href="#cb26-104"></a><span class="co">## [155] fastmap_1.0.1             httr_1.4.2               </span></span>
-<span id="cb26-105"><a href="#cb26-105"></a><span class="co">## [157] pkgbuild_1.1.0            survival_3.2-3           </span></span>
-<span id="cb26-106"><a href="#cb26-106"></a><span class="co">## [159] glue_1.4.2                bayestestR_0.7.2         </span></span>
-<span id="cb26-107"><a href="#cb26-107"></a><span class="co">## [161] zip_2.1.1                 class_7.3-17             </span></span>
-<span id="cb26-108"><a href="#cb26-108"></a><span class="co">## [163] stringi_1.5.3             performance_0.5.0        </span></span>
-<span id="cb26-109"><a href="#cb26-109"></a><span class="co">## [165] rematch2_2.1.2            blob_1.2.1               </span></span>
-<span id="cb26-110"><a href="#cb26-110"></a><span class="co">## [167] memoise_1.1.0             Rmpfr_0.8-1              </span></span>
-<span id="cb26-111"><a href="#cb26-111"></a><span class="co">## [169] e1071_1.7-3</span></span></code></pre></div>
+<h1><span class="header-section-number">5</span> Session Info</h1>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">sessionInfo</span>()</span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="co">## R version 4.0.2 (2020-06-22)</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="co">## Running under: macOS High Sierra 10.13.6</span></span>
+<span id="cb27-5"><a href="#cb27-5"></a><span class="co">## </span></span>
+<span id="cb27-6"><a href="#cb27-6"></a><span class="co">## Matrix products: default</span></span>
+<span id="cb27-7"><a href="#cb27-7"></a><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib</span></span>
+<span id="cb27-8"><a href="#cb27-8"></a><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib</span></span>
+<span id="cb27-9"><a href="#cb27-9"></a><span class="co">## </span></span>
+<span id="cb27-10"><a href="#cb27-10"></a><span class="co">## locale:</span></span>
+<span id="cb27-11"><a href="#cb27-11"></a><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
+<span id="cb27-12"><a href="#cb27-12"></a><span class="co">## </span></span>
+<span id="cb27-13"><a href="#cb27-13"></a><span class="co">## attached base packages:</span></span>
+<span id="cb27-14"><a href="#cb27-14"></a><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb27-15"><a href="#cb27-15"></a><span class="co">## </span></span>
+<span id="cb27-16"><a href="#cb27-16"></a><span class="co">## other attached packages:</span></span>
+<span id="cb27-17"><a href="#cb27-17"></a><span class="co">##  [1] klippy_0.0.0.9500      patchwork_1.0.1        ggstatsplot_0.6.0     </span></span>
+<span id="cb27-18"><a href="#cb27-18"></a><span class="co">##  [4] cowplot_1.1.0          BayesFactor_0.9.12-4.2 coda_0.19-3           </span></span>
+<span id="cb27-19"><a href="#cb27-19"></a><span class="co">##  [7] emmeans_1.5.1          afex_0.28-0            lme4_1.1-23           </span></span>
+<span id="cb27-20"><a href="#cb27-20"></a><span class="co">## [10] Matrix_1.2-18          powerAnalysis_0.2.1    knitr_1.29            </span></span>
+<span id="cb27-21"><a href="#cb27-21"></a><span class="co">## [13] forcats_0.5.0          stringr_1.4.0          dplyr_1.0.2           </span></span>
+<span id="cb27-22"><a href="#cb27-22"></a><span class="co">## [16] purrr_0.3.4            readr_1.3.1            tidyr_1.1.2           </span></span>
+<span id="cb27-23"><a href="#cb27-23"></a><span class="co">## [19] tibble_3.0.3           ggplot2_3.3.2          tidyverse_1.3.0       </span></span>
+<span id="cb27-24"><a href="#cb27-24"></a><span class="co">## [22] Rmisc_1.5              plyr_1.8.6             lattice_0.20-41       </span></span>
+<span id="cb27-25"><a href="#cb27-25"></a><span class="co">## [25] pacman_0.5.1          </span></span>
+<span id="cb27-26"><a href="#cb27-26"></a><span class="co">## </span></span>
+<span id="cb27-27"><a href="#cb27-27"></a><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span id="cb27-28"><a href="#cb27-28"></a><span class="co">##   [1] utf8_1.1.4                tidyselect_1.1.0         </span></span>
+<span id="cb27-29"><a href="#cb27-29"></a><span class="co">##   [3] grid_4.0.2                dunn.test_1.3.5          </span></span>
+<span id="cb27-30"><a href="#cb27-30"></a><span class="co">##   [5] gmp_0.6-0                 munsell_0.5.0            </span></span>
+<span id="cb27-31"><a href="#cb27-31"></a><span class="co">##   [7] codetools_0.2-16          effectsize_0.3.3         </span></span>
+<span id="cb27-32"><a href="#cb27-32"></a><span class="co">##   [9] statmod_1.4.34            miniUI_0.1.1.1           </span></span>
+<span id="cb27-33"><a href="#cb27-33"></a><span class="co">##  [11] withr_2.2.0               Brobdingnag_1.2-6        </span></span>
+<span id="cb27-34"><a href="#cb27-34"></a><span class="co">##  [13] metaBMA_0.6.3             colorspace_1.4-1         </span></span>
+<span id="cb27-35"><a href="#cb27-35"></a><span class="co">##  [15] highr_0.8                 rstudioapi_0.11          </span></span>
+<span id="cb27-36"><a href="#cb27-36"></a><span class="co">##  [17] stats4_4.0.2              DescTools_0.99.38        </span></span>
+<span id="cb27-37"><a href="#cb27-37"></a><span class="co">##  [19] ipmisc_3.2.0              rcompanion_2.3.25        </span></span>
+<span id="cb27-38"><a href="#cb27-38"></a><span class="co">##  [21] ggsignif_0.6.0            labeling_0.3             </span></span>
+<span id="cb27-39"><a href="#cb27-39"></a><span class="co">##  [23] rstan_2.21.2              bbmle_1.0.23.1           </span></span>
+<span id="cb27-40"><a href="#cb27-40"></a><span class="co">##  [25] farver_2.0.3              bridgesampling_1.0-0     </span></span>
+<span id="cb27-41"><a href="#cb27-41"></a><span class="co">##  [27] vctrs_0.3.4               generics_0.0.2           </span></span>
+<span id="cb27-42"><a href="#cb27-42"></a><span class="co">##  [29] TH.data_1.0-10            tidyBF_0.3.0             </span></span>
+<span id="cb27-43"><a href="#cb27-43"></a><span class="co">##  [31] metafor_2.4-0             xfun_0.17                </span></span>
+<span id="cb27-44"><a href="#cb27-44"></a><span class="co">##  [33] BWStest_0.2.2             R6_2.4.1                 </span></span>
+<span id="cb27-45"><a href="#cb27-45"></a><span class="co">##  [35] ggbeeswarm_0.6.0          reshape_0.8.8            </span></span>
+<span id="cb27-46"><a href="#cb27-46"></a><span class="co">##  [37] logspline_2.1.16          assertthat_0.2.1         </span></span>
+<span id="cb27-47"><a href="#cb27-47"></a><span class="co">##  [39] promises_1.1.1            scales_1.1.1             </span></span>
+<span id="cb27-48"><a href="#cb27-48"></a><span class="co">##  [41] multcomp_1.4-13           beeswarm_0.2.3           </span></span>
+<span id="cb27-49"><a href="#cb27-49"></a><span class="co">##  [43] ggExtra_0.9               gtable_0.3.0             </span></span>
+<span id="cb27-50"><a href="#cb27-50"></a><span class="co">##  [45] multcompView_0.1-8        processx_3.4.4           </span></span>
+<span id="cb27-51"><a href="#cb27-51"></a><span class="co">##  [47] lmom_2.8                  sandwich_2.5-1           </span></span>
+<span id="cb27-52"><a href="#cb27-52"></a><span class="co">##  [49] rlang_0.4.7               MatrixModels_0.4-1       </span></span>
+<span id="cb27-53"><a href="#cb27-53"></a><span class="co">##  [51] EMT_1.1                   zeallot_0.1.0            </span></span>
+<span id="cb27-54"><a href="#cb27-54"></a><span class="co">##  [53] PMCMRplus_1.5.0           splines_4.0.2            </span></span>
+<span id="cb27-55"><a href="#cb27-55"></a><span class="co">##  [55] TMB_1.7.18                broom_0.7.0.9001         </span></span>
+<span id="cb27-56"><a href="#cb27-56"></a><span class="co">##  [57] inline_0.3.16             yaml_2.2.1               </span></span>
+<span id="cb27-57"><a href="#cb27-57"></a><span class="co">##  [59] reshape2_1.4.4            abind_1.4-5              </span></span>
+<span id="cb27-58"><a href="#cb27-58"></a><span class="co">##  [61] modelr_0.1.8              backports_1.1.10         </span></span>
+<span id="cb27-59"><a href="#cb27-59"></a><span class="co">##  [63] httpuv_1.5.4              tools_4.0.2              </span></span>
+<span id="cb27-60"><a href="#cb27-60"></a><span class="co">##  [65] ellipsis_0.3.1            WRS2_1.1-0               </span></span>
+<span id="cb27-61"><a href="#cb27-61"></a><span class="co">##  [67] ez_4.4-0                  Rcpp_1.0.5.2             </span></span>
+<span id="cb27-62"><a href="#cb27-62"></a><span class="co">##  [69] ps_1.3.4                  prettyunits_1.1.1        </span></span>
+<span id="cb27-63"><a href="#cb27-63"></a><span class="co">##  [71] pbapply_1.4-3             correlation_0.3.0        </span></span>
+<span id="cb27-64"><a href="#cb27-64"></a><span class="co">##  [73] zoo_1.8-8                 LaplacesDemon_16.1.4     </span></span>
+<span id="cb27-65"><a href="#cb27-65"></a><span class="co">##  [75] haven_2.3.1               ggrepel_0.8.2            </span></span>
+<span id="cb27-66"><a href="#cb27-66"></a><span class="co">##  [77] fs_1.5.0                  magrittr_1.5             </span></span>
+<span id="cb27-67"><a href="#cb27-67"></a><span class="co">##  [79] magick_2.4.0              data.table_1.13.0        </span></span>
+<span id="cb27-68"><a href="#cb27-68"></a><span class="co">##  [81] openxlsx_4.2.2            lmerTest_3.1-2           </span></span>
+<span id="cb27-69"><a href="#cb27-69"></a><span class="co">##  [83] lmtest_0.9-38             reprex_0.3.0             </span></span>
+<span id="cb27-70"><a href="#cb27-70"></a><span class="co">##  [85] mvtnorm_1.1-1             broomExtra_4.0.6         </span></span>
+<span id="cb27-71"><a href="#cb27-71"></a><span class="co">##  [87] matrixStats_0.56.0        hms_0.5.3                </span></span>
+<span id="cb27-72"><a href="#cb27-72"></a><span class="co">##  [89] mime_0.9                  evaluate_0.14            </span></span>
+<span id="cb27-73"><a href="#cb27-73"></a><span class="co">##  [91] xtable_1.8-4              rio_0.5.16               </span></span>
+<span id="cb27-74"><a href="#cb27-74"></a><span class="co">##  [93] pairwiseComparisons_2.0.1 broom.mixed_0.2.6        </span></span>
+<span id="cb27-75"><a href="#cb27-75"></a><span class="co">##  [95] readxl_1.3.1              gridExtra_2.3            </span></span>
+<span id="cb27-76"><a href="#cb27-76"></a><span class="co">##  [97] rstantools_2.1.1          bdsmatrix_1.3-4          </span></span>
+<span id="cb27-77"><a href="#cb27-77"></a><span class="co">##  [99] compiler_4.0.2            V8_3.2.0                 </span></span>
+<span id="cb27-78"><a href="#cb27-78"></a><span class="co">## [101] crayon_1.3.4              minqa_1.2.4              </span></span>
+<span id="cb27-79"><a href="#cb27-79"></a><span class="co">## [103] StanHeaders_2.21.0-6      htmltools_0.5.0          </span></span>
+<span id="cb27-80"><a href="#cb27-80"></a><span class="co">## [105] mgcv_1.8-33               mc2d_0.1-18              </span></span>
+<span id="cb27-81"><a href="#cb27-81"></a><span class="co">## [107] later_1.1.0.1             libcoin_1.0-6            </span></span>
+<span id="cb27-82"><a href="#cb27-82"></a><span class="co">## [109] expm_0.999-5              Exact_2.0                </span></span>
+<span id="cb27-83"><a href="#cb27-83"></a><span class="co">## [111] RcppParallel_5.0.2        lubridate_1.7.9          </span></span>
+<span id="cb27-84"><a href="#cb27-84"></a><span class="co">## [113] DBI_1.1.0                 SuppDists_1.1-9.5        </span></span>
+<span id="cb27-85"><a href="#cb27-85"></a><span class="co">## [115] kSamples_1.2-9            dbplyr_1.4.4             </span></span>
+<span id="cb27-86"><a href="#cb27-86"></a><span class="co">## [117] MASS_7.3-53               boot_1.3-25              </span></span>
+<span id="cb27-87"><a href="#cb27-87"></a><span class="co">## [119] car_3.0-9                 cli_2.0.2                </span></span>
+<span id="cb27-88"><a href="#cb27-88"></a><span class="co">## [121] parallel_4.0.2            insight_0.9.6            </span></span>
+<span id="cb27-89"><a href="#cb27-89"></a><span class="co">## [123] pkgconfig_2.0.3           metaplus_0.7-11          </span></span>
+<span id="cb27-90"><a href="#cb27-90"></a><span class="co">## [125] statsExpressions_0.5.0    coin_1.3-1               </span></span>
+<span id="cb27-91"><a href="#cb27-91"></a><span class="co">## [127] numDeriv_2016.8-1.1       foreign_0.8-80           </span></span>
+<span id="cb27-92"><a href="#cb27-92"></a><span class="co">## [129] xml2_1.3.2                paletteer_1.2.0          </span></span>
+<span id="cb27-93"><a href="#cb27-93"></a><span class="co">## [131] vipor_0.4.5               ggcorrplot_0.1.3         </span></span>
+<span id="cb27-94"><a href="#cb27-94"></a><span class="co">## [133] estimability_1.3          rvest_0.3.6              </span></span>
+<span id="cb27-95"><a href="#cb27-95"></a><span class="co">## [135] callr_3.4.4               digest_0.6.25            </span></span>
+<span id="cb27-96"><a href="#cb27-96"></a><span class="co">## [137] parameters_0.8.5          fastGHQuad_1.0           </span></span>
+<span id="cb27-97"><a href="#cb27-97"></a><span class="co">## [139] rmarkdown_2.3             cellranger_1.1.0         </span></span>
+<span id="cb27-98"><a href="#cb27-98"></a><span class="co">## [141] nortest_1.0-4             gld_2.6.2                </span></span>
+<span id="cb27-99"><a href="#cb27-99"></a><span class="co">## [143] curl_4.3                  modeltools_0.2-23        </span></span>
+<span id="cb27-100"><a href="#cb27-100"></a><span class="co">## [145] shiny_1.5.0               gtools_3.8.2             </span></span>
+<span id="cb27-101"><a href="#cb27-101"></a><span class="co">## [147] nloptr_1.2.2.2            lifecycle_0.2.0          </span></span>
+<span id="cb27-102"><a href="#cb27-102"></a><span class="co">## [149] nlme_3.1-149              jsonlite_1.7.1           </span></span>
+<span id="cb27-103"><a href="#cb27-103"></a><span class="co">## [151] carData_3.0-4             fansi_0.4.1              </span></span>
+<span id="cb27-104"><a href="#cb27-104"></a><span class="co">## [153] pillar_1.4.6              loo_2.3.1                </span></span>
+<span id="cb27-105"><a href="#cb27-105"></a><span class="co">## [155] fastmap_1.0.1             httr_1.4.2               </span></span>
+<span id="cb27-106"><a href="#cb27-106"></a><span class="co">## [157] pkgbuild_1.1.0            survival_3.2-3           </span></span>
+<span id="cb27-107"><a href="#cb27-107"></a><span class="co">## [159] glue_1.4.2                bayestestR_0.7.2         </span></span>
+<span id="cb27-108"><a href="#cb27-108"></a><span class="co">## [161] zip_2.1.1                 class_7.3-17             </span></span>
+<span id="cb27-109"><a href="#cb27-109"></a><span class="co">## [163] stringi_1.5.3             performance_0.5.0        </span></span>
+<span id="cb27-110"><a href="#cb27-110"></a><span class="co">## [165] rematch2_2.1.2            blob_1.2.1               </span></span>
+<span id="cb27-111"><a href="#cb27-111"></a><span class="co">## [167] memoise_1.1.0             Rmpfr_0.8-1              </span></span>
+<span id="cb27-112"><a href="#cb27-112"></a><span class="co">## [169] e1071_1.7-3</span></span></code></pre></div>
 </div>
 
 
