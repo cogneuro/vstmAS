@@ -1,0 +1,1641 @@
+---
+title: "VSTM does not enhance visual selection"
+author: "Hyuksu Lee, Do-Joon Yi"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapse: false
+      smooth_scroll: false
+    number_sections: true
+    theme: cosmo 
+    highlight: haddock
+    code_folding: hide
+subtitle: Manuscript under review
+mainfont: Noto Sans CJK KR
+---
+
+```{r wd, echo=FALSE}
+setwd("~/Dropbox/2017Experiment/vstmAS/")
+```
+
+```{css, echo=FALSE}
+pre code, pre, code {
+  white-space: pre !important;
+  overflow-x: scroll !important;
+  word-break: keep-all !important;
+  word-wrap: initial !important;
+}
+```
+
+```{r setup, message=FALSE}
+set.seed(12345) # for reproducibility
+
+if (!require("Rmisc", quietly = TRUE)) install.packages("Rmisc") # Never load it directly.
+pacman::p_load(tidyverse, psych)
+pacman::p_load(knitr, ggridges)
+pacman::p_load(rstatix, TOSTER, pwr)
+pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
+
+options(knitr.kable.NA = '')
+options(dplyr.summarise.inform=FALSE) # suppress warning in regards to regrouping 
+xcut <- 2
+
+klippy::klippy()
+```
+
+# Data
+
+```{r, collapse=TRUE}
+# Exp1: distractor = O's
+E1 <- read.csv("data/data_vstmAS1.csv", header = T)
+headTail(E1)
+
+length(unique(E1$SN))
+table(E1$vstmLoad, E1$SN)
+table(E1$Congruency, E1$SN)
+table(E1$Resp, E1$SN) # 7 = no resp
+table(E1$vstmResp, E1$SN)
+
+E1$SN <- factor(E1$SN)
+E1$vstmLoad <- factor(E1$vstmLoad, levels=c(1,2), labels=c("Low","High"))
+E1$Congruency <- factor(E1$Congruency, levels=c(0,1), labels=c("Incongruent","Congruent"))
+E1$Corr <- ifelse(E1$Targ==E1$Resp,1,0)
+E1$vstmCorr <- ifelse(E1$vstmCond==E1$vstmResp,1,0)
+glimpse(E1, width=70)
+
+table(E1$Corr, E1$SN)
+table(E1$vstmCorr, E1$SN)
+
+
+# Exp2: distractor = ., blocked, 1 vs. 4
+E2 <- read.csv("data/data_vstmAS2.csv", header = T)
+headTail(E2)
+
+length(unique(E2$SN))
+
+table(E2$Block, E2$SN)
+table(E2$vstmLoad, E2$SN)
+table(E2$Congruency, E2$SN)
+table(E2$Resp, E2$SN) # 7 = no resp
+table(E2$vstmResp, E2$SN)
+
+E2$SN <- factor(E2$SN)
+E2$vstmLoad <- factor(E2$vstmLoad, levels=c(1,2), labels=c("Low","High"))
+E2$Congruency <- factor(E2$Congruency, levels=c(0,1), labels=c("Incongruent","Congruent"))
+E2$Corr <- ifelse(E2$Targ==E2$Resp,1,0)
+E2$vstmCorr <- ifelse(E2$vstmCond==E2$vstmResp,1,0)
+glimpse(E2, width=70)
+
+table(E2$Corr, E2$SN)
+table(E2$vstmCorr, E2$SN)
+table(E2$TargPos, E2$SN)
+
+
+# Exp3: distractor = ., blocked, 0 vs. 3
+E3 <- read.csv("data/data_vstmAS3.csv", header = T)
+headTail(E3)
+
+length(unique(E3$SN))
+
+table(E3$Block, E3$SN)
+table(E3$vstmLoad, E3$SN)
+table(E3$Congruency, E3$SN)
+table(E3$Resp, E3$SN) # 7 = no resp
+table(E3$vstmResp[E3$vstmLoad==2], E3$SN[E3$vstmLoad==2])
+
+E3$SN <- factor(E3$SN)
+E3$vstmLoad <- factor(E3$vstmLoad, levels=c(1,2), labels=c("Low","High"))
+E3$Congruency <- factor(E3$Congruency, levels=c(0,1), labels=c("Incongruent","Congruent"))
+E3$Corr <- ifelse(E3$Targ==E3$Resp,1,0)
+E3$vstmCorr <- ifelse(E3$vstmLoad=="Low",1,ifelse(E3$vstmCond==E3$vstmResp,1,0))
+
+table(E3$Corr, E3$SN)
+table(E3$vstmCorr, E3$SN)
+table(E3$TargPos, E3$SN)
+
+
+# Exp4: perceptual load
+E4 <- read.csv("data/data_vstmAS4.csv", header = T)
+headTail(E4)
+
+length(unique(E4$SN))
+
+table(E4$Block, E4$SN)
+table(E4$PercLoad, E4$SN)
+table(E4$Congruency, E4$SN)
+table(E4$Resp, E4$SN) # 7 = no resp
+
+E4$SN <- factor(E4$SN)
+E4$PercLoad <- factor(E4$PercLoad, levels=c(1,2), labels=c("Low","High"))
+E4$Congruency <- factor(E4$Congruency, levels=c(0,1), labels=c("Incongruent","Congruent"))
+E4$Corr <- ifelse(E4$Targ==E4$Resp,1,0)
+
+table(E4$Corr, E4$SN)
+
+
+# Exp5: overlap
+E5 <- read.csv("data/data_vstmAS5.csv", header = T)
+headTail(E5)
+
+table(E5$Block, E5$SN)
+table(E5$vstmLoad, E5$SN)
+table(E5$Overlap, E5$SN)
+table(E5$Congruency, E5$SN)
+table(E5$vstmPos, E5$SN)
+table(E5$Resp, E5$SN) # 7 = no resp
+
+E5$SN <- factor(E5$SN)
+E5$vstmLoad <- factor(E5$vstmLoad, levels=c(1,2), labels=c("Low","High"))
+E5$Congruency <- factor(E5$Congruency, levels=c(0,1), labels=c("Incongruent","Congruent"))
+E5$Overlap <- factor(E5$Overlap, levels=c(0,1), labels=c("NonOverlap","Overlap"))
+E5$Corr <- ifelse(E5$Targ==E5$Resp,1,0)
+E5$vstmCorr <- ifelse(E5$vstmCond==E5$vstmResp,1,0)
+
+table(E5$Corr, E5$SN)
+table(E5$vstmCorr, E5$SN)
+```
+
+<br><br>
+
+------------------------------------------------------------------------
+
+<br><br>
+
+# Experiment 1
+
+Interleaved, 1 vs. 4
+
+## VSTM: Accuracy
+
+```{r, collapse=TRUE}
+E1 %>% group_by(SN, vstmLoad) %>% 
+	summarise(acc = mean(vstmCorr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = "SN", names_from = "vstmLoad", values_from = "acc") %>% 
+	mutate(Diff = Low - High) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "Load", values_to = "Accuracy") %>% 
+	mutate(Load = factor(.$Load, levels = c("Low", "High", "Diff"), 
+											 labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Load) %>% 
+	get_summary_stats(Accuracy, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-2) %>% 
+	kable(digits = 2, caption = "VSTM: Descriptive Stats")
+
+v1 <- E1 %>% group_by(SN, vstmLoad) %>% summarise(acc = mean(vstmCorr)*100) %>% ungroup()
+v1g <- v1 %>% Rmisc::summarySEwithin(measurevar = 'acc', withinvars = 'vstmLoad', idvar = 'SN')
+
+v1 %>% ggplot(aes(x=vstmLoad, y=acc)) +
+	geom_violin(width = 0.5, trim=TRUE) + 
+	geom_point(color="gray80", size=1.8) +
+	geom_line(aes(group = SN), color="gray80") +
+	geom_errorbar(data=v1g, aes(x = vstmLoad, ymin = acc-ci, ymax = acc+ci),
+								position = position_dodge(0.8), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=v1g, aes(x = vstmLoad, y = acc),
+						 position=position_dodge(0.8), size=4, color = "darkred", show.legend = FALSE) + 
+	labs(x = "VSTM Load", y = "Change Detection Accuracy (%)") +
+	coord_cartesian(ylim = c(50, 100), clip = "on") +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+
+v1 %>% pairwise_t_test(acc ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Pairwise t test")
+v1 %>% cohens_d(acc ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Effect Size")
+```
+
+## VSTM: K
+
+Cowan's K([Rouder et al., 2011, PBR](https://link.springer.com/article/10.3758/s13423-011-0055-3)).
+
+```{r, collapse=TRUE}
+k1 <- E1 %>% 
+	group_by(SN, vstmLoad, vstmCond) %>% # vstmCond: change = 1 or not = 2
+	summarise(acc = mean(vstmCorr)) %>%
+	ungroup() %>% 
+	mutate(vstmCond = ifelse(vstmCond==1, "different", "same")) %>% 
+	pivot_wider(id_cols = c(SN, vstmLoad), names_from = vstmCond, values_from = acc) %>% 
+	mutate(SS = ifelse(vstmLoad=="Low", 1, 4),
+				 K = SS * (same - (1 - different))) %>% 
+	select(SN, vstmLoad, K)
+
+k1 %>% pivot_wider(id_cols = SN, names_from = vstmLoad, values_from = K) %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "K") %>% 
+	mutate(vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"))) %>% 
+	group_by(vstmLoad) %>% 
+	get_summary_stats(K, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-2) %>% 
+	kable(digits = 2, caption = "K: Descriptive Stats")
+
+k1 %>% mutate(vstmLoad = factor(.$vstmLoad, levels = c("High", "Low"))) %>% 
+	pairwise_t_test(K ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Pairwise t test")
+k1 %>% mutate(vstmLoad = factor(.$vstmLoad, levels = c("High", "Low"))) %>% 
+	cohens_d(K ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Effect Size")
+```
+
+
+
+## Flanker task: Error
+
+```{r, collapse=TRUE}
+E1 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "err") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+											 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(vstmLoad, Congruency) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "Flanker % Error: Descriptive Stats")
+
+
+E1 %>% group_by(SN, Congruency, vstmLoad) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Congruency"), names_from = "vstmLoad", values_from = "err") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"), 
+														 labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Congruency, vstmLoad) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci"))
+
+e1 <- E1 %>% group_by(SN, vstmLoad, Congruency) %>% summarise(err = 100 - mean(Corr)*100) %>% ungroup()
+e1g <- e1 %>% Rmisc::summarySEwithin(measurevar = "err", withinvars = c("vstmLoad", "Congruency"), idvar = "SN")
+
+e1 %>% ggplot(aes(x=vstmLoad, y=err, fill=Congruency)) +
+	geom_violin(width = 0.7, trim=TRUE) +
+	ggbeeswarm::geom_quasirandom(dodge.width = 0.7, color = "gray80", size = 3, alpha = 0.4, show.legend = FALSE) +
+	geom_errorbar(data=e1g, aes(x = vstmLoad, ymin = err-ci, ymax = err+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=e1g, aes(x = vstmLoad, y = err),
+						 position=position_dodge(0.7), size=5, color = "darkred", show.legend = FALSE) + 
+	coord_cartesian(ylim = c(0, 50), clip = "on") +
+	labs(x = "VSTM Load", y = "% Error", fill="Congruency") +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+e1 %>% anova_test(dv = err, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+
+# arcsine transformation
+E1 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(acc = asin(sqrt(mean(Corr)))) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "acc") %>% 
+	mutate(Diff = Congruent - Incongruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Accuracy") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(vstmLoad, Congruency) %>% 
+	get_summary_stats(Accuracy, show = c("mean", "sd", "median", "iqr", "ci"))
+
+s1 <- E1 %>% group_by(SN, vstmLoad, Congruency) %>% summarise(acc = asin(sqrt(mean(Corr)))) %>% ungroup()
+s1 %>% anova_test(dv = acc, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes")
+```
+
+## Flanker task: RT
+
+```{r, collapse=TRUE}
+# filtering out incorrect trials
+cE1 <- E1 %>% filter(Corr==1 & vstmCorr==1) %>% mutate(RT = RT*1000)
+
+# trimming
+tE1 <- cE1 %>% filter(RT > 200) %>% 
+	group_by(SN) %>% 
+	nest() %>%
+	mutate(lbound = map(data, ~mean(.$RT)-xcut*sd(.$RT)),
+				 ubound = map(data, ~mean(.$RT)+xcut*sd(.$RT))) %>%
+	unnest(c(lbound, ubound)) %>%
+	unnest(data) %>%
+	mutate(Outlier = (RT < lbound)|(RT > ubound)) %>%
+	filter(Outlier == FALSE) %>%
+	ungroup %>%
+	select(SN, vstmLoad, Congruency, RT)
+
+# percentage trimmed.
+100*(nrow(cE1)-nrow(tE1))/nrow(E1)
+
+tE1 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), 
+				 									labels = c("Low", "High"))) %>% 
+	group_by(vstmLoad, Congruency) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "Flanker RT (ms): Descriptive Stats")
+
+tE1 %>% group_by(SN, Congruency, vstmLoad) %>% 
+	summarise(rt = mean(RT)) %>%
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Congruency"), names_from = "vstmLoad", values_from = "rt") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"), 
+				 									labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Congruency, vstmLoad) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci"))
+
+r1 <- tE1 %>% group_by(SN, vstmLoad, Congruency) %>% summarise(RT = mean(RT)) %>% ungroup()
+r1w <- r1 %>%	unite("temp", c("vstmLoad", "Congruency")) %>% 
+	pivot_wider(id_cols = SN, names_from = temp, values_from = RT)
+r1g <- r1 %>% Rmisc::summarySEwithin(measurevar = "RT", withinvars = c("vstmLoad", "Congruency"), idvar = "SN")
+
+F1 <- ggplot() + 
+	geom_bar(data=r1g, aes(x=vstmLoad, y=RT, fill=Congruency),
+		stat="identity", width=0.7, color="black", position=position_dodge(.8)) + 
+	geom_linerange(data=r1g, aes(x=vstmLoad, ymin=RT-ci, ymax=RT+ci, group=Congruency),
+								 linewidth=1, position=position_dodge(0.8)) +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	geom_point(data=r1, aes(x=vstmLoad, y=RT, group=Congruency),
+						 position=position_dodge(0.6), color="gray80", size=1.8) +
+	geom_segment(data=r1w, aes(x=1-.15, y=Low_Incongruent, xend=1+.15, yend=Low_Congruent), color="gray80") +
+	geom_segment(data=r1w, aes(x=2-.15, y=High_Incongruent, xend=2+.15, yend=High_Congruent), color="gray80") +
+	labs(x = "VSTM Load", y = "Response Time (ms)") +
+	scale_x_discrete(labels=c("Low" = "Low (1)", "High" = "High (4)")) +
+	coord_cartesian(ylim = c(500, 1000), clip = "on") +
+	theme_bw(base_size = 18) +
+	theme(legend.position="top",
+				legend.spacing.x = unit(0.5, 'lines'),
+				legend.margin = margin(0, 0, 0, 0),
+				legend.title = element_blank(),
+				legend.background = element_blank(),
+				panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+r1ce <- tE1 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	select(SN, vstmLoad, Diff)
+r1cew <- r1ce %>% pivot_wider(id_cols = SN, names_from = vstmLoad, values_from = Diff)
+r1ceg <- r1ce %>% Rmisc::summarySEwithin(measurevar = "Diff", withinvars = "vstmLoad", idvar = "SN")
+
+G1 <- ggplot(r1ce, aes(x=vstmLoad, y=Diff)) +
+	geom_hline(yintercept = 0) +
+	geom_violin(width = 0.5, trim=TRUE) + 
+	geom_point(color="gray80", size=1.8) +
+	geom_segment(data=r1cew, color="gray80", aes(x=1, y=Low, xend=2, yend=High)) +
+	geom_errorbar(data=r1ceg, aes(x = vstmLoad, ymin = Diff-ci, ymax = Diff+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=r1ceg, aes(x = vstmLoad, y = Diff), 
+						 position=position_dodge(0.7), size=4, color = "darkred", show.legend = FALSE) + 
+	labs(x = "VSTM Load", y = "Congruency Effect (ms)") +
+	scale_x_discrete(labels=c("Low" = "Low (1)", "High" = "High (4)")) +
+	coord_cartesian(ylim = c(-60, 120), clip = "on") +
+	scale_y_continuous(breaks=seq(-60, 120, by = 30)) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+F1 + G1 + plot_layout(nrow = 1, widths = c(2, 1.2))
+
+
+r1 %>% anova_test(dv = RT, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+```
+
+<br><br>
+
+------------------------------------------------------------------------
+
+<br><br>
+
+# Experiment 2
+
+Blocked, 1 vs 4
+
+## VSTM: Accuracy
+
+```{r, collapse=TRUE}
+
+E2 %>% group_by(SN, vstmLoad) %>% 
+	summarise(acc = mean(vstmCorr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = "SN", names_from = "vstmLoad", values_from = "acc") %>% 
+	mutate(Diff = Low - High) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "Load", values_to = "Accuracy") %>% 
+	mutate(Load = factor(.$Load, levels = c("Low", "High", "Diff"), 
+											 labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Load) %>% 
+	get_summary_stats(Accuracy, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-2) %>% 
+	kable(digits = 2, caption = "VSTM: Descriptive Stats")
+
+
+v2 <- E2 %>% group_by(SN, vstmLoad) %>% summarise(acc = mean(vstmCorr)*100) %>% ungroup()
+v2g <- v2 %>% Rmisc::summarySEwithin(measurevar = 'acc', withinvars = 'vstmLoad', idvar = 'SN')
+
+v2 %>% ggplot(aes(x=vstmLoad, y=acc)) +
+	geom_violin(width = 0.5, trim=TRUE) + 
+	geom_point(color="gray80", size=1.8) +
+	geom_line(aes(group = SN), color="gray80") +
+	geom_errorbar(data=v2g, aes(x = vstmLoad, ymin = acc-ci, ymax = acc+ci),
+								position = position_dodge(0.8), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=v2g, aes(x = vstmLoad, y = acc),
+						 position=position_dodge(0.8), size=4, color = "darkred", show.legend = FALSE) + 
+	labs(x = "VSTM Load", y = "Change Detection Accuracy (%)") +
+	coord_cartesian(ylim = c(50, 100), clip = "on") +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+v2 %>% pairwise_t_test(acc ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Pairwise t test")
+v2 %>% cohens_d(acc ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Effect Size")
+```
+
+## VSTM: K
+
+```{r, collapse=TRUE}
+k2 <- E2 %>% 
+	group_by(SN, vstmLoad, vstmCond) %>% # vstmCond: change = 1 or not = 2
+	summarise(acc = mean(vstmCorr)) %>%
+	ungroup() %>% 
+	mutate(vstmCond = ifelse(vstmCond==1, "different", "same")) %>% 
+	pivot_wider(id_cols = c(SN, vstmLoad), names_from = vstmCond, values_from = acc) %>% 
+	mutate(SS = ifelse(vstmLoad=="Low", 1, 4),
+				 K = SS * (same - (1 - different))) %>% 
+	select(SN, vstmLoad, K)
+
+k2 %>% pivot_wider(id_cols = SN, names_from = vstmLoad, values_from = K) %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "K") %>% 
+	mutate(vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"))) %>% 
+	group_by(vstmLoad) %>% 
+	get_summary_stats(K, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-2) %>% 
+	kable(digits = 2, caption = "K: Descriptive Stats")
+
+k2 %>% mutate(vstmLoad = factor(.$vstmLoad, levels = c("High", "Low"))) %>% 
+	pairwise_t_test(K ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Pairwise t test")
+k2 %>% mutate(vstmLoad = factor(.$vstmLoad, levels = c("High", "Low"))) %>% 
+	cohens_d(K ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Effect Size")
+```
+
+
+## Flanker task: Error
+
+```{r, collapse=TRUE}
+E2 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "err") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(vstmLoad, Congruency) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "Flanker % Error: Descriptive Stats")
+
+E2 %>% group_by(SN, Congruency, vstmLoad) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Congruency"), names_from = "vstmLoad", values_from = "err") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"), 
+				 									labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Congruency, vstmLoad) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci"))
+
+e2 <- E2 %>% group_by(SN, vstmLoad, Congruency) %>% summarise(err = 100 - mean(Corr)*100) %>% ungroup()
+e2g <- e2 %>% Rmisc::summarySEwithin(measurevar = "err", withinvars = c("vstmLoad", "Congruency"), idvar = "SN")
+
+e2 %>% ggplot(aes(x=vstmLoad, y=err, fill=Congruency)) +
+	geom_violin(width = 0.7, trim=TRUE) +
+	ggbeeswarm::geom_quasirandom(dodge.width = 0.7, color = "gray80", size = 3, alpha = 0.4, show.legend = FALSE) +
+	geom_errorbar(data=e2g, aes(x = vstmLoad, ymin = err-ci, ymax = err+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=e2g, aes(x = vstmLoad, y = err),
+						 position=position_dodge(0.7), size=5, color = "darkred", show.legend = FALSE) + 
+	coord_cartesian(ylim = c(0, 50), clip = "on") +
+	labs(x = "VSTM Load", y = "% Error", fill="Congruency") +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+e2 %>% anova_test(dv = err, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+
+# arcsine transformation
+E2 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(acc = asin(sqrt(mean(Corr)))) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "acc") %>% 
+	mutate(Diff = Congruent - Incongruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Accuracy") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(vstmLoad, Congruency) %>% 
+	get_summary_stats(Accuracy, show = c("mean", "sd", "median", "iqr", "ci"))
+
+s2 <- E2 %>% group_by(SN, vstmLoad, Congruency) %>% summarise(acc = asin(sqrt(mean(Corr)))) %>% ungroup()
+s2 %>% anova_test(dv = acc, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes")
+```
+
+## Flanker task: RT
+
+```{r, collapse=TRUE}
+# filtering out incorrect trials
+cE2 <- E2 %>% filter(Corr==1 & vstmCorr==1) %>% mutate(RT = RT*1000)
+
+# trimming
+tE2 <- cE2 %>% filter(RT > 200) %>% 
+	group_by(SN) %>% 
+	nest() %>%
+	mutate(lbound = map(data, ~mean(.$RT)-xcut*sd(.$RT)),
+				 ubound = map(data, ~mean(.$RT)+xcut*sd(.$RT))) %>%
+	unnest(c(lbound, ubound)) %>%
+	unnest(data) %>%
+	mutate(Outlier = (RT < lbound)|(RT > ubound)) %>%
+	filter(Outlier == FALSE) %>%
+	ungroup %>%
+	select(SN, vstmLoad, Congruency, RT)
+
+# percentage trimmed.
+100*(nrow(cE2)-nrow(tE2))/nrow(E2)
+
+tE2 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), 
+				 									labels = c("Low", "High"))) %>% 
+	group_by(vstmLoad, Congruency) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "Flanker RT (ms): Descriptive Stats")
+
+tE2 %>% group_by(SN, Congruency, vstmLoad) %>% 
+	summarise(rt = mean(RT)) %>%
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Congruency"), names_from = "vstmLoad", values_from = "rt") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"), 
+				 									labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Congruency, vstmLoad) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci"))
+
+r2 <- tE2 %>% group_by(SN, vstmLoad, Congruency) %>% summarise(RT = mean(RT)) %>% ungroup()
+r2w <- r2 %>%	unite("temp", c("vstmLoad", "Congruency")) %>% 
+	pivot_wider(id_cols = SN, names_from = temp, values_from = RT)
+r2g <- r2 %>% Rmisc::summarySEwithin(measurevar = "RT", withinvars = c("vstmLoad", "Congruency"), idvar = "SN")
+
+F2 <- ggplot() + 
+	geom_bar(data=r2g, aes(x=vstmLoad, y=RT, fill=Congruency),
+					 stat="identity", width=0.7, color="black", position=position_dodge(.8)) + 
+	geom_linerange(data=r2g, aes(x=vstmLoad, ymin=RT-ci, ymax=RT+ci, group=Congruency),
+								 linewidth=1, position=position_dodge(0.8)) +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	geom_point(data=r2, aes(x=vstmLoad, y=RT, group=Congruency),
+						 position=position_dodge(0.6), color="gray80", size=1.8) +
+	geom_segment(data=r2w, aes(x=1-.15, y=Low_Incongruent, xend=1+.15, yend=Low_Congruent), color="gray80") +
+	geom_segment(data=r2w, aes(x=2-.15, y=High_Incongruent, xend=2+.15, yend=High_Congruent), color="gray80") +
+	labs(x = "VSTM Load", y = "Response Time (ms)") +
+	scale_x_discrete(labels=c("Low" = "Low (1)", "High" = "High (4)")) +
+	coord_cartesian(ylim = c(500, 1000), clip = "on") +
+	theme_bw(base_size = 18) +
+	theme(legend.position="top",
+				legend.spacing.x = unit(0.5, 'lines'),
+				legend.margin = margin(0, 0, 0, 0),
+				legend.title = element_blank(),
+				legend.background = element_blank(),
+				panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+r2ce <- tE2 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	select(SN, vstmLoad, Diff)
+r2cew <- r2ce %>% pivot_wider(id_cols = SN, names_from = vstmLoad, values_from = Diff)
+r2ceg <- r2ce %>% Rmisc::summarySEwithin(measurevar = "Diff", withinvars = "vstmLoad", idvar = "SN")
+
+G2 <- ggplot(r2ce, aes(x=vstmLoad, y=Diff)) +
+	geom_hline(yintercept = 0) +
+	geom_violin(width = 0.5, trim=TRUE) + 
+	geom_point(color="gray80", size=1.8) +
+	geom_segment(data=r2cew, color="gray80", aes(x=1, y=Low, xend=2, yend=High)) +
+	geom_errorbar(data=r2ceg, aes(x = vstmLoad, ymin = Diff-ci, ymax = Diff+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=r2ceg, aes(x = vstmLoad, y = Diff), 
+						 position=position_dodge(0.7), size=4, color = "darkred", show.legend = FALSE) + 
+	labs(x = "VSTM Load", y = "Congruency Effect (ms)") +
+	scale_x_discrete(labels=c("Low" = "Low (1)", "High" = "High (4)")) +
+	coord_cartesian(ylim = c(-20, 160), clip = "on") +
+	scale_y_continuous(breaks=c(-20, 0, 40, 80, 120, 160)) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+F2 + G2 + plot_layout(nrow = 1, widths = c(2, 1.2))
+
+
+r2 %>% anova_test(dv = RT, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+```
+
+<br><br>
+
+------------------------------------------------------------------------
+
+<br><br>
+
+# Experiment 3
+
+Blocked, 0 vs 3
+
+## VSTM: Accuracy
+
+```{r, collapse=TRUE}
+E3 %>% filter(vstmLoad == "High") %>% 
+	group_by(SN) %>% 
+	summarise(acc = mean(vstmCorr)*100) %>% 
+	ungroup() %>% 
+	get_summary_stats(acc, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-1) %>% 
+	kable(digits = 2, caption = "VSTM: Descriptive Stats")
+
+v3 <- E3 %>% filter(vstmLoad == "High") %>% group_by(SN) %>% summarise(acc = mean(vstmCorr)*100) %>% ungroup()
+
+ggplot(data=v3, aes(x=1, y=acc)) +
+	geom_violin(width = 1, trim = TRUE) +
+	ggbeeswarm::geom_quasirandom(dodge.width = 0.7, color = "blue", size = 3, alpha = 0.2, show.legend = FALSE) +
+	stat_summary(fun.data = "mean_cl_normal", color = "darkred", size = 1) +
+	coord_flip(ylim = c(50, 100), clip = "on") +
+	labs(y = "Change Detection Accuracy (%)") +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(),
+				panel.grid.minor = element_blank(),
+				axis.title.y = element_blank(),
+				axis.ticks.y = element_blank(),
+				axis.text.y = element_blank(),
+				aspect.ratio = .3)
+```
+
+## VSTM: K
+
+```{r, collapse=TRUE}
+k3 <- E3 %>% 
+	filter(vstmLoad == "High") %>% 
+	group_by(SN, vstmLoad, vstmCond) %>% # vstmCond: change = 1 or not = 2
+	summarise(acc = mean(vstmCorr)) %>%
+	ungroup() %>% 
+	mutate(vstmCond = ifelse(vstmCond==1, "different", "same")) %>% 
+	pivot_wider(id_cols = c(SN, vstmLoad), names_from = vstmCond, values_from = acc) %>% 
+	mutate(SS = 3,
+				 K = SS * (same - (1 - different))) %>% 
+	select(SN, vstmLoad, K)
+
+k3 %>% group_by(vstmLoad) %>% 
+	get_summary_stats(K, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-2) %>% 
+	kable(digits = 2, caption = "K: Descriptive Stats")
+```
+
+
+## Flanker task: Error
+
+```{r, collapse=TRUE}
+E3 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "err") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(vstmLoad, Congruency) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "Flanker % Error: Descriptive Stats")
+
+E3 %>% group_by(SN, Congruency, vstmLoad) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Congruency"), names_from = "vstmLoad", values_from = "err") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"), 
+				 									labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Congruency, vstmLoad) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci")) 
+
+e3 <- E3 %>% group_by(SN, vstmLoad, Congruency) %>% summarise(err = 100 - mean(Corr)*100) %>% ungroup()
+e3g <- e3 %>% Rmisc::summarySEwithin(measurevar = "err", withinvars = c("vstmLoad", "Congruency"), idvar = "SN")
+
+e3 %>% ggplot(aes(x=vstmLoad, y=err, fill=Congruency)) +
+	geom_violin(width = 0.7, trim=TRUE) +
+	ggbeeswarm::geom_quasirandom(dodge.width = 0.7, color = "gray80", size = 3, alpha = 0.4, show.legend = FALSE) +
+	geom_errorbar(data=e3g, aes(x = vstmLoad, ymin = err-ci, ymax = err+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=e3g, aes(x = vstmLoad, y = err),
+						 position=position_dodge(0.7), size=5, color = "darkred", show.legend = FALSE) + 
+	coord_cartesian(ylim = c(0, 50), clip = "on") +
+	labs(x = "VSTM Load", y = "% Error", fill="Congruency") +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+e3 %>% anova_test(dv = err, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+
+# arcsine transformation
+E3 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(acc = asin(sqrt(mean(Corr)))) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "acc") %>% 
+	mutate(Diff = Congruent - Incongruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Accuracy") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(vstmLoad, Congruency) %>% 
+	get_summary_stats(Accuracy, show = c("mean", "sd", "median", "iqr", "ci"))
+
+s3 <- E3 %>% group_by(SN, vstmLoad, Congruency) %>% summarise(acc = asin(sqrt(mean(Corr)))) %>% ungroup()
+s3 %>% anova_test(dv = acc, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes")
+```
+
+
+## Flanker task: RT
+
+```{r, collapse=TRUE}
+# filtering out incorrect trials
+cE3 <- E3 %>% filter(Corr==1 & vstmCorr==1) %>% mutate(RT = RT*1000)
+
+# trimming
+tE3 <- cE3 %>% filter(RT > 200) %>% 
+	group_by(SN) %>% 
+	nest() %>%
+	mutate(lbound = map(data, ~mean(.$RT)-xcut*sd(.$RT)),
+				 ubound = map(data, ~mean(.$RT)+xcut*sd(.$RT))) %>%
+	unnest(c(lbound, ubound)) %>%
+	unnest(data) %>%
+	mutate(Outlier = (RT < lbound)|(RT > ubound)) %>%
+	filter(Outlier == FALSE) %>%
+	ungroup %>%
+	select(SN, vstmLoad, Congruency, RT)
+
+# percentage trimmed.
+100*(nrow(cE3)-nrow(tE3))/nrow(E3)
+
+tE3 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), 
+				 									labels = c("Low", "High"))) %>% 
+	group_by(vstmLoad, Congruency) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "Flanker RT (ms): Descriptive Stats")
+
+tE3 %>% group_by(SN, Congruency, vstmLoad) %>% 
+	summarise(rt = mean(RT)) %>%
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Congruency"), names_from = "vstmLoad", values_from = "rt") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"), 
+				 									labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Congruency, vstmLoad) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci"))
+
+r3 <- tE3 %>% group_by(SN, vstmLoad, Congruency) %>% summarise(RT = mean(RT)) %>% ungroup()
+r3w <- r3 %>%	unite("temp", c("vstmLoad", "Congruency")) %>% 
+	pivot_wider(id_cols = SN, names_from = temp, values_from = RT)
+r3g <- r3 %>% Rmisc::summarySEwithin(measurevar = "RT", withinvars = c("vstmLoad", "Congruency"), idvar = "SN")
+
+F3 <- ggplot() + 
+	geom_bar(data=r3g, aes(x=vstmLoad, y=RT, fill=Congruency),
+					 stat="identity", width=0.7, color="black", position=position_dodge(.8)) + 
+	geom_linerange(data=r3g, aes(x=vstmLoad, ymin=RT-ci, ymax=RT+ci, group=Congruency),
+								 linewidth=1, position=position_dodge(0.8)) +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	geom_point(data=r3, aes(x=vstmLoad, y=RT, group=Congruency),
+						 position=position_dodge(0.6), color="gray80", size=1.8) +
+	geom_segment(data=r3w, aes(x=1-.15, y=Low_Incongruent, xend=1+.15, yend=Low_Congruent), color="gray80") +
+	geom_segment(data=r3w, aes(x=2-.15, y=High_Incongruent, xend=2+.15, yend=High_Congruent), color="gray80") +
+	labs(x = "VSTM Load", y = "Response Time (ms)") +
+	scale_x_discrete(labels=c("Low" = "Low (0)", "High" = "High (3)")) +
+	coord_cartesian(ylim = c(500, 1300), clip = "on") +
+	scale_y_continuous(breaks=c(500,700,900,1100,1300)) +
+	theme_bw(base_size = 18) +
+	theme(legend.position="top",
+				legend.spacing.x = unit(0.5, 'lines'),
+				legend.margin = margin(0, 0, 0, 0),
+				legend.title = element_blank(),
+				legend.background = element_blank(),
+				panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+r3ce <- tE3 %>% group_by(SN, vstmLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	select(SN, vstmLoad, Diff)
+r3cew <- r3ce %>% pivot_wider(id_cols = SN, names_from = vstmLoad, values_from = Diff)
+r3ceg <- r3ce %>% Rmisc::summarySEwithin(measurevar = "Diff", withinvars = "vstmLoad", idvar = "SN")
+
+G3 <- ggplot(r3ce, aes(x=vstmLoad, y=Diff)) +
+	geom_hline(yintercept = 0) +
+	geom_violin(width = 0.5, trim=TRUE) + 
+	geom_point(color="gray80", size=1.8) +
+	geom_segment(data=r3cew, color="gray80", aes(x=1, y=Low, xend=2, yend=High)) +
+	geom_errorbar(data=r3ceg, aes(x = vstmLoad, ymin = Diff-ci, ymax = Diff+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=r3ceg, aes(x = vstmLoad, y = Diff), 
+						 position=position_dodge(0.7), size=4, color = "darkred", show.legend = FALSE) + 
+	labs(x = "VSTM Load", y = "Congruency Effect (ms)") +
+	scale_x_discrete(labels=c("Low" = "Low (0)", "High" = "High (3)")) +
+	coord_cartesian(ylim = c(-30, 270), clip = "on") +
+	scale_y_continuous(breaks=c(-30, 0, 30, 90, 150, 210, 270)) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+F3 + G3 + plot_layout(nrow = 1, widths = c(2, 1.2))
+
+
+r3 %>% anova_test(dv = RT, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+```
+
+<br><br>
+
+------------------------------------------------------------------------
+
+<br><br>
+
+# Experiment 4
+
+Perceptual load
+
+## Flanker task: Error
+
+```{r, collapse=TRUE}
+E4 %>% group_by(SN, PercLoad, Congruency) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "PercLoad"), names_from = "Congruency", values_from = "err") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 PercLoad = factor(.$PercLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(PercLoad, Congruency) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "Flanker % Error: Descriptive Stats")
+
+E4 %>% group_by(SN, Congruency, PercLoad) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Congruency"), names_from = "PercLoad", values_from = "err") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "PercLoad", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 PercLoad = factor(.$PercLoad, levels = c("Low", "High", "Diff"), 
+				 									labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Congruency, PercLoad) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci"))
+
+e4 <- E4 %>% group_by(SN, PercLoad, Congruency) %>% summarise(err = 100 - mean(Corr)*100) %>% ungroup()
+e4g <- e4 %>% Rmisc::summarySEwithin(measurevar = "err", withinvars = c("PercLoad", "Congruency"), idvar = "SN")
+
+e4 %>% ggplot(aes(x=PercLoad, y=err, fill=Congruency)) +
+	geom_violin(width = 0.7, trim=TRUE) +
+	ggbeeswarm::geom_quasirandom(dodge.width = 0.7, color = "gray80", size = 3, alpha = 0.4, show.legend = FALSE) +
+	geom_errorbar(data=e4g, aes(x = PercLoad, ymin = err-ci, ymax = err+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=e4g, aes(x = PercLoad, y = err),
+						 position=position_dodge(0.7), size=5, color = "darkred", show.legend = FALSE) + 
+	coord_cartesian(ylim = c(0, 50), clip = "on") +
+	labs(x = "Perceptual Load", y = "% Error", fill="Congruency") +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+e4 %>% anova_test(dv = err, wid = SN, within = c(PercLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+
+# arcsine transformation
+E4 %>% group_by(SN, PercLoad, Congruency) %>% 
+	summarise(acc = asin(sqrt(mean(Corr)))) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "PercLoad"), names_from = "Congruency", values_from = "acc") %>% 
+	mutate(Diff = Congruent - Incongruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Accuracy") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 PercLoad = factor(.$PercLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(PercLoad, Congruency) %>% 
+	get_summary_stats(Accuracy, show = c("mean", "sd", "median", "iqr", "ci"))
+
+s4 <- E4 %>% group_by(SN, PercLoad, Congruency) %>% summarise(acc = asin(sqrt(mean(Corr)))) %>% ungroup()
+s4 %>% anova_test(dv = acc, wid = SN, within = c(PercLoad, Congruency), effect.size = "pes")
+```
+
+## Flanker task: RT
+
+```{r, collapse=TRUE}
+# filtering out incorrect trials
+cE4 <- E4 %>% filter(Corr==1) %>% mutate(RT = RT*1000)
+
+# trimming
+tE4 <- cE4 %>% filter(RT > 200) %>% 
+	group_by(SN) %>% 
+	nest() %>%
+	mutate(lbound = map(data, ~mean(.$RT)-xcut*sd(.$RT)),
+				 ubound = map(data, ~mean(.$RT)+xcut*sd(.$RT))) %>%
+	unnest(c(lbound, ubound)) %>%
+	unnest(data) %>%
+	mutate(Outlier = (RT < lbound)|(RT > ubound)) %>%
+	filter(Outlier == FALSE) %>%
+	ungroup %>%
+	select(SN, PercLoad, Congruency, RT)
+
+# percentage trimmed.
+100*(nrow(cE4)-nrow(tE4))/nrow(E4)
+
+tE4 %>% group_by(SN, PercLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "PercLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 PercLoad = factor(.$PercLoad, levels = c("Low", "High"), 
+				 									labels = c("Low", "High"))) %>% 
+	group_by(PercLoad, Congruency) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "Flanker RT (ms): Descriptive Stats")
+
+tE4 %>% group_by(SN, Congruency, PercLoad) %>% 
+	summarise(rt = mean(RT)) %>%
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Congruency"), names_from = "PercLoad", values_from = "rt") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "PercLoad", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 PercLoad = factor(.$PercLoad, levels = c("Low", "High", "Diff"), 
+				 									labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Congruency, PercLoad) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci"))
+
+r4 <- tE4 %>% group_by(SN, PercLoad, Congruency) %>% summarise(RT = mean(RT)) %>% ungroup()
+r4w <- r4 %>%	unite("temp", c("PercLoad", "Congruency")) %>% 
+	pivot_wider(id_cols = SN, names_from = temp, values_from = RT)
+r4g <- r4 %>% Rmisc::summarySEwithin(measurevar = "RT", withinvars = c("PercLoad", "Congruency"), idvar = "SN")
+
+F4 <- ggplot() + 
+	geom_bar(data=r4g, aes(x=PercLoad, y=RT, fill=Congruency),
+					 stat="identity", width=0.7, color="black", position=position_dodge(.8)) + 
+	geom_linerange(data=r4g, aes(x=PercLoad, ymin=RT-ci, ymax=RT+ci, group=Congruency),
+								 linewidth=1, position=position_dodge(0.8)) +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	geom_point(data=r4, aes(x=PercLoad, y=RT, group=Congruency),
+						 position=position_dodge(0.6), color="gray80", size=1.8) +
+	geom_segment(data=r4w, aes(x=1-.15, y=Low_Incongruent, xend=1+.15, yend=Low_Congruent), color="gray80") +
+	geom_segment(data=r4w, aes(x=2-.15, y=High_Incongruent, xend=2+.15, yend=High_Congruent), color="gray80") +
+	labs(x = "Perceptual Load", y = "Response Time (ms)") +
+	coord_cartesian(ylim = c(400, 1000), clip = "on") +
+	scale_y_continuous(breaks=seq(400,1000,by=100)) +
+	theme_bw(base_size = 18) +
+	theme(legend.position="top",
+				legend.spacing.x = unit(0.5, 'lines'),
+				legend.margin = margin(0, 0, 0, 0),
+				legend.title = element_blank(),
+				legend.background = element_blank(),
+				panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+r4ce <- tE4 %>% group_by(SN, PercLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "PercLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	select(SN, PercLoad, Diff)
+r4cew <- r4ce %>% pivot_wider(id_cols = SN, names_from = PercLoad, values_from = Diff)
+r4ceg <- r4ce %>% Rmisc::summarySEwithin(measurevar = "Diff", withinvars = "PercLoad", idvar = "SN")
+
+G4 <- ggplot(r4ce, aes(x=PercLoad, y=Diff)) +
+	geom_hline(yintercept = 0) +
+	geom_violin(width = 0.5, trim=TRUE) + 
+	geom_point(color="gray80", size=1.8) +
+	geom_segment(data=r4cew, color="gray80", aes(x=1, y=Low, xend=2, yend=High)) +
+	geom_errorbar(data=r4ceg, aes(x = PercLoad, ymin = Diff-ci, ymax = Diff+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=r4ceg, aes(x = PercLoad, y = Diff), 
+						 position=position_dodge(0.7), size=4, color = "darkred", show.legend = FALSE) + 
+	labs(x = "VSTM Load", y = "Congruency Effect (ms)") +
+	scale_x_discrete(labels=c("Low" = "Low (0)", "High" = "High (3)")) +
+	coord_cartesian(ylim = c(-40, 100), clip = "on") +
+	scale_y_continuous(breaks=seq(-40, 100, by=20)) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+F4 + G4 + plot_layout(nrow = 1, widths = c(2, 1.2))
+
+
+r4 %>% anova_test(dv = RT, wid = SN, within = c(PercLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+
+m4lo <- r4 %>% filter(PercLoad == "Low") %>% 
+	anova_test(dv = RT, wid = SN, within = Congruency, effect.size = "pes") 
+m4lo %>% kable(digits = 2, format = "simple", caption = "ANOVA")
+m4hi <- r4 %>% filter(PercLoad == "High") %>% 
+	anova_test(dv = RT, wid = SN, within = Congruency, effect.size = "pes") 
+m4hi %>% kable(digits = 2, format = "simple", caption = "ANOVA")
+
+pbon <- p.adjust(c(m4lo$p, m4hi$p), "bonferroni")
+tibble(Load = c("Low", "High"),
+			 lowLoad = c(pbon[1], pbon[2])) %>% 
+	kable(align = 'c', digits = 2, caption = "Bonferroni-corrected p")
+
+bind_rows(r3 %>% rename("Load" = vstmLoad) %>% mutate(Exp = 'Exp3', SN = paste('e3s', .$SN, sep = "")),
+					r4 %>% rename("Load" = PercLoad) %>% mutate(Exp = 'Exp4', SN = paste('e4s', .$SN, sep = ""))) %>% 
+	anova_test(dv = RT, wid = SN, within = c(Load, Congruency), between = Exp, effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA: Expt 3 vs. 4")
+```
+
+<br><br>
+
+------------------------------------------------------------------------
+
+<br><br>
+
+# Experiment 5
+
+Overlap
+
+## VSTM: Accuracy
+
+```{r, collapse=TRUE}
+E5 %>% group_by(SN, Overlap, vstmLoad) %>% 
+	summarise(acc = mean(vstmCorr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Overlap"), names_from = "vstmLoad", values_from = "acc") %>% 
+	mutate(Diff = Low - High) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "Load", values_to = "Accuracy") %>% 
+	mutate(Load = factor(.$Load, levels = c("Low", "High", "Diff"), 
+											 labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Overlap, Load) %>% 
+	get_summary_stats(Accuracy, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "VSTM: Descriptive Stats")
+
+
+v5 <- E5 %>% group_by(SN, Overlap, vstmLoad) %>% summarise(acc = mean(vstmCorr)*100) %>% ungroup()
+v5g <- v5 %>% Rmisc::summarySEwithin(measurevar = 'acc', withinvars = c('Overlap', 'vstmLoad'), idvar = 'SN')
+
+over.labs <- c("Non-overlap", "Overlap")
+names(over.labs) <- c("NonOverlap", "Overlap")
+
+v5 %>% ggplot(aes(x=vstmLoad, y=acc)) +
+	geom_violin(width = 0.5, trim=TRUE) + 
+	facet_grid(. ~ Overlap, labeller = labeller(Overlap = over.labs)) +
+	geom_point(color="gray80", size=1.8) +
+	geom_line(aes(group = SN), color="gray80") +
+	geom_errorbar(data=v5g, aes(x = vstmLoad, ymin = acc-ci, ymax = acc+ci),
+								position = position_dodge(0.8), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=v5g, aes(x = vstmLoad, y = acc),
+						 position=position_dodge(0.8), size=4, color = "darkred", show.legend = FALSE) + 
+	labs(x = "VSTM Load", y = "Change Detection Accuracy (%)") +
+	scale_x_discrete(labels=c("Low" = "Low (1)", "High" = "High (4)")) +
+	coord_cartesian(ylim = c(50, 100), clip = "on") +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+v5 %>% anova_test(dv = acc, wid = SN, within = c(Overlap, vstmLoad), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+
+v5 %>% filter(Overlap == "NonOverlap") %>% pairwise_t_test(acc ~ vstmLoad, paired = TRUE)
+v5 %>% filter(Overlap == "NonOverlap") %>% cohens_d(acc ~ vstmLoad, paired = TRUE)
+
+v5 %>% filter(Overlap == "Overlap") %>% pairwise_t_test(acc ~ vstmLoad, paired = TRUE)
+v5 %>% filter(Overlap == "Overlap") %>% cohens_d(acc ~ vstmLoad, paired = TRUE)
+```
+
+## VSTM: K
+
+```{r}
+k5 <- E5 %>% 
+	group_by(SN, Overlap, vstmLoad, vstmCond) %>% # vstmCond: change = 1 or not = 2
+	summarise(acc = mean(vstmCorr)) %>%
+	ungroup() %>% 
+	mutate(vstmCond = ifelse(vstmCond==1, "different", "same")) %>% 
+	pivot_wider(id_cols = c(SN, Overlap, vstmLoad), names_from = vstmCond, values_from = acc) %>% 
+	mutate(SS = ifelse(vstmLoad=="Low", 1, 4),
+				 K = SS * (same - (1 - different))) %>% 
+	select(SN, Overlap, vstmLoad, K)
+
+k5 %>% pivot_wider(id_cols = c(SN, Overlap), names_from = vstmLoad, values_from = K) %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "K") %>% 
+	mutate(vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"))) %>% 
+	group_by(Overlap, vstmLoad) %>% 
+	get_summary_stats(K, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-3) %>% 
+	kable(digits = 2, caption = "K: Descriptive Stats")
+
+k5 %>% anova_test(dv = K, wid = SN, within = c(Overlap, vstmLoad), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+
+k5 %>% filter(Overlap == "NonOverlap") %>% 
+	mutate(vstmLoad = factor(.$vstmLoad, levels = c("High", "Low"))) %>% 
+	pairwise_t_test(K ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Pairwise t test")
+k5 %>% filter(Overlap == "NonOverlap") %>% 
+	mutate(vstmLoad = factor(.$vstmLoad, levels = c("High", "Low"))) %>% 
+	cohens_d(K ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Effect Size")
+
+k5 %>% filter(Overlap == "Overlap") %>% 
+	mutate(vstmLoad = factor(.$vstmLoad, levels = c("High", "Low"))) %>% 
+	pairwise_t_test(K ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Pairwise t test")
+k5 %>% filter(Overlap == "Overlap") %>% 
+	mutate(vstmLoad = factor(.$vstmLoad, levels = c("High", "Low"))) %>% 
+	cohens_d(K ~ vstmLoad, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Effect Size")
+```
+
+
+
+## Flanker task: Error
+
+```{r, collapse=TRUE}
+E5 %>% group_by(SN, Overlap, vstmLoad, Congruency) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Overlap", "vstmLoad"), names_from = "Congruency", values_from = "err") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(Overlap, vstmLoad, Congruency) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-4) %>%
+	kable(digits = 2, caption = "Flanker % Error: Descriptive Stats")
+
+E5 %>% group_by(SN, Overlap, Congruency, vstmLoad) %>% 
+	summarise(err = 100 - mean(Corr)*100) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Overlap", "Congruency"), names_from = "vstmLoad", values_from = "err") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "Error") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"), 
+				 									labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Overlap, Congruency, vstmLoad) %>% 
+	get_summary_stats(Error, show = c("mean", "sd", "median", "iqr", "ci")) 
+
+e5 <- E5 %>% group_by(SN, Overlap, vstmLoad, Congruency) %>% summarise(err = 100 - mean(Corr)*100) %>% ungroup()
+e5g <- e5 %>% Rmisc::summarySEwithin(measurevar = "err", withinvars = c("Overlap", "vstmLoad", "Congruency"), idvar = "SN")
+
+e5 %>% ggplot(aes(x=vstmLoad, y=err, fill=Congruency)) +
+	geom_violin(width = 0.7, trim=TRUE) +
+	facet_grid(. ~ Overlap, labeller = labeller(Overlap = over.labs)) +
+	ggbeeswarm::geom_quasirandom(dodge.width = 0.7, color = "gray80", size = 3, alpha = 0.4, show.legend = FALSE) +
+	geom_errorbar(data=e5g, aes(x = vstmLoad, ymin = err-ci, ymax = err+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=e5g, aes(x = vstmLoad, y = err),
+						 position=position_dodge(0.7), size=5, color = "darkred", show.legend = FALSE) + 
+	coord_cartesian(ylim = c(0, 50), clip = "on") +
+	labs(x = "VSTM Load", y = "% Error", fill="Congruency") +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+e5 %>% anova_test(dv = err, wid = SN, within = c(Overlap, vstmLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+
+# arcsine transformation
+E5 %>% group_by(SN, Overlap, vstmLoad, Congruency) %>% 
+	summarise(acc = asin(sqrt(mean(Corr)))) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Overlap", "vstmLoad"), names_from = "Congruency", values_from = "acc") %>% 
+	mutate(Diff = Congruent - Incongruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "Accuracy") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), labels = c("Low", "High"))) %>% 
+	group_by(Overlap, vstmLoad, Congruency) %>% 
+	get_summary_stats(Accuracy, show = c("mean", "sd", "median", "iqr", "ci"))
+
+s5 <- E5 %>% group_by(SN, Overlap, vstmLoad, Congruency) %>% summarise(acc = asin(sqrt(mean(Corr)))) %>% ungroup()
+s5 %>% anova_test(dv = acc, wid = SN, within = c(Overlap, vstmLoad, Congruency), effect.size = "pes")
+```
+
+## Flanker task: RT
+
+```{r, collapse=TRUE}
+# filtering out incorrect trials
+cE5 <- E5 %>% filter(Corr==1 & vstmCorr==1) %>% mutate(RT = RT*1000)
+
+# trimming
+tE5 <- cE5 %>% filter(RT > 200) %>% 
+	group_by(SN) %>% 
+	nest() %>%
+	mutate(lbound = map(data, ~mean(.$RT)-xcut*sd(.$RT)),
+				 ubound = map(data, ~mean(.$RT)+xcut*sd(.$RT))) %>%
+	unnest(c(lbound, ubound)) %>%
+	unnest(data) %>%
+	mutate(Outlier = (RT < lbound)|(RT > ubound)) %>%
+	filter(Outlier == FALSE) %>%
+	ungroup %>%
+	select(SN, Overlap, vstmLoad, Congruency, RT)
+
+# percentage trimmed.
+100*(nrow(cE5)-nrow(tE5))/nrow(E5)
+
+tE5 %>% group_by(SN, Overlap, vstmLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Overlap", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	pivot_longer(cols = Incongruent:Diff, names_to = "Congruency", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High"), 
+				 									labels = c("Low", "High"))) %>% 
+	group_by(Overlap, vstmLoad, Congruency) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	select(-4) %>% 
+	kable(digits = 2, caption = "Flanker RT (ms): Descriptive Stats")
+
+tE5 %>% group_by(SN, Overlap, Congruency, vstmLoad) %>% 
+	summarise(rt = mean(RT)) %>%
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Overlap", "Congruency"), names_from = "vstmLoad", values_from = "rt") %>% 
+	mutate(Diff = High - Low) %>% 
+	pivot_longer(cols = Low:Diff, names_to = "vstmLoad", values_to = "RT") %>% 
+	mutate(Congruency = factor(.$Congruency, levels = c("Congruent", "Incongruent", "Diff"), 
+														 labels = c("Congruent", "Incongruent", "Diff")),
+				 vstmLoad = factor(.$vstmLoad, levels = c("Low", "High", "Diff"), 
+				 									labels = c("Low", "High", "Diff"))) %>% 
+	group_by(Overlap, Congruency, vstmLoad) %>% 
+	get_summary_stats(RT, show = c("mean", "sd", "median", "iqr", "ci"))
+
+r5 <- tE5 %>% group_by(SN, Overlap, vstmLoad, Congruency) %>% summarise(RT = mean(RT)) %>% ungroup()
+r5w <- r5 %>%	unite("temp", c("vstmLoad", "Congruency")) %>% 
+	pivot_wider(id_cols = c(SN, Overlap), names_from = temp, values_from = RT)
+r5g <- r5 %>% Rmisc::summarySEwithin(measurevar = "RT", withinvars = c("Overlap", "vstmLoad", "Congruency"), idvar = "SN")
+
+F5 <- ggplot() + 
+	geom_bar(data=r5g, aes(x=vstmLoad, y=RT, fill=Congruency),
+					 stat="identity", width=0.7, color="black", position=position_dodge(.8)) + 
+	facet_grid(. ~ Overlap, labeller = labeller(Overlap = over.labs)) +
+	geom_linerange(data=r5g, aes(x=vstmLoad, ymin=RT-ci, ymax=RT+ci, group=Congruency),
+								 linewidth=1, position=position_dodge(0.8)) +
+	scale_fill_manual(values=c('#0073C2FF','#EFC000FF'),
+										labels=c("Incongruent", "Congruent")) +
+	geom_point(data=r5, aes(x=vstmLoad, y=RT, group=Congruency),
+						 position=position_dodge(0.6), color="gray80", size=1.8) +
+	geom_segment(data=r5w, aes(x=1-.15, y=Low_Incongruent, xend=1+.15, yend=Low_Congruent), color="gray80") +
+	geom_segment(data=r5w, aes(x=2-.15, y=High_Incongruent, xend=2+.15, yend=High_Congruent), color="gray80") +
+	labs(x = "VSTM Load", y = "Response Time (ms)") +
+	scale_x_discrete(labels=c("Low" = "Low (1)", "High" = "High (4)")) +
+	coord_cartesian(ylim = c(500, 1200), clip = "on") +
+	scale_y_continuous(breaks=seq(500, 1200, by=100)) +
+	theme_bw(base_size = 18) +
+	theme(legend.position="top",
+				legend.spacing.x = unit(0.5, 'lines'),
+				legend.margin = margin(0, 0, 0, 0),
+				legend.title = element_blank(),
+				legend.background = element_blank(),
+				panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+r5ce <- tE5 %>% group_by(SN, Overlap, vstmLoad, Congruency) %>% 
+	summarise(rt = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c("SN", "Overlap", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+	mutate(Diff = Incongruent - Congruent) %>% 
+	select(SN, Overlap, vstmLoad, Diff)
+r5cew <- r5ce %>% pivot_wider(id_cols = c(SN, Overlap), names_from = vstmLoad, values_from = Diff)
+r5ceg <- r5ce %>% Rmisc::summarySEwithin(measurevar = "Diff", withinvars = c("Overlap", "vstmLoad"), idvar = "SN")
+
+G5 <- ggplot(r5ce, aes(x=vstmLoad, y=Diff)) +
+	geom_hline(yintercept = 0) +
+	geom_violin(width = 0.5, trim=TRUE) + 
+	facet_grid(. ~ Overlap, labeller = labeller(Overlap = over.labs)) +
+	geom_point(color="gray80", size=1.8) +
+	geom_segment(data=r5cew, color="gray80", aes(x=1, y=Low, xend=2, yend=High)) +
+	geom_errorbar(data=r5ceg, aes(x = vstmLoad, ymin = Diff-ci, ymax = Diff+ci),
+								position = position_dodge(0.7), width = 0.1, linewidth = 1, color = "darkred") +
+	geom_point(data=r5ceg, aes(x = vstmLoad, y = Diff), 
+						 position=position_dodge(0.7), size=4, color = "darkred", show.legend = FALSE) + 
+	labs(x = "VSTM Load", y = "Congruency Effect (ms)") +
+	scale_x_discrete(labels=c("Low" = "Low (1)", "High" = "High (4)")) +
+	coord_cartesian(ylim = c(-50, 250), clip = "on") +
+	scale_y_continuous(breaks=seq(-50, 250, by = 50)) +
+	theme_bw(base_size = 18) +
+	theme(panel.grid.major = element_blank(), 
+				panel.grid.minor = element_blank())
+
+F5 + G5 + plot_layout(nrow = 1, widths = c(2, 1.2))
+
+
+r5 %>% anova_test(dv = RT, wid = SN, within = c(Overlap, vstmLoad, Congruency), effect.size = "pes") %>% 
+	kable(digits = 2, format = "simple", caption = "ANOVA")
+
+r5 %>% filter(Overlap == "Overlap") %>% 
+	anova_test(dv = RT, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes")
+	
+r5 %>% filter(Overlap == "NonOverlap") %>% 
+	anova_test(dv = RT, wid = SN, within = c(vstmLoad, Congruency), effect.size = "pes")
+```
+
+<br><br>
+
+------------------------------------------------------------------------
+
+<br><br>
+
+# Correlation
+
+```{r, collapse=TRUE, fig.height = 7}
+Kdiff <- bind_rows(k1 %>% pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'K') %>% 
+									 	mutate(Kdiff = High - Low) %>% select(SN, Kdiff) %>% 
+									 	mutate(Exp = 'Exp1', SN = paste('e1s', .$SN, sep = "")),
+									 k2 %>% pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'K') %>% 
+									 	mutate(Kdiff = High - Low) %>% select(SN, Kdiff) %>% 
+									 	mutate(Exp = 'Exp2', SN = paste('e2s', .$SN, sep = "")), 
+									 E5 %>% group_by(SN, vstmLoad, vstmCond) %>% # vstmCond: change = 1 or not = 2
+									 	summarise(acc = mean(vstmCorr)) %>% ungroup() %>% 
+									 	mutate(vstmCond = ifelse(vstmCond==1, "different", "same")) %>%
+									 	pivot_wider(id_cols = c(SN, vstmLoad), names_from = vstmCond, values_from = acc) %>% 
+									 	mutate(SS = ifelse(vstmLoad=="Low", 1, 4), K = SS * (same - (1 - different))) %>% 
+									 	select(SN, vstmLoad, K) %>% 
+									 	pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'K') %>% 
+									 	mutate(Kdiff = High - Low) %>% select(SN, Kdiff) %>% 
+									 	mutate(Exp = 'Exp5', SN = paste('e5s', .$SN, sep = ""))) %>% select(SN, Kdiff)
+
+Cdiff <- bind_rows(r1ce %>% pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'Diff') %>%
+									 	mutate(Cdiff = High - Low) %>% select(SN, Cdiff) %>% 
+									 	mutate(Exp = 'Exp1', SN = paste('e1s', .$SN, sep = "")),
+									 r2ce %>% pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'Diff') %>%
+									 	mutate(Cdiff = High - Low) %>% select(SN, Cdiff) %>% 
+									 	mutate(Exp = 'Exp2', SN = paste('e2s', .$SN, sep = "")),
+									 tE5 %>% group_by(SN, vstmLoad, Congruency) %>% 
+									 	summarise(rt = mean(RT)) %>% ungroup() %>% 
+									 	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+									 	mutate(Diff = Incongruent - Congruent) %>% 
+									 	select(SN, vstmLoad, Diff) %>% 
+									 	pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'Diff') %>%
+									 	mutate(Cdiff = High - Low) %>% select(SN, Cdiff) %>% 
+									 	mutate(Exp = 'Exp5', SN = paste('e5s', .$SN, sep = ""))) %>% select(SN, Cdiff)
+
+tibble(K_lo2hi = Kdiff$Kdiff, CE_lo2hi = Cdiff$Cdiff) %>% summarise(N = n())
+tibble(K_lo2hi = Kdiff$Kdiff, CE_lo2hi = Cdiff$Cdiff) %>% cor_test()
+tibble(K_lo2hi = Kdiff$Kdiff, CE_lo2hi = Cdiff$Cdiff) %>% 
+	pairs.panels(smooth = TRUE, scale = FALSE, density = TRUE, 
+							 ellipses = FALSE, method = "pearson", pch = 21, lm = TRUE, 
+							 cor = TRUE, jiggle = FALSE, factor = 2, hist.col = 4, 
+							 stars = TRUE, ci = TRUE)
+tibble(K_lo2hi = Kdiff$Kdiff, CE_lo2hi = Cdiff$Cdiff) %>% 
+	sjPlot::tab_corr(p.numeric = TRUE, corr.method = "pearson", triangle = "lower")
+```
+
+
+<br><br>
+
+------------------------------------------------------------------------
+
+<br><br>
+
+# TOST
+
+```{r, collapse=TRUE, fig.height = 7}
+# murge experiments
+d <- bind_rows(tE1 %>% mutate(Exp = 'Exp1', SN = paste('e1s', .$SN, sep = "")),
+							 tE2 %>% mutate(Exp = 'Exp2', SN = paste('e2s', .$SN, sep = "")),
+							 tE3 %>% mutate(Exp = 'Exp3', SN = paste('e3s', .$SN, sep = "")),
+							 tE5 %>% mutate(Exp = 'Exp5', SN = paste('e5s', .$SN, sep = ""))) %>% 
+	select(Exp, SN, vstmLoad, Congruency, RT) %>% 
+	mutate(Exp = factor(.$Exp), 
+				 SN = factor(.$SN))
+headTail(d)
+slice_sample(d, n = 10)
+
+dd <- d %>% 
+	group_by(Exp, SN, vstmLoad, Congruency) %>% 
+	summarise(M = mean(RT)) %>% 
+	ungroup() %>% 
+	pivot_wider(id_cols = c(Exp, SN, vstmLoad), names_from = Congruency, values_from = M) %>% 
+	mutate(Congruency = Incongruent - Congruent) %>% 
+	select(Exp, SN, vstmLoad, Congruency) %>%
+	pivot_wider(id_cols = c(Exp, SN), names_from = vstmLoad, values_from = Congruency) %>% 
+	mutate(Difference = High - Low)
+	# select(Exp, SN, Difference) 
+mean(dd$Difference)
+
+# dd %>% ggplot(aes(x=1, y=Difference)) +
+# 	geom_violin(width = 0.6, trim=TRUE) + 
+# 	ggbeeswarm::geom_quasirandom(aes(colour = Exp), size = 3, alpha = 0.9, width = 0.3) +
+# 	geom_hline(aes(yintercept=0), lty=1) +
+# 	stat_summary(fun.data="mean_cl_normal", shape=19,  colour="darkred", size = 1,
+# 							 position=position_dodge(0.9)) +
+# 	coord_flip() + 
+# 	labs(y = "Congruency Difference \n (High Load - Low Load)") +
+# 	theme_classic(base_size = 18) +
+# 	theme(axis.line.y = element_blank(),
+# 				axis.text.y = element_blank(),
+# 				axis.ticks.y = element_blank(),
+# 				axis.title.y = element_blank(),
+# 				legend.title = element_blank(),
+# 				legend.position = c(0.85, 0.8),
+# 				aspect.ratio = .5)
+
+# beanplot::beanplot(Difference ~ Exp, data = dd)
+
+# https://www.r-bloggers.com/2021/12/comparing-distributions/
+grp_names <- c(`Exp1` = "Expt 1", `Exp2` = "Expt 2", `Exp3` = "Expt 3", `Exp5` = "Expt 5")
+F6 <- dd %>% ggplot() + 
+	geom_vline(xintercept = 0) +
+	geom_density_ridges(mapping = aes(x = Difference, y = Exp, fill = Exp), 
+																color = "white", alpha = .7, scale = 2) + 
+	scale_fill_manual(values = wesanderson::wes_palette(n=4, name="Cavalcanti1")) + 
+	scale_y_discrete(labels = as_labeller(grp_names)) + 
+	scale_x_continuous(breaks=seq(-150, 150, by = 50)) +
+	coord_cartesian(xlim = c(-150, 150), clip = "on") +
+	guides(color = "none", fill = "none") + 
+	labs(x = "Difference in Congruency Effects\n(High Load - Low Load)", y = NULL) +
+	labs(x = NULL, y = NULL) + 
+	theme_classic(base_size = 18) +
+	theme(axis.line.y = element_blank(),
+				axis.ticks.y = element_blank(),
+				axis.title.y = element_blank(),
+				legend.title = element_blank(),
+				legend.position = c(0.85, 0.8),
+				aspect.ratio = .5)
+
+# Simonsohn의 제안(링크 필요)에 따라, 원래 실험에서 검증력이 33%인 효과 크기를 계산한다. 
+# Konstantinou, Beal, King, Lavie(2014, APP) 실험에서 실험 1b의 참가자 수는 N=22. 따라서,
+E33 = pwr::pwr.t.test(n=22, power = .33, sig.level = .05, type="paired")
+E33$d
+# 효과크기 d=0.3394보다 작은 효과는 효과가 없다고 할 수 있다. 
+# 재현에 필요한 표본의 크기는 효과크기 d=0.3394에서 검증력이 80% 이상인 참가자 수이다.
+
+required_N <- TOSTER::powerTOSTpaired(alpha = .05, statistical_power = .8, 
+																			low_eqbound_dz = -E33$d, high_eqbound_dz = E33$d)
+pp <- power_t_TOST(alpha = .05, power = .8, low_eqbound = -E33$d, high_eqbound = E33$d, type = "paired.sample")
+pp$n
+# 최소 76명이 필요하다.
+
+tm <- TOSTpaired(n = 80, 
+								 m1 = mean(dd$High), m2 = mean(dd$Low),
+								 sd1 = sd(dd$High), sd2 = sd(dd$Low),
+								 r12 = cor(dd$High, dd$Low),
+								 low_eqbound_dz = -E33$d, 
+								 high_eqbound_dz = E33$d, 
+								 alpha = 0.05, plot = FALSE)
+
+G6 <- as.data.frame(tm) %>% 
+	ggplot(aes(x=1, y=diff, ymin=LL_CI_TOST, ymax=UL_CI_TOST)) +
+	geom_hline(yintercept = 0) +
+	geom_errorbar(color = "darkred", width = 0.2, linewidth = 1) +
+	geom_point(color = "darkred", size = 4) +
+	coord_flip(ylim = c(tm$low_eqbound, tm$high_eqbound)) +
+	geom_hline(yintercept = c(tm$high_eqbound, tm$low_eqbound),
+						 linetype = "dashed") +
+	labs(y = "Difference in Congruency Effects\n(High Load - Low Load)") +
+	theme_classic(base_size = 18) +
+	theme(axis.line.y = element_blank(),
+				axis.text.y = element_blank(), 
+				axis.ticks.y = element_blank(),
+				axis.title.y = element_blank(),
+				aspect.ratio = .2)
+
+F6/G6 + plot_layout(nrow = 2, heights = c(2, 1.5))
+```
+
+<br><br>
+
+------------------------------------------------------------------------
+
+<br><br>
+
+# Split Analysis
+
+저부담 조건과 고부담 조건의 Cowan's *K* 차이가 상위 30%로 큰 참가자들의 플랭커 간섭을 비교하였다.
+```{r, collapse=TRUE}
+Kdiff2 <- Kdiff %>% mutate(q70 = quantile(Kdiff, prob = .70), hUpper = Kdiff > q70)
+Cdiff2 <- bind_rows(r1ce %>% pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'Diff') %>%
+									 	mutate(Exp = 'Exp1', SN = paste('e1s', .$SN, sep = "")),
+									 r2ce %>% pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'Diff') %>%
+									 	mutate(Exp = 'Exp2', SN = paste('e2s', .$SN, sep = "")),
+									 tE5 %>% group_by(SN, vstmLoad, Congruency) %>% 
+									 	summarise(rt = mean(RT)) %>% ungroup() %>% 
+									 	pivot_wider(id_cols = c("SN", "vstmLoad"), names_from = "Congruency", values_from = "rt") %>% 
+									 	mutate(Diff = Incongruent - Congruent) %>% 
+									 	select(SN, vstmLoad, Diff) %>% 
+									 	pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'Diff') %>%
+									 	mutate(Exp = 'Exp5', SN = paste('e5s', .$SN, sep = ""))) %>% select(SN, Low, High)
+
+full_join(Kdiff2, Cdiff2, by = "SN") %>% 
+	filter(hUpper == TRUE)
+h <- full_join(Kdiff2, Cdiff2, by = "SN") %>% 
+	filter(hUpper == TRUE) %>% 
+	select(SN, Low, High) %>% 
+	pivot_longer(cols = c(Low, High), names_to = 'Load', values_to = 'Flanker')
+
+h %>% group_by(Load) %>% 
+	get_summary_stats(Flanker, show = c("mean", "sd", "median", "iqr", "ci")) %>% 
+	kable(digits = 2, caption = "Flanker RT (ms): Descriptive Stats")
+
+h %>% pairwise_t_test(Flanker ~ Load, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Pairwise t test")
+h %>% cohens_d(Flanker ~ Load, paired = TRUE) %>% select(-1) %>% 
+	kable(digits = 2, format = "simple", caption = "Effect Size")
+```
+
+
+<br><br>
+
+------------------------------------------------------------------------
+
+<br><br>
+
+# Session Info
+
+```{r sinfo, collapse=TRUE}
+sessionInfo()
+```
