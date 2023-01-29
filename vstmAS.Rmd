@@ -1,6 +1,6 @@
 ---
-title: "VSTM does not enhance visual selection"
-author: "Hyuksu Lee, Do-Joon Yi"
+title: "VSTM Load Effects On Flanker Interference"
+author: "Hyuksu Lee & Do-Joon Yi"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -13,7 +13,7 @@ output:
     theme: cosmo 
     highlight: haddock
     code_folding: hide
-subtitle: Manuscript under review
+subtitle: VSTM load does not enhance visual selection
 mainfont: Noto Sans CJK KR
 ---
 
@@ -30,14 +30,16 @@ pre code, pre, code {
 }
 ```
 
-```{r setup, message=FALSE}
+```{r, collapse=TRUE}
 set.seed(12345) # for reproducibility
 
 if (!require("Rmisc", quietly = TRUE)) install.packages("Rmisc") # Never load it directly.
 pacman::p_load(tidyverse, psych)
 pacman::p_load(knitr, ggridges)
 pacman::p_load(rstatix, TOSTER, pwr)
-pacman::p_load_gh("thomasp85/patchwork", "RLesur/klippy")
+pacman::p_load(cowplot)
+pacman::p_load_gh("thomasp85/patchwork")
+pacman::p_load_gh("RLesur/klippy", "mitchelloharawild/icons")
 
 options(knitr.kable.NA = '')
 options(dplyr.summarise.inform=FALSE) # suppress warning in regards to regrouping 
@@ -45,8 +47,6 @@ xcut <- 2
 
 klippy::klippy()
 ```
-
-# Data
 
 ```{r, collapse=TRUE}
 # Exp1: distractor = O's
@@ -166,7 +166,11 @@ table(E5$vstmCorr, E5$SN)
 
 # Experiment 1
 
-Interleaved, 1 vs. 4
+VSTM `low load`와 `high load` 조건의 기억항목은 각각 한 개와 네 개. 두 조건은 무작위 순서(interleaved).
+
+```{r, fig.height=3}
+ggdraw() + draw_image("fig_proc/procExp1.png")
+```
 
 ## VSTM: Accuracy
 
@@ -430,7 +434,11 @@ r1 %>% anova_test(dv = RT, wid = SN, within = c(vstmLoad, Congruency), effect.si
 
 # Experiment 2
 
-Blocked, 1 vs 4
+VSTM `low load`와 `high load` 조건의 기억항목은 각각 한 개와 네 개. 두 조건은 구획으로 분리(blocked).
+
+```{r, fig.height=3}
+ggdraw() + draw_image("fig_proc/procExp2.png")
+```
 
 ## VSTM: Accuracy
 
@@ -691,7 +699,11 @@ r2 %>% anova_test(dv = RT, wid = SN, within = c(vstmLoad, Congruency), effect.si
 
 # Experiment 3
 
-Blocked, 0 vs 3
+VSTM `low load` 조건은 기억항목 없이 플랭커 과제만 제시, `high load` 조건은 기억항목 세 개. 두 조건은 구획으로 분리됨(blocked).
+
+```{r, fig.height=3}
+ggdraw() + draw_image("fig_proc/procExp3.png")
+```
 
 ## VSTM: Accuracy
 
@@ -931,7 +943,12 @@ r3 %>% anova_test(dv = RT, wid = SN, within = c(vstmLoad, Congruency), effect.si
 
 # Experiment 4
 
-Perceptual load
+참가자는 플랭커 과제만 수행. **지각부담** 효과를 검증하기 위해 시각탐색 배열 크기(set size)가 `고부담` 조건은 6, `저부담` 조건은 1.
+
+```{r, fig.height=3}
+ggdraw() + draw_image("fig_proc/procExp4.png")
+```
+
 
 ## Flanker task: Error
 
@@ -1137,7 +1154,12 @@ bind_rows(r3 %>% rename("Load" = vstmLoad) %>% mutate(Exp = 'Exp3', SN = paste('
 
 # Experiment 5
 
-Overlap
+`Overlap` 요인 추가. 
+
+```{r, fig.height=3}
+ggdraw() + draw_image("fig_proc/procExp5.png")
+```
+
 
 ## VSTM: Accuracy
 
@@ -1431,6 +1453,8 @@ r5 %>% filter(Overlap == "NonOverlap") %>%
 
 # Correlation
 
+VSTM 부담에 의한 *K* 변화량과 일치효과(플랭커 간섭) 변화량의 상관.
+
 ```{r, collapse=TRUE, fig.height = 7}
 Kdiff <- bind_rows(k1 %>% pivot_wider(id_cols = 'SN', names_from = 'vstmLoad', values_from = 'K') %>% 
 									 	mutate(Kdiff = High - Low) %>% select(SN, Kdiff) %>% 
@@ -1639,3 +1663,6 @@ h %>% cohens_d(Flanker ~ Load, paired = TRUE) %>% select(-1) %>%
 ```{r sinfo, collapse=TRUE}
 sessionInfo()
 ```
+
+***
+[[View on Github `r icon_style(fontawesome("github-alt", style = "brands"), scale = 4, fill = "#56B4E9")`](https://github.com/cogneuro/vstmAS)]{style="float:right"}
